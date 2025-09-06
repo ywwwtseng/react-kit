@@ -1,4 +1,4 @@
-import { createElement, memo, type PropsWithChildren } from 'react';
+import React from 'react';
 
 type TypographySize = '12' | '11' | '10' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2' | '1';
 
@@ -21,7 +21,7 @@ const config: {
   },
 };
 
-export interface TypographyProps extends PropsWithChildren, React.CSSProperties {
+export interface TypographyProps extends React.PropsWithChildren, React.CSSProperties {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'span' | 'p' | 'b';
   color?: 'currentColor' | string;
   align?: 'left' | 'center' | 'right' | 'justify';
@@ -37,7 +37,7 @@ export interface TypographyProps extends PropsWithChildren, React.CSSProperties 
   fontFamily?: string;
 }
 
-export const Typography = memo(({
+export const Typography = React.memo(({
   as = 'p',
   color = 'currentColor',
   align = 'left',
@@ -54,7 +54,7 @@ export const Typography = memo(({
   ...props
 }: TypographyProps) => {
   return (
-    createElement(
+    React.createElement(
       as,
       {
         className,

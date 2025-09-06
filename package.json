@@ -1,13 +1,13 @@
 {
-  "name": "react-kit",
+  "name": "@ywwwtseng/react-kit",
   "description": "some react components and utils",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --clean"
+    "build": "tsup src/index.tsx --format esm --dts --clean"
   },
   "devDependencies": {
     "tsup": "^8.5.0",
@@ -16,5 +16,10 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "@types/react": ">=18.0.0"
+  },
+  "dependencies": {
+    "@heroui/dropdown": "^2.3.25",
+    "@ywwwtseng/utils": "^0.0.1",
+    "vaul": "^1.1.2"
   }
 }
