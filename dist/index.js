@@ -1,5 +1,242 @@
-// src/components/Typography.ts
-import { createElement, memo } from "react";
+// src/context/StackNavigatorContext.tsx
+import {
+  createContext,
+  use,
+  useState,
+  useCallback,
+  useMemo,
+  useEffect
+} from "react";
+import { parseJSON } from "@ywwwtseng/utils";
+
+// src/components/DrawerScreen.tsx
+import { Drawer } from "vaul";
+import { jsx, jsxs } from "react/jsx-runtime";
+function DrawerScreen({ title, description, style, children }) {
+  return /* @__PURE__ */ jsx(Drawer.Root, { direction: "right", open: !!children, children: /* @__PURE__ */ jsx(Drawer.Portal, { children: /* @__PURE__ */ jsxs(Drawer.Content, { style: {
+    height: "100vh",
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    outline: "none",
+    ...style
+  }, children: [
+    /* @__PURE__ */ jsx(Drawer.Title, { style: { display: "none" }, children: title }),
+    /* @__PURE__ */ jsx(Drawer.Description, { style: { display: "none" }, children: description }),
+    children
+  ] }) }) });
+}
+
+// src/context/StackNavigatorContext.tsx
+import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
+var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
+  ScreenType2["PAGE"] = "page";
+  ScreenType2["DRAWER"] = "drawer";
+  return ScreenType2;
+})(ScreenType || {});
+var DEFAULT_STACK = parseJSON(sessionStorage.getItem("navigator/screen")) || { screen: "Home", params: {} };
+var StackNavigatorContext = createContext({
+  route: void 0,
+  navigate: (screen, options) => {
+  }
+});
+function StackNavigatorProvider({ screens, drawer, layout: Layout2 }) {
+  const [stacks, setStacks] = useState([DEFAULT_STACK]);
+  const route = useMemo(() => {
+    const stack = stacks[stacks.length - 1];
+    const screen = screens[stack.screen];
+    return {
+      name: stack.screen,
+      title: screen.title,
+      icon: screen.icon,
+      params: stack.params,
+      type: screen.type,
+      screen: screen.screen
+    };
+  }, [stacks, screens]);
+  const Screen = useMemo(() => {
+    if (route.type === "drawer") {
+      const stack = stacks[stacks.length - 2];
+      return stack ? screens[stack.screen].screen : void 0;
+    }
+    return route.screen;
+  }, [route, stacks, screens]);
+  const DrawerContent = useMemo(() => {
+    if (route.type === "drawer") {
+      return route.screen;
+    }
+  }, [route, stacks, screens]);
+  const navigate = useCallback((screen, options) => {
+    if (typeof screen === "string") {
+      if (!Object.keys(screens).includes(screen)) {
+        console.warn(`Screen ${screen} not found`);
+        return;
+      }
+    }
+    setStacks((prev) => {
+      if (screen === -1 && prev.length > 1) {
+        return prev.slice(0, -1);
+      } else if (typeof screen === "string") {
+        if (prev[prev.length - 1]?.screen === screen) {
+          return prev;
+        }
+        const route2 = { screen, params: options?.params || {} };
+        return [...prev, route2];
+      }
+      return prev;
+    });
+  }, [screens]);
+  const value = useMemo(() => ({
+    route,
+    navigate
+  }), [route, navigate]);
+  useEffect(() => {
+    if (route.type === "drawer") {
+      return;
+    }
+    sessionStorage.setItem("navigator/screen", JSON.stringify({
+      screen: route.name,
+      params: route.params
+    }));
+  }, [route]);
+  return /* @__PURE__ */ jsx2(
+    StackNavigatorContext.Provider,
+    {
+      value,
+      children: /* @__PURE__ */ jsxs2(
+        Layout2,
+        {
+          styles: {
+            tabBar: !!DrawerContent ? { display: "none" } : {}
+          },
+          children: [
+            Screen && /* @__PURE__ */ jsx2("div", { style: { display: !!DrawerContent ? "none" : "block" }, children: /* @__PURE__ */ jsx2(Screen, { params: route.params }) }),
+            /* @__PURE__ */ jsx2(
+              DrawerScreen,
+              {
+                title: route.title,
+                description: route.title,
+                style: drawer.style,
+                children: !!DrawerContent && /* @__PURE__ */ jsx2(DrawerContent, { params: route.params })
+              }
+            )
+          ]
+        }
+      )
+    }
+  );
+}
+var useNavigate = () => {
+  const context = use(StackNavigatorContext);
+  if (!context) {
+    throw new Error("useNavigate must be used within a StackNavigator");
+  }
+  return context.navigate;
+};
+var useRoute = () => {
+  const context = use(StackNavigatorContext);
+  if (!context) {
+    throw new Error("useRoute must be used within a StackNavigator");
+  }
+  return context.route;
+};
+
+// src/components/Layout.tsx
+import { jsx as jsx3 } from "react/jsx-runtime";
+function Root({ className, style, children }) {
+  return /* @__PURE__ */ jsx3(
+    "div",
+    {
+      className,
+      style: {
+        display: "flex",
+        opacity: 0,
+        flexDirection: "column",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        ...style
+      },
+      children
+    }
+  );
+}
+function Header({ style, children }) {
+  return /* @__PURE__ */ jsx3(
+    "div",
+    {
+      style: {
+        width: "100vw",
+        left: 0,
+        top: 0,
+        padding: "8px 16px",
+        position: "fixed",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "8px",
+        zIndex: 1e3,
+        pointerEvents: "auto",
+        ...style
+      },
+      children
+    }
+  );
+}
+function HeaderLeft({ style, children }) {
+  return /* @__PURE__ */ jsx3(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        ...style
+      },
+      children
+    }
+  );
+}
+function HeaderRight({ style, children }) {
+  return /* @__PURE__ */ jsx3(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        ...style
+      },
+      children
+    }
+  );
+}
+function Main({ style, children }) {
+  return /* @__PURE__ */ jsx3(
+    "div",
+    {
+      style: {
+        height: "100vh",
+        overflowY: "auto",
+        ...style
+      },
+      children
+    }
+  );
+}
+var Layout = {
+  Root,
+  Header,
+  HeaderLeft,
+  HeaderRight,
+  Main
+};
+
+// src/components/Typography.tsx
+import React from "react";
 var config = {
   size: {
     "12": { fontSize: "8rem", lineHeight: "1" },
@@ -16,7 +253,7 @@ var config = {
     "1": { fontSize: "0.75rem", lineHeight: "1rem" }
   }
 };
-var Typography = memo(({
+var Typography = React.memo(({
   as = "p",
   color = "currentColor",
   align = "left",
@@ -32,7 +269,7 @@ var Typography = memo(({
   children,
   ...props
 }) => {
-  return createElement(
+  return React.createElement(
     as,
     {
       className,
@@ -56,6 +293,99 @@ var Typography = memo(({
     }
   );
 });
+
+// src/components/Dropdown.tsx
+import {
+  Dropdown as HerouiDropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem
+} from "@heroui/dropdown";
+import { jsx as jsx4, jsxs as jsxs3 } from "react/jsx-runtime";
+function Dropdown({ items, children, onChange, ...props }) {
+  return /* @__PURE__ */ jsxs3(HerouiDropdown, { ...props, children: [
+    /* @__PURE__ */ jsx4(DropdownTrigger, { children }),
+    /* @__PURE__ */ jsx4(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx4(
+      DropdownItem,
+      {
+        onClick: () => onChange(item.key),
+        startContent: item.icon ? /* @__PURE__ */ jsx4("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
+        textValue: item.key,
+        children: /* @__PURE__ */ jsx4(Typography, { size: "4", children: item.name })
+      },
+      item.key
+    )) })
+  ] });
+}
+
+// src/components/List.tsx
+import { jsx as jsx5 } from "react/jsx-runtime";
+function List({ items, children, ...props }) {
+  return /* @__PURE__ */ jsx5("div", { ...props, children: items.map((item) => children(item)) });
+}
+
+// src/components/TabBar.tsx
+import { jsx as jsx6 } from "react/jsx-runtime";
+function TabBar({ style, items, renderItem }) {
+  return /* @__PURE__ */ jsx6(
+    List,
+    {
+      style: {
+        width: "100vw",
+        left: 0,
+        bottom: 0,
+        padding: "4px 32px 0px",
+        position: "fixed",
+        display: "flex",
+        alignItems: "start",
+        justifyContent: "space-between",
+        ...style
+      },
+      items,
+      children: (item) => renderItem(item)
+    }
+  );
+}
+
+// src/hooks/useRefValue.ts
+import React2 from "react";
+function useRefValue(value) {
+  const ref = React2.useRef(value);
+  React2.useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref;
+}
+
+// src/hooks/useClientOnce.ts
+import { useEffect as useEffect2, useRef } from "react";
+function useClientOnce(setup) {
+  const canCall = useRef(true);
+  useEffect2(() => {
+    if (!canCall.current) {
+      return;
+    }
+    canCall.current = false;
+    const destroy = setup();
+    return () => {
+      if (destroy) {
+        destroy();
+      }
+    };
+  }, []);
+}
 export {
-  Typography
+  DEFAULT_STACK,
+  Dropdown,
+  Layout,
+  List,
+  ScreenType,
+  StackNavigatorContext,
+  StackNavigatorProvider,
+  TabBar,
+  Typography,
+  useClientOnce,
+  useNavigate,
+  useRefValue,
+  useRoute
 };
