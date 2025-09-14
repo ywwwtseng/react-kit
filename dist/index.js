@@ -223,7 +223,25 @@ var Typography = React.memo(({
 
 // src/components/AmountInput.tsx
 import { useState as useState2 } from "react";
+
+// src/components/Input.tsx
+import { cva } from "class-variance-authority";
+import clsx from "clsx";
 import { jsx as jsx3 } from "react/jsx-runtime";
+var inputVariants = cva("focus:outline-none outline-none", {
+  variants: {},
+  defaultVariants: {},
+  compoundVariants: []
+});
+function Input({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx3("input", { className: clsx(inputVariants({ className })), ...props });
+}
+
+// src/components/AmountInput.tsx
+import { jsx as jsx4 } from "react/jsx-runtime";
 function formatAmount(input) {
   if (!input) return "";
   const parts = input.split(".");
@@ -243,8 +261,8 @@ function AmountInput({
   ...props
 }) {
   const [inputValue, setInputValue] = useState2(value);
-  return /* @__PURE__ */ jsx3(
-    "input",
+  return /* @__PURE__ */ jsx4(
+    Input,
     {
       ...props,
       className: props.className ? `input ${props.className}` : "input",
@@ -299,7 +317,7 @@ import {
   DropdownMenu,
   DropdownItem
 } from "@heroui/dropdown";
-import { jsx as jsx4, jsxs as jsxs3 } from "react/jsx-runtime";
+import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
 function Dropdown({
   items,
   children,
@@ -307,14 +325,14 @@ function Dropdown({
   ...props
 }) {
   return /* @__PURE__ */ jsxs3(HerouiDropdown, { ...props, children: [
-    /* @__PURE__ */ jsx4(DropdownTrigger, { children }),
-    /* @__PURE__ */ jsx4(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx4(
+    /* @__PURE__ */ jsx5(DropdownTrigger, { children }),
+    /* @__PURE__ */ jsx5(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx5(
       DropdownItem,
       {
         onClick: () => onChange(item.key),
-        startContent: item.icon ? /* @__PURE__ */ jsx4("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
+        startContent: item.icon ? /* @__PURE__ */ jsx5("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
         textValue: item.key,
-        children: /* @__PURE__ */ jsx4(Typography, { size: "2", children: item.name })
+        children: /* @__PURE__ */ jsx5(Typography, { size: "2", children: item.name })
       },
       item.key
     )) })
@@ -322,9 +340,9 @@ function Dropdown({
 }
 
 // src/components/Layout.tsx
-import { jsx as jsx5 } from "react/jsx-runtime";
+import { jsx as jsx6 } from "react/jsx-runtime";
 function Root({ className, style, children }) {
-  return /* @__PURE__ */ jsx5(
+  return /* @__PURE__ */ jsx6(
     "div",
     {
       className,
@@ -342,7 +360,7 @@ function Root({ className, style, children }) {
   );
 }
 function Header({ style, children }) {
-  return /* @__PURE__ */ jsx5(
+  return /* @__PURE__ */ jsx6(
     "div",
     {
       style: {
@@ -364,7 +382,7 @@ function Header({ style, children }) {
   );
 }
 function HeaderLeft({ style, children }) {
-  return /* @__PURE__ */ jsx5(
+  return /* @__PURE__ */ jsx6(
     "div",
     {
       style: {
@@ -379,7 +397,7 @@ function HeaderLeft({ style, children }) {
   );
 }
 function HeaderRight({ style, children }) {
-  return /* @__PURE__ */ jsx5(
+  return /* @__PURE__ */ jsx6(
     "div",
     {
       style: {
@@ -394,7 +412,7 @@ function HeaderRight({ style, children }) {
   );
 }
 function Main({ style, children }) {
-  return /* @__PURE__ */ jsx5(
+  return /* @__PURE__ */ jsx6(
     "div",
     {
       style: {
@@ -415,15 +433,15 @@ var Layout = {
 };
 
 // src/components/List.tsx
-import { jsx as jsx6 } from "react/jsx-runtime";
+import { jsx as jsx7 } from "react/jsx-runtime";
 function List({ items, children, ...props }) {
-  return /* @__PURE__ */ jsx6("div", { ...props, children: items.map((item) => children(item)) });
+  return /* @__PURE__ */ jsx7("div", { ...props, children: items.map((item) => children(item)) });
 }
 
 // src/components/TabBar.tsx
-import { jsx as jsx7 } from "react/jsx-runtime";
+import { jsx as jsx8 } from "react/jsx-runtime";
 function TabBar({ style, items, renderItem }) {
-  return /* @__PURE__ */ jsx7(
+  return /* @__PURE__ */ jsx8(
     List,
     {
       style: {
@@ -445,7 +463,7 @@ function TabBar({ style, items, renderItem }) {
 
 // src/components/Modal.tsx
 import { Drawer as Drawer2 } from "vaul";
-import { jsx as jsx8, jsxs as jsxs4 } from "react/jsx-runtime";
+import { jsx as jsx9, jsxs as jsxs4 } from "react/jsx-runtime";
 function Modal({
   type = "default",
   handle = true,
@@ -457,9 +475,9 @@ function Modal({
 }) {
   const Root2 = type === "default" ? Drawer2.Root : Drawer2.NestedRoot;
   return /* @__PURE__ */ jsxs4(Root2, { ...props, children: [
-    trigger && /* @__PURE__ */ jsx8(Drawer2.Trigger, { asChild: true, children: trigger }),
+    trigger && /* @__PURE__ */ jsx9(Drawer2.Trigger, { asChild: true, children: trigger }),
     /* @__PURE__ */ jsxs4(Drawer2.Portal, { children: [
-      /* @__PURE__ */ jsx8(
+      /* @__PURE__ */ jsx9(
         Drawer2.Overlay,
         {
           style: {
@@ -484,9 +502,9 @@ function Modal({
             right: 0
           },
           children: [
-            handle && /* @__PURE__ */ jsx8(Drawer2.Handle, {}),
-            /* @__PURE__ */ jsx8(Drawer2.Title, { className: "hidden", children: title }),
-            /* @__PURE__ */ jsx8(Drawer2.Description, { className: "hidden", children: title }),
+            handle && /* @__PURE__ */ jsx9(Drawer2.Handle, {}),
+            /* @__PURE__ */ jsx9(Drawer2.Title, { className: "hidden", children: title }),
+            /* @__PURE__ */ jsx9(Drawer2.Description, { className: "hidden", children: title }),
             children
           ]
         }
@@ -496,18 +514,18 @@ function Modal({
 }
 
 // src/components/Image.tsx
-import { jsx as jsx9 } from "react/jsx-runtime";
+import { jsx as jsx10 } from "react/jsx-runtime";
 function Image({ src, ...props }) {
   const url = typeof src === "string" ? src : src.src;
-  return /* @__PURE__ */ jsx9("img", { src: url, ...props });
+  return /* @__PURE__ */ jsx10("img", { src: url, ...props });
 }
 
 // src/components/Button.tsx
-import { cva } from "class-variance-authority";
-import clsx from "clsx";
-import { jsx as jsx10 } from "react/jsx-runtime";
-var buttonVariants = cva(
-  "cursor-pointer flex items-center justify-center",
+import { cva as cva2 } from "class-variance-authority";
+import clsx2 from "clsx";
+import { jsx as jsx11 } from "react/jsx-runtime";
+var buttonVariants = cva2(
+  "flex items-center justify-center cursor-pointer focus:outline-none outline-none",
   {
     variants: {
       variant: {
@@ -596,10 +614,10 @@ function Button({
   rounded,
   ...props
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx11(
     "button",
     {
-      className: clsx(
+      className: clsx2(
         buttonVariants({ variant, width, size, color, rounded, className })
       ),
       ...props
@@ -640,6 +658,7 @@ export {
   DEFAULT_STACK,
   Dropdown,
   Image,
+  Input,
   Layout,
   List,
   Modal,
@@ -650,6 +669,7 @@ export {
   Typography,
   buttonVariants,
   formatAmount,
+  inputVariants,
   useClientOnce,
   useNavigate,
   useRefValue,

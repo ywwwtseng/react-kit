@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Input } from './Input';
 
 export interface AmountInputProps
   extends Omit<
@@ -37,7 +38,7 @@ export function AmountInput({
   const [inputValue, setInputValue] = useState(value);
 
   return (
-    <input
+    <Input
       {...props}
       className={props.className ? `input ${props.className}` : 'input'}
       type="text"

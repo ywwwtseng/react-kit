@@ -9,6 +9,7 @@ export * from './components/List';
 export * from './components/Modal';
 export * from './components/Image';
 export * from './components/Button';
+export * from './components/Input';
 
 export * from './hooks/useRefValue';
 export * from './hooks/useClientOnce';

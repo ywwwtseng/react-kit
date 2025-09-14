@@ -166,8 +166,11 @@ declare const buttonVariants: (props?: {
 } & class_variance_authority_types.ClassProp) => string;
 declare function Button({ className, variant, width, size, color, rounded, ...props }: React.ComponentProps<'button'> & VariantProps<typeof buttonVariants>): react_jsx_runtime.JSX.Element;
 
+declare const inputVariants: (props?: {} & class_variance_authority_types.ClassProp) => string;
+declare function Input({ className, ...props }: React.ComponentProps<'input'> & VariantProps<typeof inputVariants>): react_jsx_runtime.JSX.Element;
+
 declare function useRefValue<T>(value: T): React__default.RefObject<T>;
 
 declare function useClientOnce(setup: () => void | undefined | (() => void)): void;
 
-export { AmountInput, type AmountInputProps, Button, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Typography, type TypographyProps, buttonVariants, formatAmount, useClientOnce, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, useClientOnce, useNavigate, useRefValue, useRoute };

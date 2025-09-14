@@ -4,14 +4,6 @@
   resize: none;
   outline: none;
 }
-.input,
-.input:focus {
-  outline: none;
-}
-.button,
-.button:focus {
-  outline: none;
-}
 .h-stack {
   display: flex;
   flex-direction: row;
