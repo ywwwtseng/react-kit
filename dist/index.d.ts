@@ -3,6 +3,8 @@ import * as React$1 from 'react';
 import React__default, { PropsWithChildren, CSSProperties, ElementType, ReactElement, ReactNode, HTMLAttributes } from 'react';
 import { DropdownProps as DropdownProps$1 } from '@heroui/dropdown';
 import { DialogProps } from 'vaul';
+import * as class_variance_authority_types from 'class-variance-authority/types';
+import { VariantProps } from 'class-variance-authority';
 
 interface DrawerScreenProps extends PropsWithChildren {
     title: string;
@@ -155,8 +157,17 @@ interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'sr
 }
 declare function Image({ src, ...props }: ImageProps): react_jsx_runtime.JSX.Element;
 
+declare const buttonVariants: (props?: {
+    variant?: "text" | "icon" | "contained";
+    width?: "full";
+    size?: "sm" | "md" | "xs";
+    color?: "primary" | "secondary";
+    rounded?: "sm" | "md" | "lg" | "full" | "xl";
+} & class_variance_authority_types.ClassProp) => string;
+declare function Button({ className, variant, width, size, color, rounded, ...props }: React.ComponentProps<'button'> & VariantProps<typeof buttonVariants>): react_jsx_runtime.JSX.Element;
+
 declare function useRefValue<T>(value: T): React__default.RefObject<T>;
 
 declare function useClientOnce(setup: () => void | undefined | (() => void)): void;
 
-export { AmountInput, type AmountInputProps, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Typography, type TypographyProps, formatAmount, useClientOnce, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Typography, type TypographyProps, buttonVariants, formatAmount, useClientOnce, useNavigate, useRefValue, useRoute };

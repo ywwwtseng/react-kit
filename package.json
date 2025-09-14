@@ -20,6 +20,8 @@
   "dependencies": {
     "@heroui/dropdown": "^2.3.25",
     "@ywwwtseng/utils": "^0.0.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "vaul": "^1.1.2"
   }
 }

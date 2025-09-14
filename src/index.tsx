@@ -8,6 +8,7 @@ export * from './components/TabBar';
 export * from './components/List';
 export * from './components/Modal';
 export * from './components/Image';
+export * from './components/Button';
 
 export * from './hooks/useRefValue';
 export * from './hooks/useClientOnce';
