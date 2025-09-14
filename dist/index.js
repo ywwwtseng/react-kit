@@ -625,6 +625,25 @@ function Button({
   );
 }
 
+// src/components/Textarea.tsx
+import { cva as cva3 } from "class-variance-authority";
+import clsx3 from "clsx";
+import { jsx as jsx12 } from "react/jsx-runtime";
+var textareaVariants = cva3(
+  "focus:outline-none outline-none resize-none",
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: []
+  }
+);
+function Textarea({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx12("textarea", { className: clsx3(textareaVariants({ className })), ...props });
+}
+
 // src/hooks/useRefValue.ts
 import React2 from "react";
 function useRefValue(value) {
@@ -666,10 +685,12 @@ export {
   StackNavigatorContext,
   StackNavigatorProvider,
   TabBar,
+  Textarea,
   Typography,
   buttonVariants,
   formatAmount,
   inputVariants,
+  textareaVariants,
   useClientOnce,
   useNavigate,
   useRefValue,

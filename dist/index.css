@@ -1,9 +1,4 @@
 /* src/index.css */
-.textarea,
-.textarea:focus {
-  resize: none;
-  outline: none;
-}
 .h-stack {
   display: flex;
   flex-direction: row;

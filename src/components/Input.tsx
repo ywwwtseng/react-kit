@@ -10,6 +10,7 @@ export const inputVariants = cva('focus:outline-none outline-none', {
 export function Input({
   className,
   ...props
-}: React.ComponentProps<'input'> & VariantProps<typeof inputVariants>) {
+}: React.InputHTMLAttributes<HTMLInputElement> &
+  VariantProps<typeof inputVariants>) {
   return <input className={clsx(inputVariants({ className }))} {...props} />;
 }
