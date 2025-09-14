@@ -341,7 +341,11 @@ function Dropdown({
 
 // src/components/Layout.tsx
 import { jsx as jsx6 } from "react/jsx-runtime";
-function Root({ className, style, children }) {
+function Root({
+  className,
+  style,
+  children
+}) {
   return /* @__PURE__ */ jsx6(
     "div",
     {
@@ -359,7 +363,10 @@ function Root({ className, style, children }) {
     }
   );
 }
-function Header({ style, children }) {
+function Header({
+  style,
+  children
+}) {
   return /* @__PURE__ */ jsx6(
     "div",
     {
@@ -381,7 +388,10 @@ function Header({ style, children }) {
     }
   );
 }
-function HeaderLeft({ style, children }) {
+function HeaderLeft({
+  style,
+  children
+}) {
   return /* @__PURE__ */ jsx6(
     "div",
     {
@@ -396,7 +406,10 @@ function HeaderLeft({ style, children }) {
     }
   );
 }
-function HeaderRight({ style, children }) {
+function HeaderRight({
+  style,
+  children
+}) {
   return /* @__PURE__ */ jsx6(
     "div",
     {
@@ -411,7 +424,10 @@ function HeaderRight({ style, children }) {
     }
   );
 }
-function Main({ style, children }) {
+function Main({
+  style,
+  children
+}) {
   return /* @__PURE__ */ jsx6(
     "div",
     {
@@ -448,7 +464,7 @@ function TabBar({ style, items, renderItem }) {
         width: "100vw",
         left: 0,
         bottom: 0,
-        padding: "4px 32px 0px",
+        padding: "4px 16px 0px",
         position: "fixed",
         display: "flex",
         alignItems: "start",

@@ -1,24 +1,33 @@
-import { CSSProperties, type PropsWithChildren } from 'react';
-
-function Root({ className, style, children }: PropsWithChildren<{ className?: string; style?: CSSProperties; }>) {
+function Root({
+  className,
+  style,
+  children,
+}: React.PropsWithChildren<{
+  className?: string;
+  style?: React.CSSProperties;
+}>) {
   return (
     <div
       className={className}
       style={{
-      display: 'flex',
-      opacity: 0,
-      flexDirection: 'column',
-      width: '100vw',
-      height: '100vh',
-      overflow: 'hidden',
-      ...style,
-    }}>
+        display: 'flex',
+        opacity: 0,
+        flexDirection: 'column',
+        width: '100vw',
+        height: '100vh',
+        overflow: 'hidden',
+        ...style,
+      }}
+    >
       {children}
     </div>
   );
 }
 
-function Header({ style, children }: PropsWithChildren<{ style?: CSSProperties; }>) {
+function Header({
+  style,
+  children,
+}: React.PropsWithChildren<{ style?: React.CSSProperties }>) {
   return (
     <div
       style={{
@@ -34,13 +43,17 @@ function Header({ style, children }: PropsWithChildren<{ style?: CSSProperties; 
         zIndex: 1000,
         pointerEvents: 'auto',
         ...style,
-      }}>
+      }}
+    >
       {children}
     </div>
-  )
+  );
 }
 
-function HeaderLeft({ style, children }: PropsWithChildren<{ style?: CSSProperties; }>) {
+function HeaderLeft({
+  style,
+  children,
+}: React.PropsWithChildren<{ style?: React.CSSProperties }>) {
   return (
     <div
       style={{
@@ -49,13 +62,17 @@ function HeaderLeft({ style, children }: PropsWithChildren<{ style?: CSSProperti
         justifyContent: 'center',
         gap: '8px',
         ...style,
-      }}>
+      }}
+    >
       {children}
     </div>
   );
 }
 
-function HeaderRight({ style, children }: PropsWithChildren<{ style?: CSSProperties; }>) {
+function HeaderRight({
+  style,
+  children,
+}: React.PropsWithChildren<{ style?: React.CSSProperties }>) {
   return (
     <div
       style={{
@@ -64,13 +81,17 @@ function HeaderRight({ style, children }: PropsWithChildren<{ style?: CSSPropert
         justifyContent: 'center',
         gap: '8px',
         ...style,
-      }}>
+      }}
+    >
       {children}
     </div>
   );
 }
 
-function Main({ style, children }: PropsWithChildren<{ style?: CSSProperties; }>) {
+function Main({
+  style,
+  children,
+}: React.PropsWithChildren<{ style?: React.CSSProperties }>) {
   return (
     <div
       style={{

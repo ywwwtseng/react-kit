@@ -1,4 +1,3 @@
-import type { ReactElement } from 'react';
 import {
   Dropdown as HerouiDropdown,
   DropdownProps as HerouiDropdownProps,
@@ -11,13 +10,13 @@ import { Typography } from './Typography';
 export interface DropdownItem {
   key: string;
   name: string;
-  icon?: ReactElement;
+  icon?: React.ReactElement;
 }
 
 export interface DropdownProps
   extends Omit<HerouiDropdownProps, 'onChange' | 'children'> {
   items: DropdownItem[];
-  children: ReactElement;
+  children: React.ReactElement;
   onChange: (key: string) => void;
 }
 

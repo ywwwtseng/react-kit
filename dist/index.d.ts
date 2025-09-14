@@ -1,15 +1,15 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React$1 from 'react';
-import React__default, { PropsWithChildren, CSSProperties, ElementType, ReactElement, ReactNode, HTMLAttributes } from 'react';
+import React__default, { ElementType } from 'react';
 import { DropdownProps as DropdownProps$1 } from '@heroui/dropdown';
 import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { VariantProps } from 'class-variance-authority';
 
-interface DrawerScreenProps extends PropsWithChildren {
+interface DrawerScreenProps extends React.PropsWithChildren {
     title: string;
     description: string;
-    style?: CSSProperties;
+    style?: React.CSSProperties;
 }
 
 type Stack = {
@@ -85,30 +85,30 @@ declare function AmountInput({ decimal, value, onChange, maxDigits, ...props }: 
 interface DropdownItem {
     key: string;
     name: string;
-    icon?: ReactElement;
+    icon?: React.ReactElement;
 }
 interface DropdownProps extends Omit<DropdownProps$1, 'onChange' | 'children'> {
     items: DropdownItem[];
-    children: ReactElement;
+    children: React.ReactElement;
     onChange: (key: string) => void;
 }
 declare function Dropdown({ items, children, onChange, ...props }: DropdownProps): react_jsx_runtime.JSX.Element;
 
-declare function Root({ className, style, children }: PropsWithChildren<{
+declare function Root({ className, style, children, }: React.PropsWithChildren<{
     className?: string;
-    style?: CSSProperties;
+    style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
-declare function Header({ style, children }: PropsWithChildren<{
-    style?: CSSProperties;
+declare function Header({ style, children, }: React.PropsWithChildren<{
+    style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
-declare function HeaderLeft({ style, children }: PropsWithChildren<{
-    style?: CSSProperties;
+declare function HeaderLeft({ style, children, }: React.PropsWithChildren<{
+    style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
-declare function HeaderRight({ style, children }: PropsWithChildren<{
-    style?: CSSProperties;
+declare function HeaderRight({ style, children, }: React.PropsWithChildren<{
+    style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
-declare function Main({ style, children }: PropsWithChildren<{
-    style?: CSSProperties;
+declare function Main({ style, children, }: React.PropsWithChildren<{
+    style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
 declare const Layout: {
     Root: typeof Root;
@@ -121,18 +121,18 @@ declare const Layout: {
 interface Tab {
     name: string;
     title: string;
-    icon: ReactNode;
+    icon: React.ReactNode;
 }
 interface TabBarProps {
-    style?: CSSProperties;
+    style?: React.CSSProperties;
     items: Tab[];
-    renderItem: (item: Tab) => ReactNode;
+    renderItem: (item: Tab) => React.ReactNode;
 }
 declare function TabBar({ style, items, renderItem }: TabBarProps): react_jsx_runtime.JSX.Element;
 
-interface ListProps<T> extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+interface ListProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, 'children'> {
     items: T[];
-    children: (item: T) => ReactNode;
+    children: (item: T) => React.ReactNode;
 }
 declare function List<T>({ items, children, ...props }: ListProps<T>): react_jsx_runtime.JSX.Element;
 

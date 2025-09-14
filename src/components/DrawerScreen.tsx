@@ -1,10 +1,9 @@
 import { Drawer } from 'vaul';
-import { type PropsWithChildren, CSSProperties } from 'react';
 
-export interface DrawerScreenProps extends PropsWithChildren {
+export interface DrawerScreenProps extends React.PropsWithChildren {
   title: string;
   description: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 }
 
 export function DrawerScreen({
