@@ -7,7 +7,7 @@ import {
   useEffect,
   type ElementType,
 } from 'react';
-import { parseJSON } from '@ywwwtseng/utils';
+import { parseJSON } from '@ywwwtseng/ywjs';
 import { DrawerScreen, DrawerScreenProps } from '../components/DrawerScreen';
 
 export type Stack = {
@@ -18,7 +18,7 @@ export type Stack = {
 export enum ScreenType {
   PAGE = 'page',
   DRAWER = 'drawer',
-};
+}
 
 export type Screen = {
   screen: ElementType;
@@ -32,18 +32,26 @@ export type Route = {
   params: Stack['params'];
   type: Screen['type'];
   screen: Screen['screen'];
-}
+};
 
 export interface StackNavigatorContextState {
   route: Route;
-  navigate: (screen: string | number, options?: { params: Stack['params'] }) => void;
-};
+  navigate: (
+    screen: string | number,
+    options?: { params: Stack['params'] }
+  ) => void;
+}
 
-export const DEFAULT_STACK: Stack = (parseJSON(sessionStorage.getItem('navigator/screen')) as Stack) || { screen: 'Home', params: {} };
+export const DEFAULT_STACK: Stack = (parseJSON(
+  sessionStorage.getItem('navigator/screen')
+) as Stack) || { screen: 'Home', params: {} };
 
 export const StackNavigatorContext = createContext<StackNavigatorContextState>({
   route: undefined,
-  navigate: (screen: string | number, options?: { params: Stack['params'] }) => {},
+  navigate: (
+    screen: string | number,
+    options?: { params: Stack['params'] }
+  ) => {},
 });
 
 export interface StackNavigatorProviderProps {
@@ -54,7 +62,11 @@ export interface StackNavigatorProviderProps {
   layout: ElementType;
 }
 
-export function StackNavigatorProvider({ screens, drawer, layout: Layout }: StackNavigatorProviderProps) {
+export function StackNavigatorProvider({
+  screens,
+  drawer,
+  layout: Layout,
+}: StackNavigatorProviderProps) {
   const [stacks, setStacks] = useState<Stack[]>([DEFAULT_STACK]);
 
   const route = useMemo(() => {
@@ -67,7 +79,7 @@ export function StackNavigatorProvider({ screens, drawer, layout: Layout }: Stac
       params: stack.params,
       type: screen.type,
       screen: screen.screen,
-    }
+    };
   }, [stacks, screens]);
 
   const Screen = useMemo(() => {
@@ -85,52 +97,57 @@ export function StackNavigatorProvider({ screens, drawer, layout: Layout }: Stac
     }
   }, [route, stacks, screens]);
 
-
-  const navigate = useCallback((screen: string | number, options?: { params: Route['params'] }) => {
-    if (typeof screen === 'string') {
-      if (!Object.keys(screens).includes(screen)) {
-        console.warn(`Screen ${screen} not found`);
-        return;
-      }
-    }
-
-    setStacks(prev => {
-      if (screen === -1 && prev.length > 1) {
-        return prev.slice(0, -1);
-      } else if (typeof screen === 'string') {
-        if (prev[prev.length - 1]?.screen === screen) {
-          return prev;
+  const navigate = useCallback(
+    (screen: string | number, options?: { params: Route['params'] }) => {
+      if (typeof screen === 'string') {
+        if (!Object.keys(screens).includes(screen)) {
+          console.warn(`Screen ${screen} not found`);
+          return;
         }
-  
-        const route = { screen, params: options?.params || {} };
-        return [...prev, route];
       }
 
-      return prev;
-    });
-    
-  }, [screens]);
+      setStacks((prev) => {
+        if (screen === -1 && prev.length > 1) {
+          return prev.slice(0, -1);
+        } else if (typeof screen === 'string') {
+          if (prev[prev.length - 1]?.screen === screen) {
+            return prev;
+          }
 
-  const value = useMemo(() => ({
-    route,
-    navigate,
-  }), [route, navigate]);
+          const route = { screen, params: options?.params || {} };
+          return [...prev, route];
+        }
+
+        return prev;
+      });
+    },
+    [screens]
+  );
+
+  const value = useMemo(
+    () => ({
+      route,
+      navigate,
+    }),
+    [route, navigate]
+  );
 
   useEffect(() => {
     if (route.type === 'drawer') {
       return;
     }
 
-    sessionStorage.setItem('navigator/screen', JSON.stringify({
-      screen: route.name,
-      params: route.params,
-    }));
+    sessionStorage.setItem(
+      'navigator/screen',
+      JSON.stringify({
+        screen: route.name,
+        params: route.params,
+      })
+    );
   }, [route]);
 
   return (
-    <StackNavigatorContext.Provider
-      value={value}
-    >
+    <StackNavigatorContext.Provider value={value}>
       <Layout
         styles={{
           tabBar: !!DrawerContent ? { display: 'none' } : {},

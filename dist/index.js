@@ -7,7 +7,7 @@ import {
   useMemo,
   useEffect
 } from "react";
-import { parseJSON } from "@ywwwtseng/utils";
+import { parseJSON } from "@ywwwtseng/ywjs";
 
 // src/components/DrawerScreen.tsx
 import { Drawer } from "vaul";
@@ -46,13 +46,19 @@ var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
   ScreenType2["DRAWER"] = "drawer";
   return ScreenType2;
 })(ScreenType || {});
-var DEFAULT_STACK = parseJSON(sessionStorage.getItem("navigator/screen")) || { screen: "Home", params: {} };
+var DEFAULT_STACK = parseJSON(
+  sessionStorage.getItem("navigator/screen")
+) || { screen: "Home", params: {} };
 var StackNavigatorContext = createContext({
   route: void 0,
   navigate: (screen, options) => {
   }
 });
-function StackNavigatorProvider({ screens, drawer, layout: Layout2 }) {
+function StackNavigatorProvider({
+  screens,
+  drawer,
+  layout: Layout2
+}) {
   const [stacks, setStacks] = useState([DEFAULT_STACK]);
   const route = useMemo(() => {
     const stack = stacks[stacks.length - 1];
@@ -77,75 +83,78 @@ function StackNavigatorProvider({ screens, drawer, layout: Layout2 }) {
       return route.screen;
     }
   }, [route, stacks, screens]);
-  const navigate = useCallback((screen, options) => {
-    if (typeof screen === "string") {
-      if (!Object.keys(screens).includes(screen)) {
-        console.warn(`Screen ${screen} not found`);
-        return;
-      }
-    }
-    setStacks((prev) => {
-      if (screen === -1 && prev.length > 1) {
-        return prev.slice(0, -1);
-      } else if (typeof screen === "string") {
-        if (prev[prev.length - 1]?.screen === screen) {
-          return prev;
+  const navigate = useCallback(
+    (screen, options) => {
+      if (typeof screen === "string") {
+        if (!Object.keys(screens).includes(screen)) {
+          console.warn(`Screen ${screen} not found`);
+          return;
         }
-        const route2 = { screen, params: options?.params || {} };
-        return [...prev, route2];
       }
-      return prev;
-    });
-  }, [screens]);
-  const value = useMemo(() => ({
-    route,
-    navigate
-  }), [route, navigate]);
+      setStacks((prev) => {
+        if (screen === -1 && prev.length > 1) {
+          return prev.slice(0, -1);
+        } else if (typeof screen === "string") {
+          if (prev[prev.length - 1]?.screen === screen) {
+            return prev;
+          }
+          const route2 = { screen, params: options?.params || {} };
+          return [...prev, route2];
+        }
+        return prev;
+      });
+    },
+    [screens]
+  );
+  const value = useMemo(
+    () => ({
+      route,
+      navigate
+    }),
+    [route, navigate]
+  );
   useEffect(() => {
     if (route.type === "drawer") {
       return;
     }
-    sessionStorage.setItem("navigator/screen", JSON.stringify({
-      screen: route.name,
-      params: route.params
-    }));
+    sessionStorage.setItem(
+      "navigator/screen",
+      JSON.stringify({
+        screen: route.name,
+        params: route.params
+      })
+    );
   }, [route]);
-  return /* @__PURE__ */ jsx2(
-    StackNavigatorContext.Provider,
+  return /* @__PURE__ */ jsx2(StackNavigatorContext.Provider, { value, children: /* @__PURE__ */ jsxs2(
+    Layout2,
     {
-      value,
-      children: /* @__PURE__ */ jsxs2(
-        Layout2,
-        {
-          styles: {
-            tabBar: !!DrawerContent ? { display: "none" } : {}
-          },
-          children: [
-            Screen && /* @__PURE__ */ jsx2(
-              "div",
-              {
-                style: {
-                  height: "100%",
-                  overflowY: "auto",
-                  display: !!DrawerContent ? "none" : "block"
-                },
-                children: /* @__PURE__ */ jsx2(Screen, { params: route.params })
-              }
-            ),
-            /* @__PURE__ */ jsx2(
-              DrawerScreen,
-              {
-                title: route.title,
-                description: route.title,
-                style: drawer.style,
-                children: !!DrawerContent && /* @__PURE__ */ jsx2(DrawerContent, { params: route.params })
-              }
-            )
-          ]
-        }
-      )
+      styles: {
+        tabBar: !!DrawerContent ? { display: "none" } : {}
+      },
+      children: [
+        Screen && /* @__PURE__ */ jsx2(
+          "div",
+          {
+            style: {
+              height: "100%",
+              overflowY: "auto",
+              display: !!DrawerContent ? "none" : "block"
+            },
+            children: /* @__PURE__ */ jsx2(Screen, { params: route.params })
+          }
+        ),
+        /* @__PURE__ */ jsx2(
+          DrawerScreen,
+          {
+            title: route.title,
+            description: route.title,
+            style: drawer.style,
+            children: !!DrawerContent && /* @__PURE__ */ jsx2(DrawerContent, { params: route.params })
+          }
+        )
+      ]
     }
-  );
+  ) });
 }
 var useNavigate = () => {
   const context = use(StackNavigatorContext);
@@ -660,6 +669,31 @@ function Textarea({
   return /* @__PURE__ */ jsx12("textarea", { className: clsx3(textareaVariants({ className })), ...props });
 }
 
+// src/components/Canvas.tsx
+import { useEffect as useEffect2, useRef } from "react";
+import { jsx as jsx13 } from "react/jsx-runtime";
+function Canvas({
+  image,
+  size = 40,
+  ...props
+}) {
+  const canvasRef = useRef(null);
+  useEffect2(() => {
+    if (image) {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(image, 0, 0, size, size);
+        }
+      }
+    }
+  }, [image, size]);
+  return /* @__PURE__ */ jsx13("canvas", { ref: canvasRef, ...props, width: size, height: size });
+}
+
 // src/hooks/useRefValue.ts
 import React2 from "react";
 function useRefValue(value) {
@@ -671,10 +705,10 @@ function useRefValue(value) {
 }
 
 // src/hooks/useClientOnce.ts
-import { useEffect as useEffect2, useRef } from "react";
+import { useEffect as useEffect3, useRef as useRef2 } from "react";
 function useClientOnce(setup) {
-  const canCall = useRef(true);
-  useEffect2(() => {
+  const canCall = useRef2(true);
+  useEffect3(() => {
     if (!canCall.current) {
       return;
     }
@@ -690,6 +724,7 @@ function useClientOnce(setup) {
 export {
   AmountInput,
   Button,
+  Canvas,
   DEFAULT_STACK,
   Dropdown,
   Image,

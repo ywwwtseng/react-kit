@@ -11,6 +11,7 @@ export * from './components/Image';
 export * from './components/Button';
 export * from './components/Input';
 export * from './components/Textarea';
+export * from './components/Canvas';
 
 export * from './hooks/useRefValue';
 export * from './hooks/useClientOnce';

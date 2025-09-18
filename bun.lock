@@ -5,7 +5,7 @@
       "name": "@ywwwtseng/react-kit",
       "dependencies": {
         "@heroui/dropdown": "^2.3.25",
-        "@ywwwtseng/utils": "^1.0.0",
+        "@ywwwtseng/ywjs": "^0.1.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "vaul": "^1.1.2",
@@ -271,7 +271,7 @@
 
     "@types/react": ["@types/react@19.1.13", "", { "dependencies": { "csstype": "^3.0.2" } }, "sha512-hHkbU/eoO3EG5/MZkuFSKmYqPbSVk5byPFa3e7y/8TybHiLMACgI8seVYlicwk7H5K/rI2px9xrQp/C+AUDTiQ=="],
 
-    "@ywwwtseng/utils": ["@ywwwtseng/utils@1.0.0", "", {}, "sha512-kUW6LKtcZG9mGJd5rrGIiGvXseKqBu/pzTFdzgNiHpePRRGnqqNZA5BPfrBRQdXx5uONVxtR+41y5R/TxbaO2A=="],
+    "@ywwwtseng/ywjs": ["@ywwwtseng/ywjs@0.1.0", "", {}, "sha512-6JcJSrd66pnwT0oLC/g5BQaCXFTO+oE9O5mRgud/KtQ5lejkY38QkIsMmJ7oC3H2L35ycH5PLiHcbOfhNGQELw=="],
 
     "acorn": ["acorn@8.15.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg=="],
 

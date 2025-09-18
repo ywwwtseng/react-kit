@@ -49,7 +49,7 @@ interface StackNavigatorProviderProps {
     };
     layout: ElementType;
 }
-declare function StackNavigatorProvider({ screens, drawer, layout: Layout }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
+declare function StackNavigatorProvider({ screens, drawer, layout: Layout, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
 declare const useNavigate: () => (screen: string | number, options?: {
     params: Stack["params"];
 }) => void;
@@ -172,8 +172,13 @@ declare function Input({ className, ...props }: React.InputHTMLAttributes<HTMLIn
 declare const textareaVariants: (props?: {} & class_variance_authority_types.ClassProp) => string;
 declare function Textarea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & VariantProps<typeof textareaVariants>): react_jsx_runtime.JSX.Element;
 
+declare function Canvas({ image, size, ...props }: {
+    image: HTMLImageElement;
+    size?: number;
+} & React.CanvasHTMLAttributes<HTMLCanvasElement>): react_jsx_runtime.JSX.Element;
+
 declare function useRefValue<T>(value: T): React__default.RefObject<T>;
 
 declare function useClientOnce(setup: () => void | undefined | (() => void)): void;
 
-export { AmountInput, type AmountInputProps, Button, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, Canvas, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useNavigate, useRefValue, useRoute };
