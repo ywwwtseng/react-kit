@@ -1,5 +1,6 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { ComponentProps } from 'react';
 import clsx from 'clsx';
+import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
   'flex items-center justify-center cursor-pointer focus:outline-none outline-none',
@@ -21,6 +22,7 @@ export const buttonVariants = cva(
       color: {
         primary: '',
         secondary: '',
+        destructive: '',
       },
       rounded: {
         sm: 'rounded-sm',
@@ -45,6 +47,11 @@ export const buttonVariants = cva(
         className: 'text-secondary hover:text-secondary/90',
       },
       {
+        variant: 'text',
+        color: 'destructive',
+        className: 'text-destructive hover:text-destructive/90',
+      },
+      {
         variant: 'contained',
         color: 'primary',
         className: 'bg-primary hover:bg-primary/90',
@@ -55,6 +62,11 @@ export const buttonVariants = cva(
         className: 'bg-secondary hover:bg-secondary/90',
       },
       {
+        variant: 'contained',
+        color: 'destructive',
+        className: 'bg-destructive hover:bg-destructive/90',
+      },
+      {
         variant: 'icon',
         color: 'primary',
         className: 'bg-primary hover:bg-primary/90',
@@ -63,6 +75,11 @@ export const buttonVariants = cva(
         variant: 'icon',
         color: 'secondary',
         className: 'bg-secondary hover:bg-secondary/90',
+      },
+      {
+        variant: 'icon',
+        color: 'destructive',
+        className: 'bg-destructive hover:bg-destructive/90',
       },
       {
         variant: 'icon',
@@ -82,6 +99,9 @@ export const buttonVariants = cva(
     ],
   }
 );
+
+export type ButtonProps = ComponentProps<'button'> &
+  VariantProps<typeof buttonVariants>;
 
 export function Button({
   className,

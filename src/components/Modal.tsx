@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { Drawer, type DialogProps } from 'vaul';
 
 export type ModalProps = DialogProps & {
@@ -5,11 +6,11 @@ export type ModalProps = DialogProps & {
   handle?: boolean;
   trigger?: React.ReactNode;
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   classes?: {
     content?: string;
-  }
-}
+  };
+};
 
 export function Modal({
   type = 'default',
@@ -23,11 +24,7 @@ export function Modal({
   const Root = type === 'default' ? Drawer.Root : Drawer.NestedRoot;
   return (
     <Root {...props}>
-      {trigger && (
-        <Drawer.Trigger asChild>
-          {trigger}
-        </Drawer.Trigger>
-      )}
+      {trigger && <Drawer.Trigger asChild>{trigger}</Drawer.Trigger>}
       <Drawer.Portal>
         <Drawer.Overlay
           style={{
@@ -35,9 +32,9 @@ export function Modal({
             inset: '0',
             zIndex: '30',
           }}
-          />
+        />
         <Drawer.Content
-          className={classes?.content}
+          className={clsx(classes?.content, 'bg-modal')}
           style={{
             position: 'fixed',
             borderTopLeftRadius: 10,
@@ -47,14 +44,16 @@ export function Modal({
             bottom: 0,
             left: 0,
             right: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 16,
           }}
-          >
-            {handle && (
-              <Drawer.Handle />
-            )}
-            <Drawer.Title className="hidden">{title}</Drawer.Title>
-            <Drawer.Description className="hidden">{title}</Drawer.Description>
-            {children}
+        >
+          {handle && <Drawer.Handle />}
+          <Drawer.Title className="hidden">{title}</Drawer.Title>
+          <Drawer.Description className="hidden">{title}</Drawer.Description>
+          {children}
         </Drawer.Content>
       </Drawer.Portal>
     </Root>

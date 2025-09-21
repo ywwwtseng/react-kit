@@ -1,6 +1,6 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React$1 from 'react';
-import React__default, { ElementType } from 'react';
+import React__default, { ElementType, ComponentProps } from 'react';
 import { DropdownProps as DropdownProps$1 } from '@heroui/dropdown';
 import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
@@ -141,7 +141,7 @@ type ModalProps = DialogProps & {
     handle?: boolean;
     trigger?: React.ReactNode;
     title: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     classes?: {
         content?: string;
     };
@@ -161,9 +161,10 @@ declare const buttonVariants: (props?: {
     variant?: "text" | "icon" | "contained";
     width?: "full";
     size?: "sm" | "md" | "xs";
-    color?: "primary" | "secondary";
+    color?: "primary" | "secondary" | "destructive";
     rounded?: "sm" | "md" | "lg" | "full" | "xl";
 } & class_variance_authority_types.ClassProp) => string;
+type ButtonProps = ComponentProps<'button'> & VariantProps<typeof buttonVariants>;
 declare function Button({ className, variant, width, size, color, rounded, ...props }: React.ComponentProps<'button'> & VariantProps<typeof buttonVariants>): react_jsx_runtime.JSX.Element;
 
 declare const inputVariants: (props?: {} & class_variance_authority_types.ClassProp) => string;
@@ -177,8 +178,15 @@ declare function Canvas({ image, size, ...props }: {
     size?: number;
 } & React.CanvasHTMLAttributes<HTMLCanvasElement>): react_jsx_runtime.JSX.Element;
 
+type ConfirmProps = ModalProps & {
+    description: string;
+    cancel: ButtonProps;
+    confirm: ButtonProps;
+};
+declare function Confirm({ title, description, onOpenChange, cancel, confirm, ...props }: ConfirmProps): react_jsx_runtime.JSX.Element;
+
 declare function useRefValue<T>(value: T): React__default.RefObject<T>;
 
 declare function useClientOnce(setup: () => void | undefined | (() => void)): void;
 
-export { AmountInput, type AmountInputProps, Button, Canvas, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useNavigate, useRefValue, useRoute };

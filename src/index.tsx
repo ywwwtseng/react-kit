@@ -12,6 +12,7 @@ export * from './components/Button';
 export * from './components/Input';
 export * from './components/Textarea';
 export * from './components/Canvas';
+export * from './components/Confirm';
 
 export * from './hooks/useRefValue';
 export * from './hooks/useClientOnce';

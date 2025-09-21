@@ -487,6 +487,7 @@ function TabBar({ style, items, renderItem }) {
 }
 
 // src/components/Modal.tsx
+import clsx2 from "clsx";
 import { Drawer as Drawer2 } from "vaul";
 import { jsx as jsx9, jsxs as jsxs4 } from "react/jsx-runtime";
 function Modal({
@@ -515,7 +516,7 @@ function Modal({
       /* @__PURE__ */ jsxs4(
         Drawer2.Content,
         {
-          className: classes?.content,
+          className: clsx2(classes?.content, "bg-modal"),
           style: {
             position: "fixed",
             borderTopLeftRadius: 10,
@@ -524,7 +525,11 @@ function Modal({
             paddingTop: 16,
             bottom: 0,
             left: 0,
-            right: 0
+            right: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 16
           },
           children: [
             handle && /* @__PURE__ */ jsx9(Drawer2.Handle, {}),
@@ -546,8 +551,8 @@ function Image({ src, ...props }) {
 }
 
 // src/components/Button.tsx
+import clsx3 from "clsx";
 import { cva as cva2 } from "class-variance-authority";
-import clsx2 from "clsx";
 import { jsx as jsx11 } from "react/jsx-runtime";
 var buttonVariants = cva2(
   "flex items-center justify-center cursor-pointer focus:outline-none outline-none",
@@ -568,7 +573,8 @@ var buttonVariants = cva2(
       },
       color: {
         primary: "",
-        secondary: ""
+        secondary: "",
+        destructive: ""
       },
       rounded: {
         sm: "rounded-sm",
@@ -593,6 +599,11 @@ var buttonVariants = cva2(
         className: "text-secondary hover:text-secondary/90"
       },
       {
+        variant: "text",
+        color: "destructive",
+        className: "text-destructive hover:text-destructive/90"
+      },
+      {
         variant: "contained",
         color: "primary",
         className: "bg-primary hover:bg-primary/90"
@@ -603,6 +614,11 @@ var buttonVariants = cva2(
         className: "bg-secondary hover:bg-secondary/90"
       },
       {
+        variant: "contained",
+        color: "destructive",
+        className: "bg-destructive hover:bg-destructive/90"
+      },
+      {
         variant: "icon",
         color: "primary",
         className: "bg-primary hover:bg-primary/90"
@@ -611,6 +627,11 @@ var buttonVariants = cva2(
         variant: "icon",
         color: "secondary",
         className: "bg-secondary hover:bg-secondary/90"
+      },
+      {
+        variant: "icon",
+        color: "destructive",
+        className: "bg-destructive hover:bg-destructive/90"
       },
       {
         variant: "icon",
@@ -642,7 +663,7 @@ function Button({
   return /* @__PURE__ */ jsx11(
     "button",
     {
-      className: clsx2(
+      className: clsx3(
         buttonVariants({ variant, width, size, color, rounded, className })
       ),
       ...props
@@ -652,7 +673,7 @@ function Button({
 
 // src/components/Textarea.tsx
 import { cva as cva3 } from "class-variance-authority";
-import clsx3 from "clsx";
+import clsx4 from "clsx";
 import { jsx as jsx12 } from "react/jsx-runtime";
 var textareaVariants = cva3(
   "focus:outline-none outline-none resize-none",
@@ -666,7 +687,7 @@ function Textarea({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx12("textarea", { className: clsx3(textareaVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx12("textarea", { className: clsx4(textareaVariants({ className })), ...props });
 }
 
 // src/components/Canvas.tsx
@@ -692,6 +713,54 @@ function Canvas({
     }
   }, [image, size]);
   return /* @__PURE__ */ jsx13("canvas", { ref: canvasRef, ...props, width: size, height: size });
+}
+
+// src/components/Confirm.tsx
+import { jsx as jsx14, jsxs as jsxs5 } from "react/jsx-runtime";
+function Confirm({
+  title,
+  description,
+  onOpenChange,
+  cancel,
+  confirm,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs5(Modal, { title, onOpenChange, ...props, children: [
+    /* @__PURE__ */ jsx14(Typography, { size: "4", children: title }),
+    /* @__PURE__ */ jsx14(Typography, { size: "2", children: description }),
+    /* @__PURE__ */ jsxs5("div", { className: "flex w-full gap-6 py-4 px-6", children: [
+      /* @__PURE__ */ jsx14(
+        Button,
+        {
+          width: "full",
+          rounded: "full",
+          variant: "contained",
+          color: "secondary",
+          size: "sm",
+          onClick: () => {
+            onOpenChange(false);
+          },
+          children: "Cancel",
+          ...cancel
+        }
+      ),
+      /* @__PURE__ */ jsx14(
+        Button,
+        {
+          width: "full",
+          rounded: "full",
+          variant: "contained",
+          size: "sm",
+          color: "destructive",
+          ...confirm,
+          onClick: (event) => {
+            onOpenChange(false);
+            confirm.onClick?.(event);
+          }
+        }
+      )
+    ] })
+  ] });
 }
 
 // src/hooks/useRefValue.ts
@@ -725,6 +794,7 @@ export {
   AmountInput,
   Button,
   Canvas,
+  Confirm,
   DEFAULT_STACK,
   Dropdown,
   Image,
