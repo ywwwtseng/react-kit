@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 export const buttonVariants = cva(
-  'flex items-center justify-center cursor-pointer focus:outline-none outline-none',
+  'flex items-center justify-center cursor-pointer focus:outline-none outline-none disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -39,47 +39,48 @@ export const buttonVariants = cva(
       {
         variant: 'text',
         color: 'primary',
-        className: 'text-primary hover:text-primary/90',
+        className: 'text-primary [&:not(:disabled)]:hover:text-primary/90',
       },
       {
         variant: 'text',
         color: 'secondary',
-        className: 'text-secondary hover:text-secondary/90',
+        className: 'text-secondary [&:not(:disabled)]:hover:text-secondary/90',
       },
       {
         variant: 'text',
         color: 'destructive',
-        className: 'text-destructive hover:text-destructive/90',
+        className:
+          'text-destructive [&:not(:disabled)]:hover:text-destructive/90',
       },
       {
         variant: 'contained',
         color: 'primary',
-        className: 'bg-primary hover:bg-primary/90',
+        className: 'bg-primary [&:not(:disabled)]:hover:bg-primary/90',
       },
       {
         variant: 'contained',
         color: 'secondary',
-        className: 'bg-secondary hover:bg-secondary/90',
+        className: 'bg-secondary [&:not(:disabled)]:hover:bg-secondary/90',
       },
       {
         variant: 'contained',
         color: 'destructive',
-        className: 'bg-destructive hover:bg-destructive/90',
+        className: 'bg-destructive [&:not(:disabled)]:hover:bg-destructive/90',
       },
       {
         variant: 'icon',
         color: 'primary',
-        className: 'bg-primary hover:bg-primary/90',
+        className: 'bg-primary [&:not(:disabled)]:hover:bg-primary/90',
       },
       {
         variant: 'icon',
         color: 'secondary',
-        className: 'bg-secondary hover:bg-secondary/90',
+        className: 'bg-secondary [&:not(:disabled)]:hover:bg-secondary/90',
       },
       {
         variant: 'icon',
         color: 'destructive',
-        className: 'bg-destructive hover:bg-destructive/90',
+        className: 'bg-destructive [&:not(:disabled)]:hover:bg-destructive/90',
       },
       {
         variant: 'icon',
