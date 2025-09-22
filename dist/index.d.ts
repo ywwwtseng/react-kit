@@ -189,4 +189,6 @@ declare function useRefValue<T>(value: T): React__default.RefObject<T>;
 
 declare function useClientOnce(setup: () => void | undefined | (() => void)): void;
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useNavigate, useRefValue, useRoute };
+declare function useIsMounted(): boolean;
+
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useIsMounted, useNavigate, useRefValue, useRoute };

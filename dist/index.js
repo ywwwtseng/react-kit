@@ -790,6 +790,16 @@ function useClientOnce(setup) {
     };
   }, []);
 }
+
+// src/hooks/useIsMounted.ts
+import { useEffect as useEffect4, useState as useState3 } from "react";
+function useIsMounted() {
+  const [isMounted, setIsMounted] = useState3(false);
+  useEffect4(() => {
+    setIsMounted(true);
+  }, []);
+  return isMounted;
+}
 export {
   AmountInput,
   Button,
@@ -813,6 +823,7 @@ export {
   inputVariants,
   textareaVariants,
   useClientOnce,
+  useIsMounted,
   useNavigate,
   useRefValue,
   useRoute

@@ -16,6 +16,7 @@ export * from './components/Confirm';
 
 export * from './hooks/useRefValue';
 export * from './hooks/useClientOnce';
+export * from './hooks/useIsMounted';
 
 export * from './types';
 
