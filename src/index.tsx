@@ -18,6 +18,8 @@ export * from './hooks/useRefValue';
 export * from './hooks/useClientOnce';
 export * from './hooks/useIsMounted';
 
+export * from './icons';
+
 export * from './types';
 
 import './index.css';
