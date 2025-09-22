@@ -1,6 +1,18 @@
 import React from 'react';
 
-type TypographySize = '12' | '11' | '10' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2' | '1';
+type TypographySize =
+  | '12'
+  | '11'
+  | '10'
+  | '9'
+  | '8'
+  | '7'
+  | '6'
+  | '5'
+  | '4'
+  | '3'
+  | '2'
+  | '1';
 
 const config: {
   size: Record<TypographySize, { fontSize: string; lineHeight: string }>;
@@ -21,7 +33,9 @@ const config: {
   },
 };
 
-export interface TypographyProps extends React.PropsWithChildren, React.CSSProperties {
+export interface TypographyProps
+  extends React.PropsWithChildren,
+    React.CSSProperties {
   as?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'span' | 'p' | 'b';
   color?: 'currentColor' | string;
   align?: 'left' | 'center' | 'right' | 'justify';
@@ -37,49 +51,55 @@ export interface TypographyProps extends React.PropsWithChildren, React.CSSPrope
   fontFamily?: string;
 }
 
-export const Typography = React.memo(({
-  as = 'p',
-  color = 'currentColor',
-  align = 'left',
-  weight = 400,
-  size = '3',
-  className,
-  ellipsis = false,
-  lineClamp,
-  capitalize = false,
-  whitespacePreWrap = false,
-  noWrap = false,
-  dangerouslySetInnerHTML = false,
-  children,
-  ...props
-}: TypographyProps) => {
-  return (
-    React.createElement(
-      as,
-      {
-        className,
-        style: {
-          textAlign: align,
-          color,
-          fontWeight: weight,
-          ...config.size[size],
-          ...(ellipsis ? { textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" } : {}),
-          ...(lineClamp ? { WebkitLineClamp: lineClamp, display: "-webkit-box", WebkitBoxOrient: "vertical",  overflow: "hidden" } : {}),
-          ...(capitalize ? { textTransform: "capitalize" } : {}),
-          ...(whitespacePreWrap ? { whiteSpace: "pre-wrap" } : {}),
-          ...(noWrap ? { whiteSpace: "nowrap" } : {}),
-          ...props,
-        },
-        ...(dangerouslySetInnerHTML
-            ? {
-                dangerouslySetInnerHTML: {
-                  __html: children,
-                }
-              }
-            : { children }
-          )
-        
+export const Typography = React.memo(
+  ({
+    as = 'p',
+    align = 'left',
+    weight = 400,
+    size = '3',
+    className,
+    ellipsis = false,
+    lineClamp,
+    capitalize = false,
+    whitespacePreWrap = false,
+    noWrap = false,
+    dangerouslySetInnerHTML = false,
+    children,
+    ...props
+  }: TypographyProps) => {
+    return React.createElement(as, {
+      className,
+      style: {
+        textAlign: align,
+        fontWeight: weight,
+        ...config.size[size],
+        ...(ellipsis
+          ? {
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+            }
+          : {}),
+        ...(lineClamp
+          ? {
+              WebkitLineClamp: lineClamp,
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }
+          : {}),
+        ...(capitalize ? { textTransform: 'capitalize' } : {}),
+        ...(whitespacePreWrap ? { whiteSpace: 'pre-wrap' } : {}),
+        ...(noWrap ? { whiteSpace: 'nowrap' } : {}),
+        ...props,
       },
-    )
-  );
-});
+      ...(dangerouslySetInnerHTML
+        ? {
+            dangerouslySetInnerHTML: {
+              __html: children,
+            },
+          }
+        : { children }),
+    });
+  }
+);

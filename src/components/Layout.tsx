@@ -59,8 +59,29 @@ function HeaderLeft({
       style={{
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'flex-start',
+        gap: '8px',
+        flex: 1,
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function HeaderTitle({
+  style,
+  children,
+}: React.PropsWithChildren<{ style?: React.CSSProperties }>) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: 'center',
         gap: '8px',
+        flex: 1,
         ...style,
       }}
     >
@@ -78,8 +99,9 @@ function HeaderRight({
       style={{
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         gap: '8px',
+        flex: 1,
         ...style,
       }}
     >
@@ -110,5 +132,6 @@ export const Layout = {
   Header,
   HeaderLeft,
   HeaderRight,
+  HeaderTitle,
   Main,
 };

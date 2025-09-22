@@ -13,24 +13,32 @@ export function DrawerScreen({
   children,
 }: DrawerScreenProps) {
   return (
-    <Drawer.Root handleOnly direction="right" open={!!children}>
+    <Drawer.Root
+      handleOnly
+      direction="right"
+      open={!!children}
+      repositionInputs={false}
+    >
       <Drawer.Portal>
         <Drawer.Content
           style={{
             height: '100vh',
+            minHeight: '100vh',
             position: 'fixed',
+            top: 0,
             bottom: 0,
             left: 0,
             right: 0,
             outline: 'none',
-            ...style,
           }}
         >
           <Drawer.Title style={{ display: 'none' }}>{title}</Drawer.Title>
           <Drawer.Description style={{ display: 'none' }}>
             {description}
           </Drawer.Description>
-          {children}
+          <div className="w-full h-full overflow-y-auto" style={style}>
+            {children}
+          </div>
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>

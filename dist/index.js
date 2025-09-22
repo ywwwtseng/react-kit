@@ -18,25 +18,35 @@ function DrawerScreen({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx(Drawer.Root, { handleOnly: true, direction: "right", open: !!children, children: /* @__PURE__ */ jsx(Drawer.Portal, { children: /* @__PURE__ */ jsxs(
-    Drawer.Content,
+  return /* @__PURE__ */ jsx(
+    Drawer.Root,
     {
-      style: {
-        height: "100vh",
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        outline: "none",
-        ...style
-      },
-      children: [
-        /* @__PURE__ */ jsx(Drawer.Title, { style: { display: "none" }, children: title }),
-        /* @__PURE__ */ jsx(Drawer.Description, { style: { display: "none" }, children: description }),
-        children
-      ]
+      handleOnly: true,
+      direction: "right",
+      open: !!children,
+      repositionInputs: false,
+      children: /* @__PURE__ */ jsx(Drawer.Portal, { children: /* @__PURE__ */ jsxs(
+        Drawer.Content,
+        {
+          style: {
+            height: "100vh",
+            minHeight: "100vh",
+            position: "fixed",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            outline: "none"
+          },
+          children: [
+            /* @__PURE__ */ jsx(Drawer.Title, { style: { display: "none" }, children: title }),
+            /* @__PURE__ */ jsx(Drawer.Description, { style: { display: "none" }, children: description }),
+            /* @__PURE__ */ jsx("div", { className: "w-full h-full overflow-y-auto", style, children })
+          ]
+        }
+      ) })
     }
-  ) }) });
+  );
 }
 
 // src/context/StackNavigatorContext.tsx
@@ -189,33 +199,39 @@ var config = {
     "1": { fontSize: "0.75rem", lineHeight: "1rem" }
   }
 };
-var Typography = React.memo(({
-  as = "p",
-  color = "currentColor",
-  align = "left",
-  weight = 400,
-  size = "3",
-  className,
-  ellipsis = false,
-  lineClamp,
-  capitalize = false,
-  whitespacePreWrap = false,
-  noWrap = false,
-  dangerouslySetInnerHTML = false,
-  children,
-  ...props
-}) => {
-  return React.createElement(
-    as,
-    {
+var Typography = React.memo(
+  ({
+    as = "p",
+    align = "left",
+    weight = 400,
+    size = "3",
+    className,
+    ellipsis = false,
+    lineClamp,
+    capitalize = false,
+    whitespacePreWrap = false,
+    noWrap = false,
+    dangerouslySetInnerHTML = false,
+    children,
+    ...props
+  }) => {
+    return React.createElement(as, {
       className,
       style: {
         textAlign: align,
-        color,
         fontWeight: weight,
         ...config.size[size],
-        ...ellipsis ? { textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" } : {},
-        ...lineClamp ? { WebkitLineClamp: lineClamp, display: "-webkit-box", WebkitBoxOrient: "vertical", overflow: "hidden" } : {},
+        ...ellipsis ? {
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          whiteSpace: "nowrap"
+        } : {},
+        ...lineClamp ? {
+          WebkitLineClamp: lineClamp,
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden"
+        } : {},
         ...capitalize ? { textTransform: "capitalize" } : {},
         ...whitespacePreWrap ? { whiteSpace: "pre-wrap" } : {},
         ...noWrap ? { whiteSpace: "nowrap" } : {},
@@ -226,9 +242,9 @@ var Typography = React.memo(({
           __html: children
         }
       } : { children }
-    }
-  );
-});
+    });
+  }
+);
 
 // src/components/AmountInput.tsx
 import { useState as useState2 } from "react";
@@ -320,42 +336,138 @@ function AmountInput({
 }
 
 // src/components/Dropdown.tsx
+import { useMemo as useMemo2 } from "react";
+import clsx2 from "clsx";
 import {
   Dropdown as HerouiDropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem
 } from "@heroui/dropdown";
+
+// src/icons/Spinner.tsx
 import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
+function Spinner({
+  width = 24,
+  height = 24
+}) {
+  return /* @__PURE__ */ jsxs3(
+    "svg",
+    {
+      "aria-hidden": "true",
+      className: "animate-spin text-white/50 fill-white/80",
+      viewBox: "0 0 100 101",
+      fill: "none",
+      width,
+      height,
+      xmlns: "http://www.w3.org/2000/svg",
+      children: [
+        /* @__PURE__ */ jsx5(
+          "path",
+          {
+            d: "M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z",
+            fill: "currentColor"
+          }
+        ),
+        /* @__PURE__ */ jsx5(
+          "path",
+          {
+            d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",
+            fill: "currentFill"
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/icons/ChevronDown.tsx
+import { jsx as jsx6 } from "react/jsx-runtime";
+function ChevronDown(props) {
+  return /* @__PURE__ */ jsx6(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: /* @__PURE__ */ jsx6("path", { d: "m6 9 6 6 6-6" })
+    }
+  );
+}
+
+// src/components/Dropdown.tsx
+import { jsx as jsx7, jsxs as jsxs4 } from "react/jsx-runtime";
 function Dropdown({
+  value,
   items,
-  children,
+  size = "md",
+  showIcon = true,
   onChange,
+  placeholder,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs3(HerouiDropdown, { ...props, children: [
-    /* @__PURE__ */ jsx5(DropdownTrigger, { children }),
-    /* @__PURE__ */ jsx5(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx5(
-      DropdownItem,
-      {
-        onClick: () => onChange(item.key),
-        startContent: item.icon ? /* @__PURE__ */ jsx5("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
-        textValue: item.key,
-        children: /* @__PURE__ */ jsx5(Typography, { size: "2", children: item.name })
+  const typographySize = size === "sm" ? "1" : "2";
+  const selected = useMemo2(() => {
+    return items.find((item) => item.key === value);
+  }, [items, value]);
+  return /* @__PURE__ */ jsxs4(
+    HerouiDropdown,
+    {
+      classNames: {
+        base: "bg-modal rounded-lg",
+        trigger: clsx2("bg-form-element", {
+          "rounded-full py-2 pl-4 pr-3": size === "sm",
+          "rounded-lg py-2.5 px-3": size === "md"
+        })
       },
-      item.key
-    )) })
-  ] });
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx7(DropdownTrigger, { children: /* @__PURE__ */ jsxs4("div", { className: "flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer", children: [
+          selected ? /* @__PURE__ */ jsxs4("div", { className: "flex items-center gap-2", children: [
+            selected.icon && showIcon && selected.icon,
+            /* @__PURE__ */ jsx7(Typography, { size: typographySize, children: selected.name })
+          ] }) : /* @__PURE__ */ jsx7(Typography, { className: "text-placeholder", size: typographySize, children: placeholder }),
+          /* @__PURE__ */ jsx7(
+            ChevronDown,
+            {
+              width: size === "sm" ? 16 : 20,
+              height: size === "sm" ? 16 : 20,
+              strokeWidth: 1.5,
+              className: "text-icon-foreground max-w-4"
+            }
+          )
+        ] }) }),
+        /* @__PURE__ */ jsx7(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx7(
+          DropdownItem,
+          {
+            onPress: () => {
+              onChange(item.key);
+            },
+            startContent: item.icon ? /* @__PURE__ */ jsx7("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
+            textValue: item.key,
+            children: /* @__PURE__ */ jsx7(Typography, { size: "2", children: item.name })
+          },
+          item.key
+        )) })
+      ]
+    }
+  );
 }
 
 // src/components/Layout.tsx
-import { jsx as jsx6 } from "react/jsx-runtime";
+import { jsx as jsx8 } from "react/jsx-runtime";
 function Root({
   className,
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx6(
+  return /* @__PURE__ */ jsx8(
     "div",
     {
       className,
@@ -376,7 +488,7 @@ function Header({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx6(
+  return /* @__PURE__ */ jsx8(
     "div",
     {
       style: {
@@ -401,7 +513,26 @@ function HeaderLeft({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx6(
+  return /* @__PURE__ */ jsx8(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        gap: "8px",
+        flex: 1,
+        ...style
+      },
+      children
+    }
+  );
+}
+function HeaderTitle({
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx8(
     "div",
     {
       style: {
@@ -409,6 +540,7 @@ function HeaderLeft({
         alignItems: "center",
         justifyContent: "center",
         gap: "8px",
+        flex: 1,
         ...style
       },
       children
@@ -419,14 +551,15 @@ function HeaderRight({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx6(
+  return /* @__PURE__ */ jsx8(
     "div",
     {
       style: {
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-end",
         gap: "8px",
+        flex: 1,
         ...style
       },
       children
@@ -437,7 +570,7 @@ function Main({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx6(
+  return /* @__PURE__ */ jsx8(
     "div",
     {
       style: {
@@ -454,19 +587,20 @@ var Layout = {
   Header,
   HeaderLeft,
   HeaderRight,
+  HeaderTitle,
   Main
 };
 
 // src/components/List.tsx
-import { jsx as jsx7 } from "react/jsx-runtime";
+import { jsx as jsx9 } from "react/jsx-runtime";
 function List({ items, children, ...props }) {
-  return /* @__PURE__ */ jsx7("div", { ...props, children: items.map((item) => children(item)) });
+  return /* @__PURE__ */ jsx9("div", { ...props, children: items.map((item) => children(item)) });
 }
 
 // src/components/TabBar.tsx
-import { jsx as jsx8 } from "react/jsx-runtime";
+import { jsx as jsx10 } from "react/jsx-runtime";
 function TabBar({ style, items, renderItem }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx10(
     List,
     {
       style: {
@@ -487,9 +621,9 @@ function TabBar({ style, items, renderItem }) {
 }
 
 // src/components/Modal.tsx
-import clsx2 from "clsx";
+import clsx3 from "clsx";
 import { Drawer as Drawer2 } from "vaul";
-import { jsx as jsx9, jsxs as jsxs4 } from "react/jsx-runtime";
+import { jsx as jsx11, jsxs as jsxs5 } from "react/jsx-runtime";
 function Modal({
   type = "default",
   handle = true,
@@ -500,10 +634,10 @@ function Modal({
   ...props
 }) {
   const Root2 = type === "default" ? Drawer2.Root : Drawer2.NestedRoot;
-  return /* @__PURE__ */ jsxs4(Root2, { ...props, children: [
-    trigger && /* @__PURE__ */ jsx9(Drawer2.Trigger, { asChild: true, children: trigger }),
-    /* @__PURE__ */ jsxs4(Drawer2.Portal, { children: [
-      /* @__PURE__ */ jsx9(
+  return /* @__PURE__ */ jsxs5(Root2, { ...props, children: [
+    trigger && /* @__PURE__ */ jsx11(Drawer2.Trigger, { asChild: true, children: trigger }),
+    /* @__PURE__ */ jsxs5(Drawer2.Portal, { children: [
+      /* @__PURE__ */ jsx11(
         Drawer2.Overlay,
         {
           style: {
@@ -513,10 +647,10 @@ function Modal({
           }
         }
       ),
-      /* @__PURE__ */ jsxs4(
+      /* @__PURE__ */ jsxs5(
         Drawer2.Content,
         {
-          className: clsx2(classes?.content, "bg-modal"),
+          className: clsx3(classes?.content, "bg-modal"),
           style: {
             position: "fixed",
             borderTopLeftRadius: 10,
@@ -532,9 +666,9 @@ function Modal({
             gap: 16
           },
           children: [
-            handle && /* @__PURE__ */ jsx9(Drawer2.Handle, {}),
-            /* @__PURE__ */ jsx9(Drawer2.Title, { className: "hidden", children: title }),
-            /* @__PURE__ */ jsx9(Drawer2.Description, { className: "hidden", children: title }),
+            handle && /* @__PURE__ */ jsx11(Drawer2.Handle, {}),
+            /* @__PURE__ */ jsx11(Drawer2.Title, { className: "hidden", children: title }),
+            /* @__PURE__ */ jsx11(Drawer2.Description, { className: "hidden", children: title }),
             children
           ]
         }
@@ -544,16 +678,16 @@ function Modal({
 }
 
 // src/components/Image.tsx
-import { jsx as jsx10 } from "react/jsx-runtime";
+import { jsx as jsx12 } from "react/jsx-runtime";
 function Image({ src, ...props }) {
   const url = typeof src === "string" ? src : src.src;
-  return /* @__PURE__ */ jsx10("img", { src: url, ...props });
+  return /* @__PURE__ */ jsx12("img", { src: url, ...props });
 }
 
 // src/components/Button.tsx
-import clsx3 from "clsx";
+import clsx4 from "clsx";
 import { cva as cva2 } from "class-variance-authority";
-import { jsx as jsx11 } from "react/jsx-runtime";
+import { jsx as jsx13 } from "react/jsx-runtime";
 var buttonVariants = cva2(
   "flex items-center justify-center cursor-pointer focus:outline-none outline-none disabled:cursor-not-allowed disabled:opacity-50",
   {
@@ -658,23 +792,31 @@ function Button({
   size,
   color,
   rounded,
+  isLoading = false,
+  children,
+  onClick,
   ...props
 }) {
-  return /* @__PURE__ */ jsx11(
+  return /* @__PURE__ */ jsx13(
     "button",
     {
-      className: clsx3(
+      className: clsx4(
         buttonVariants({ variant, width, size, color, rounded, className })
       ),
-      ...props
+      onClick: (event) => {
+        if (isLoading) return;
+        onClick?.(event);
+      },
+      ...props,
+      children: isLoading ? /* @__PURE__ */ jsx13(Spinner, { width: 24, height: 24 }) : children
     }
   );
 }
 
 // src/components/Textarea.tsx
 import { cva as cva3 } from "class-variance-authority";
-import clsx4 from "clsx";
-import { jsx as jsx12 } from "react/jsx-runtime";
+import clsx5 from "clsx";
+import { jsx as jsx14 } from "react/jsx-runtime";
 var textareaVariants = cva3(
   "focus:outline-none outline-none resize-none",
   {
@@ -687,12 +829,12 @@ function Textarea({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx12("textarea", { className: clsx4(textareaVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx14("textarea", { className: clsx5(textareaVariants({ className })), ...props });
 }
 
 // src/components/Canvas.tsx
 import { useEffect as useEffect2, useRef } from "react";
-import { jsx as jsx13 } from "react/jsx-runtime";
+import { jsx as jsx15 } from "react/jsx-runtime";
 function Canvas({
   image,
   size = 40,
@@ -712,11 +854,11 @@ function Canvas({
       }
     }
   }, [image, size]);
-  return /* @__PURE__ */ jsx13("canvas", { ref: canvasRef, ...props, width: size, height: size });
+  return /* @__PURE__ */ jsx15("canvas", { ref: canvasRef, ...props, width: size, height: size });
 }
 
 // src/components/Confirm.tsx
-import { jsx as jsx14, jsxs as jsxs5 } from "react/jsx-runtime";
+import { jsx as jsx16, jsxs as jsxs6 } from "react/jsx-runtime";
 function Confirm({
   title,
   description,
@@ -725,11 +867,11 @@ function Confirm({
   confirm,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs5(Modal, { title, onOpenChange, ...props, children: [
-    /* @__PURE__ */ jsx14(Typography, { size: "4", children: title }),
-    /* @__PURE__ */ jsx14(Typography, { size: "2", children: description }),
-    /* @__PURE__ */ jsxs5("div", { className: "flex w-full gap-6 py-4 px-6", children: [
-      /* @__PURE__ */ jsx14(
+  return /* @__PURE__ */ jsxs6(Modal, { title, onOpenChange, ...props, children: [
+    /* @__PURE__ */ jsx16(Typography, { size: "4", children: title }),
+    /* @__PURE__ */ jsx16(Typography, { size: "2", children: description }),
+    /* @__PURE__ */ jsxs6("div", { className: "flex w-full gap-6 py-4 px-6", children: [
+      /* @__PURE__ */ jsx16(
         Button,
         {
           width: "full",
@@ -744,7 +886,7 @@ function Confirm({
           ...cancel
         }
       ),
-      /* @__PURE__ */ jsx14(
+      /* @__PURE__ */ jsx16(
         Button,
         {
           width: "full",
@@ -800,46 +942,11 @@ function useIsMounted() {
   }, []);
   return isMounted;
 }
-
-// src/icons/index.tsx
-import { jsx as jsx15, jsxs as jsxs6 } from "react/jsx-runtime";
-function Spinner({
-  width = 24,
-  height = 24
-}) {
-  return /* @__PURE__ */ jsxs6(
-    "svg",
-    {
-      "aria-hidden": "true",
-      className: "animate-spin text-white/50 fill-white/80",
-      viewBox: "0 0 100 101",
-      fill: "none",
-      width,
-      height,
-      xmlns: "http://www.w3.org/2000/svg",
-      children: [
-        /* @__PURE__ */ jsx15(
-          "path",
-          {
-            d: "M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z",
-            fill: "currentColor"
-          }
-        ),
-        /* @__PURE__ */ jsx15(
-          "path",
-          {
-            d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",
-            fill: "currentFill"
-          }
-        )
-      ]
-    }
-  );
-}
 export {
   AmountInput,
   Button,
   Canvas,
+  ChevronDown,
   Confirm,
   DEFAULT_STACK,
   Dropdown,

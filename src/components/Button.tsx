@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react';
 import clsx from 'clsx';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Spinner } from '../icons';
 
 export const buttonVariants = cva(
   'flex items-center justify-center cursor-pointer focus:outline-none outline-none disabled:cursor-not-allowed disabled:opacity-50',
@@ -102,7 +103,9 @@ export const buttonVariants = cva(
 );
 
 export type ButtonProps = ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants>;
+  VariantProps<typeof buttonVariants> & {
+    isLoading?: boolean;
+  };
 
 export function Button({
   className,
@@ -111,14 +114,23 @@ export function Button({
   size,
   color,
   rounded,
+  isLoading = false,
+  children,
+  onClick,
   ...props
-}: React.ComponentProps<'button'> & VariantProps<typeof buttonVariants>) {
+}: ButtonProps) {
   return (
     <button
       className={clsx(
         buttonVariants({ variant, width, size, color, rounded, className })
       )}
+      onClick={(event) => {
+        if (isLoading) return;
+        onClick?.(event);
+      }}
       {...props}
-    />
+    >
+      {isLoading ? <Spinner width={24} height={24} /> : children}
+    </button>
   );
 }
