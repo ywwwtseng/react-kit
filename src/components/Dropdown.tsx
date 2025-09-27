@@ -74,6 +74,7 @@ export function Dropdown({
       <DropdownMenu>
         {items.map((item) => (
           <DropdownItem
+            className="rounded-lg"
             key={item.key}
             onPress={() => {
               onChange(item.key);

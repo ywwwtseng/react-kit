@@ -12,7 +12,7 @@ import { DrawerScreen, DrawerScreenProps } from '../components/DrawerScreen';
 
 export type Stack = {
   screen: string;
-  params: Record<string, string | number>;
+  params: Record<string, string | number | boolean | null | undefined>;
 };
 
 export enum ScreenType {
