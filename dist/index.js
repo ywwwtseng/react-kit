@@ -54,6 +54,7 @@ import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
   ScreenType2["PAGE"] = "page";
   ScreenType2["DRAWER"] = "drawer";
+  ScreenType2["SINGLE"] = "single";
   return ScreenType2;
 })(ScreenType || {});
 var DEFAULT_STACK = parseJSON(
@@ -82,14 +83,14 @@ function StackNavigatorProvider({
     };
   }, [stacks, screens]);
   const Screen = useMemo(() => {
-    if (route.type === "drawer") {
+    if (route.type !== "page" /* PAGE */) {
       const stack = stacks[stacks.length - 2];
       return stack ? screens[stack.screen].screen : void 0;
     }
     return route.screen;
   }, [route, stacks, screens]);
   const DrawerContent = useMemo(() => {
-    if (route.type === "drawer") {
+    if (route.type !== "page" /* PAGE */) {
       return route.screen;
     }
   }, [route, stacks, screens]);
@@ -247,7 +248,7 @@ var Typography = React.memo(
 );
 
 // src/components/AmountInput.tsx
-import { useState as useState2 } from "react";
+import { useState as useState2, useEffect as useEffect2 } from "react";
 
 // src/components/Input.tsx
 import { cva } from "class-variance-authority";
@@ -286,6 +287,11 @@ function AmountInput({
   ...props
 }) {
   const [inputValue, setInputValue] = useState2(value);
+  useEffect2(() => {
+    if (value === "") {
+      setInputValue("");
+    }
+  }, [value]);
   return /* @__PURE__ */ jsx4(
     Input,
     {
@@ -446,6 +452,7 @@ function Dropdown({
         /* @__PURE__ */ jsx7(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx7(
           DropdownItem,
           {
+            className: "rounded-lg",
             onPress: () => {
               onChange(item.key);
             },
@@ -833,7 +840,7 @@ function Textarea({
 }
 
 // src/components/Canvas.tsx
-import { useEffect as useEffect2, useRef } from "react";
+import { useEffect as useEffect3, useRef } from "react";
 import { jsx as jsx15 } from "react/jsx-runtime";
 function Canvas({
   image,
@@ -841,7 +848,7 @@ function Canvas({
   ...props
 }) {
   const canvasRef = useRef(null);
-  useEffect2(() => {
+  useEffect3(() => {
     if (image) {
       const canvas = canvasRef.current;
       if (canvas) {
@@ -916,10 +923,10 @@ function useRefValue(value) {
 }
 
 // src/hooks/useClientOnce.ts
-import { useEffect as useEffect3, useRef as useRef2 } from "react";
+import { useEffect as useEffect4, useRef as useRef2 } from "react";
 function useClientOnce(setup) {
   const canCall = useRef2(true);
-  useEffect3(() => {
+  useEffect4(() => {
     if (!canCall.current) {
       return;
     }
@@ -934,10 +941,10 @@ function useClientOnce(setup) {
 }
 
 // src/hooks/useIsMounted.ts
-import { useEffect as useEffect4, useState as useState3 } from "react";
+import { useEffect as useEffect5, useState as useState3 } from "react";
 function useIsMounted() {
   const [isMounted, setIsMounted] = useState3(false);
-  useEffect4(() => {
+  useEffect5(() => {
     setIsMounted(true);
   }, []);
   return isMounted;

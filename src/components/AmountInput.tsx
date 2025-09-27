@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from './Input';
 
 export interface AmountInputProps
@@ -36,6 +36,12 @@ export function AmountInput({
   ...props
 }: AmountInputProps) {
   const [inputValue, setInputValue] = useState(value);
+
+  useEffect(() => {
+    if (value === '') {
+      setInputValue('');
+    }
+  }, [value]);
 
   return (
     <Input

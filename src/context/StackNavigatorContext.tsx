@@ -12,12 +12,13 @@ import { DrawerScreen, DrawerScreenProps } from '../components/DrawerScreen';
 
 export type Stack = {
   screen: string;
-  params: Record<string, string | number>;
+  params: Record<string, string | number | boolean | null | undefined>;
 };
 
 export enum ScreenType {
   PAGE = 'page',
   DRAWER = 'drawer',
+  SINGLE = 'single',
 }
 
 export type Screen = {
@@ -83,7 +84,7 @@ export function StackNavigatorProvider({
   }, [stacks, screens]);
 
   const Screen = useMemo(() => {
-    if (route.type === 'drawer') {
+    if (route.type !== ScreenType.PAGE) {
       const stack = stacks[stacks.length - 2];
       return stack ? screens[stack.screen].screen : undefined;
     }
@@ -92,7 +93,7 @@ export function StackNavigatorProvider({
   }, [route, stacks, screens]);
 
   const DrawerContent = useMemo(() => {
-    if (route.type === 'drawer') {
+    if (route.type !== ScreenType.PAGE) {
       return route.screen;
     }
   }, [route, stacks, screens]);

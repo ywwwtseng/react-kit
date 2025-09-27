@@ -14,11 +14,12 @@ interface DrawerScreenProps extends React.PropsWithChildren {
 
 type Stack = {
     screen: string;
-    params: Record<string, string | number>;
+    params: Record<string, string | number | boolean | null | undefined>;
 };
 declare enum ScreenType {
     PAGE = "page",
-    DRAWER = "drawer"
+    DRAWER = "drawer",
+    SINGLE = "single"
 }
 type Screen = {
     screen: ElementType;
