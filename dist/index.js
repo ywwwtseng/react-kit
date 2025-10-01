@@ -876,7 +876,7 @@ function Confirm({
 }) {
   return /* @__PURE__ */ jsxs6(Modal, { title, onOpenChange, ...props, children: [
     /* @__PURE__ */ jsx16(Typography, { size: "4", children: title }),
-    /* @__PURE__ */ jsx16(Typography, { size: "2", children: description }),
+    /* @__PURE__ */ jsx16("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx16(Typography, { size: "2", children: description }) }),
     /* @__PURE__ */ jsxs6("div", { className: "flex w-full gap-6 py-4 px-6", children: [
       /* @__PURE__ */ jsx16(
         Button,
