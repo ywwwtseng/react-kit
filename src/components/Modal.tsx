@@ -34,26 +34,33 @@ export function Modal({
           }}
         />
         <Drawer.Content
-          className={clsx(classes?.content, 'bg-modal')}
           style={{
             position: 'fixed',
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
             zIndex: 30,
-            paddingTop: 16,
             bottom: 0,
             left: 0,
             right: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: 16,
+            margin: '0 4px 28px',
           }}
         >
-          {handle && <Drawer.Handle />}
-          <Drawer.Title className="hidden">{title}</Drawer.Title>
-          <Drawer.Description className="hidden">{title}</Drawer.Description>
-          {children}
+          <div
+            className={clsx(classes?.content, 'bg-modal')}
+            style={{
+              paddingTop: 16,
+              borderRadius: 10,
+              display: 'flex',
+              alignItems: 'center',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              gap: 16,
+            }}
+          >
+            <Drawer.Title className="hidden">{title}</Drawer.Title>
+            <Drawer.Description className="hidden">{title}</Drawer.Description>
+            {handle && <Drawer.Handle />}
+            {children}
+          </div>
         </Drawer.Content>
       </Drawer.Portal>
     </Root>

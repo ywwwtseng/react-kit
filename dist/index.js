@@ -286,6 +286,7 @@ function AmountInput({
   maxDigits,
   ...props
 }) {
+  const [isComposing, setIsComposing] = useState2(false);
   const [inputValue, setInputValue] = useState2(value);
   useEffect2(() => {
     if (value === "") {
@@ -298,7 +299,10 @@ function AmountInput({
       ...props,
       className: props.className ? `input ${props.className}` : "input",
       type: "text",
-      value: formatAmount(inputValue),
+      value: isComposing ? inputValue : formatAmount(inputValue),
+      onCompositionStart: () => {
+        setIsComposing(true);
+      },
       onChange: (e) => {
         const value2 = e.target.value.replace(/,/g, "");
         if (value2 === "") {
@@ -654,30 +658,39 @@ function Modal({
           }
         }
       ),
-      /* @__PURE__ */ jsxs5(
+      /* @__PURE__ */ jsx11(
         Drawer2.Content,
         {
-          className: clsx3(classes?.content, "bg-modal"),
           style: {
             position: "fixed",
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
             zIndex: 30,
-            paddingTop: 16,
             bottom: 0,
             left: 0,
             right: 0,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 16
+            margin: "0 4px 28px"
           },
-          children: [
-            handle && /* @__PURE__ */ jsx11(Drawer2.Handle, {}),
-            /* @__PURE__ */ jsx11(Drawer2.Title, { className: "hidden", children: title }),
-            /* @__PURE__ */ jsx11(Drawer2.Description, { className: "hidden", children: title }),
-            children
-          ]
+          children: /* @__PURE__ */ jsxs5(
+            "div",
+            {
+              className: clsx3(classes?.content, "bg-modal"),
+              style: {
+                paddingTop: 16,
+                borderRadius: 10,
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+                gap: 16
+              },
+              children: [
+                /* @__PURE__ */ jsx11(Drawer2.Title, { className: "hidden", children: title }),
+                /* @__PURE__ */ jsx11(Drawer2.Description, { className: "hidden", children: title }),
+                handle && /* @__PURE__ */ jsx11(Drawer2.Handle, {}),
+                children
+              ]
+            }
+          )
         }
       )
     ] })
