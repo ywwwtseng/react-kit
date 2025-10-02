@@ -35,6 +35,7 @@ export function AmountInput({
   maxDigits,
   ...props
 }: AmountInputProps) {
+  const [isComposing, setIsComposing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
   useEffect(() => {
@@ -48,7 +49,10 @@ export function AmountInput({
       {...props}
       className={props.className ? `input ${props.className}` : 'input'}
       type="text"
-      value={formatAmount(inputValue)}
+      value={isComposing ? inputValue : formatAmount(inputValue)}
+      onCompositionStart={() => {
+        setIsComposing(true);
+      }}
       onChange={(e) => {
         const value = e.target.value.replace(/,/g, '');
         if (value === '') {
