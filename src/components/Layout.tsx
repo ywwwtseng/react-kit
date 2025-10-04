@@ -11,7 +11,6 @@ function Root({
       className={className}
       style={{
         display: 'flex',
-        opacity: 0,
         flexDirection: 'column',
         width: '100vw',
         height: '100vh',

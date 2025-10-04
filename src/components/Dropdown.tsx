@@ -1,28 +1,19 @@
 import { useMemo } from 'react';
 import clsx from 'clsx';
-import {
-  Dropdown as HerouiDropdown,
-  DropdownProps as HerouiDropdownProps,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-} from '@heroui/dropdown';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { ChevronDown, Check } from '../icons';
 import { Typography } from './Typography';
-import { ChevronDown } from '../icons';
 
-export interface DropdownItem {
-  key: string;
-  name: string;
-  icon?: React.ReactNode;
-}
-
-export interface DropdownProps
-  extends Omit<HerouiDropdownProps, 'onChange' | 'children'> {
+export interface DropdownProps {
   value?: string;
-  items: DropdownItem[];
+  items: { key: string; name: string; icon?: React.ReactNode }[];
   showIcon?: boolean;
   size?: 'sm' | 'md';
   placeholder?: string;
+  disabled?: boolean;
+  classes?: {
+    trigger?: string;
+  };
   onChange: (key: string) => void;
 }
 
@@ -31,28 +22,25 @@ export function Dropdown({
   items,
   size = 'md',
   showIcon = true,
-  onChange,
+  classes,
+  disabled,
   placeholder,
-  ...props
+  onChange,
 }: DropdownProps) {
   const typographySize = size === 'sm' ? '1' : '2';
   const selected = useMemo(() => {
-    return items.find((item) => item.key === value);
+    return items.find((item) => item.key === value) ?? null;
   }, [items, value]);
 
   return (
-    <HerouiDropdown
-      classNames={{
-        base: 'bg-modal rounded-lg',
-        trigger: clsx('bg-form-element', {
-          'rounded-full py-2 pl-4 pr-3': size === 'sm',
-          'rounded-lg py-2.5 px-3': size === 'md',
-        }),
-      }}
-      {...props}
-    >
-      <DropdownTrigger>
-        <div className="flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer">
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild disabled={disabled}>
+        <button
+          className={clsx(
+            'flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer outline-none',
+            classes?.trigger
+          )}
+        >
           {selected ? (
             <div className="flex items-center gap-2">
               {selected.icon && showIcon && selected.icon}
@@ -69,27 +57,36 @@ export function Dropdown({
             strokeWidth={1.5}
             className="text-icon-foreground max-w-4"
           />
-        </div>
-      </DropdownTrigger>
-      <DropdownMenu>
-        {items.map((item) => (
-          <DropdownItem
-            className="rounded-lg"
-            key={item.key}
-            onPress={() => {
-              onChange(item.key);
-            }}
-            startContent={
-              item.icon ? (
+        </button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          className="min-w-[220px] rounded-md bg-modal p-2 m-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+          sideOffset={5}
+        >
+          {items.map((item) => (
+            <DropdownMenu.Item
+              className={clsx(
+                'relative flex p-2 select-none items-center rounded-lg leading-none outline-none',
+                selected?.key === item.key && 'bg-default'
+              )}
+              key={item.key}
+              onClick={() => {
+                onChange(item.key);
+              }}
+            >
+              {item.icon ? (
                 <div style={{ marginRight: '10px' }}>{item.icon}</div>
-              ) : null
-            }
-            textValue={item.key}
-          >
-            <Typography size="2">{item.name}</Typography>
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
-    </HerouiDropdown>
+              ) : null}
+              <Typography size="2">{item.name}</Typography>
+              {selected?.key === item.key && (
+                <Check className="w-4 h-4 ml-auto" />
+              )}
+            </DropdownMenu.Item>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }

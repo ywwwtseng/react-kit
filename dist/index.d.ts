@@ -1,7 +1,6 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import * as React$1 from 'react';
 import React__default, { ElementType, ComponentProps } from 'react';
-import { DropdownProps as DropdownProps$1 } from '@heroui/dropdown';
 import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { VariantProps } from 'class-variance-authority';
@@ -83,20 +82,23 @@ interface AmountInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
 declare function formatAmount(input: string): string;
 declare function AmountInput({ decimal, value, onChange, maxDigits, ...props }: AmountInputProps): react_jsx_runtime.JSX.Element;
 
-interface DropdownItem {
-    key: string;
-    name: string;
-    icon?: React.ReactNode;
-}
-interface DropdownProps extends Omit<DropdownProps$1, 'onChange' | 'children'> {
+interface DropdownProps {
     value?: string;
-    items: DropdownItem[];
+    items: {
+        key: string;
+        name: string;
+        icon?: React.ReactNode;
+    }[];
     showIcon?: boolean;
     size?: 'sm' | 'md';
     placeholder?: string;
+    disabled?: boolean;
+    classes?: {
+        trigger?: string;
+    };
     onChange: (key: string) => void;
 }
-declare function Dropdown({ value, items, size, showIcon, onChange, placeholder, ...props }: DropdownProps): react_jsx_runtime.JSX.Element;
+declare function Dropdown({ value, items, size, showIcon, classes, disabled, placeholder, onChange, }: DropdownProps): react_jsx_runtime.JSX.Element;
 
 declare function Root({ className, style, children, }: React.PropsWithChildren<{
     className?: string;
@@ -170,7 +172,7 @@ declare const buttonVariants: (props?: {
     width?: "full";
     size?: "sm" | "md" | "xs";
     color?: "primary" | "secondary" | "destructive";
-    rounded?: "sm" | "md" | "lg" | "full" | "xl";
+    rounded?: "sm" | "md" | "full" | "lg" | "xl";
 } & class_variance_authority_types.ClassProp) => string;
 type ButtonProps = ComponentProps<'button'> & VariantProps<typeof buttonVariants> & {
     isLoading?: boolean;
@@ -201,11 +203,10 @@ declare function useClientOnce(setup: () => void | undefined | (() => void)): vo
 
 declare function useIsMounted(): boolean;
 
-declare function Spinner({ width, height, }: {
-    width?: number;
-    height?: number;
-}): react_jsx_runtime.JSX.Element;
+declare function Spinner(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
 declare function ChevronDown(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownItem, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useIsMounted, useNavigate, useRefValue, useRoute };
+declare function Check(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
+
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useIsMounted, useNavigate, useRefValue, useRoute };

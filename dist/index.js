@@ -348,29 +348,22 @@ function AmountInput({
 // src/components/Dropdown.tsx
 import { useMemo as useMemo2 } from "react";
 import clsx2 from "clsx";
-import {
-  Dropdown as HerouiDropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem
-} from "@heroui/dropdown";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 // src/icons/Spinner.tsx
 import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
-function Spinner({
-  width = 24,
-  height = 24
-}) {
+function Spinner(props) {
   return /* @__PURE__ */ jsxs3(
     "svg",
     {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
       "aria-hidden": "true",
       className: "animate-spin text-white/50 fill-white/80",
       viewBox: "0 0 100 101",
       fill: "none",
-      width,
-      height,
-      xmlns: "http://www.w3.org/2000/svg",
+      ...props,
       children: [
         /* @__PURE__ */ jsx5(
           "path",
@@ -399,11 +392,11 @@ function ChevronDown(props) {
     {
       xmlns: "http://www.w3.org/2000/svg",
       viewBox: "0 0 24 24",
+      width: "24",
+      height: "24",
       fill: "none",
       stroke: "currentColor",
       strokeWidth: "1.5",
-      strokeLinecap: "round",
-      strokeLinejoin: "round",
       "aria-hidden": "true",
       ...props,
       children: /* @__PURE__ */ jsx6("path", { d: "m6 9 6 6 6-6" })
@@ -411,39 +404,56 @@ function ChevronDown(props) {
   );
 }
 
+// src/icons/Check.tsx
+import { jsx as jsx7 } from "react/jsx-runtime";
+function Check(props) {
+  return /* @__PURE__ */ jsx7(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      "aria-hidden": "true",
+      ...props,
+      children: /* @__PURE__ */ jsx7("path", { d: "M20 6 9 17l-5-5" })
+    }
+  );
+}
+
 // src/components/Dropdown.tsx
-import { jsx as jsx7, jsxs as jsxs4 } from "react/jsx-runtime";
+import { jsx as jsx8, jsxs as jsxs4 } from "react/jsx-runtime";
 function Dropdown({
   value,
   items,
   size = "md",
   showIcon = true,
-  onChange,
+  classes,
+  disabled,
   placeholder,
-  ...props
+  onChange
 }) {
   const typographySize = size === "sm" ? "1" : "2";
   const selected = useMemo2(() => {
-    return items.find((item) => item.key === value);
+    return items.find((item) => item.key === value) ?? null;
   }, [items, value]);
-  return /* @__PURE__ */ jsxs4(
-    HerouiDropdown,
-    {
-      classNames: {
-        base: "bg-modal rounded-lg",
-        trigger: clsx2("bg-form-element", {
-          "rounded-full py-2 pl-4 pr-3": size === "sm",
-          "rounded-lg py-2.5 px-3": size === "md"
-        })
-      },
-      ...props,
-      children: [
-        /* @__PURE__ */ jsx7(DropdownTrigger, { children: /* @__PURE__ */ jsxs4("div", { className: "flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer", children: [
+  return /* @__PURE__ */ jsxs4(DropdownMenu.Root, { children: [
+    /* @__PURE__ */ jsx8(DropdownMenu.Trigger, { asChild: true, disabled, children: /* @__PURE__ */ jsxs4(
+      "button",
+      {
+        className: clsx2(
+          "flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer outline-none",
+          classes?.trigger
+        ),
+        children: [
           selected ? /* @__PURE__ */ jsxs4("div", { className: "flex items-center gap-2", children: [
             selected.icon && showIcon && selected.icon,
-            /* @__PURE__ */ jsx7(Typography, { size: typographySize, children: selected.name })
-          ] }) : /* @__PURE__ */ jsx7(Typography, { className: "text-placeholder", size: typographySize, children: placeholder }),
-          /* @__PURE__ */ jsx7(
+            /* @__PURE__ */ jsx8(Typography, { size: typographySize, children: selected.name })
+          ] }) : /* @__PURE__ */ jsx8(Typography, { className: "text-placeholder", size: typographySize, children: placeholder }),
+          /* @__PURE__ */ jsx8(
             ChevronDown,
             {
               width: size === "sm" ? 16 : 20,
@@ -452,39 +462,50 @@ function Dropdown({
               className: "text-icon-foreground max-w-4"
             }
           )
-        ] }) }),
-        /* @__PURE__ */ jsx7(DropdownMenu, { children: items.map((item) => /* @__PURE__ */ jsx7(
-          DropdownItem,
+        ]
+      }
+    ) }),
+    /* @__PURE__ */ jsx8(DropdownMenu.Portal, { children: /* @__PURE__ */ jsx8(
+      DropdownMenu.Content,
+      {
+        className: "min-w-[220px] rounded-md bg-modal p-2 m-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade",
+        sideOffset: 5,
+        children: items.map((item) => /* @__PURE__ */ jsxs4(
+          DropdownMenu.Item,
           {
-            className: "rounded-lg",
-            onPress: () => {
+            className: clsx2(
+              "relative flex p-2 select-none items-center rounded-lg leading-none outline-none",
+              selected?.key === item.key && "bg-default"
+            ),
+            onClick: () => {
               onChange(item.key);
             },
-            startContent: item.icon ? /* @__PURE__ */ jsx7("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
-            textValue: item.key,
-            children: /* @__PURE__ */ jsx7(Typography, { size: "2", children: item.name })
+            children: [
+              item.icon ? /* @__PURE__ */ jsx8("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
+              /* @__PURE__ */ jsx8(Typography, { size: "2", children: item.name }),
+              selected?.key === item.key && /* @__PURE__ */ jsx8(Check, { className: "w-4 h-4 ml-auto" })
+            ]
           },
           item.key
-        )) })
-      ]
-    }
-  );
+        ))
+      }
+    ) })
+  ] });
 }
 
 // src/components/Layout.tsx
-import { jsx as jsx8 } from "react/jsx-runtime";
-function Root({
+import { jsx as jsx9 } from "react/jsx-runtime";
+function Root2({
   className,
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(
     "div",
     {
       className,
       style: {
         display: "flex",
-        opacity: 0,
         flexDirection: "column",
         width: "100vw",
         height: "100vh",
@@ -499,7 +520,7 @@ function Header({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(
     "div",
     {
       style: {
@@ -524,7 +545,7 @@ function HeaderLeft({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(
     "div",
     {
       style: {
@@ -543,7 +564,7 @@ function HeaderTitle({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(
     "div",
     {
       style: {
@@ -562,7 +583,7 @@ function HeaderRight({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(
     "div",
     {
       style: {
@@ -581,7 +602,7 @@ function Main({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsx9(
     "div",
     {
       style: {
@@ -594,7 +615,7 @@ function Main({
   );
 }
 var Layout = {
-  Root,
+  Root: Root2,
   Header,
   HeaderLeft,
   HeaderRight,
@@ -603,15 +624,15 @@ var Layout = {
 };
 
 // src/components/List.tsx
-import { jsx as jsx9 } from "react/jsx-runtime";
+import { jsx as jsx10 } from "react/jsx-runtime";
 function List({ items, children, ...props }) {
-  return /* @__PURE__ */ jsx9("div", { ...props, children: items.map((item) => children(item)) });
+  return /* @__PURE__ */ jsx10("div", { ...props, children: items.map((item) => children(item)) });
 }
 
 // src/components/TabBar.tsx
-import { jsx as jsx10 } from "react/jsx-runtime";
+import { jsx as jsx11 } from "react/jsx-runtime";
 function TabBar({ style, items, renderItem }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx11(
     List,
     {
       style: {
@@ -634,7 +655,7 @@ function TabBar({ style, items, renderItem }) {
 // src/components/Modal.tsx
 import clsx3 from "clsx";
 import { Drawer as Drawer2 } from "vaul";
-import { jsx as jsx11, jsxs as jsxs5 } from "react/jsx-runtime";
+import { jsx as jsx12, jsxs as jsxs5 } from "react/jsx-runtime";
 function Modal({
   type = "default",
   handle = true,
@@ -644,11 +665,11 @@ function Modal({
   classes,
   ...props
 }) {
-  const Root2 = type === "default" ? Drawer2.Root : Drawer2.NestedRoot;
-  return /* @__PURE__ */ jsxs5(Root2, { ...props, children: [
-    trigger && /* @__PURE__ */ jsx11(Drawer2.Trigger, { asChild: true, children: trigger }),
+  const Root3 = type === "default" ? Drawer2.Root : Drawer2.NestedRoot;
+  return /* @__PURE__ */ jsxs5(Root3, { ...props, children: [
+    trigger && /* @__PURE__ */ jsx12(Drawer2.Trigger, { asChild: true, children: trigger }),
     /* @__PURE__ */ jsxs5(Drawer2.Portal, { children: [
-      /* @__PURE__ */ jsx11(
+      /* @__PURE__ */ jsx12(
         Drawer2.Overlay,
         {
           style: {
@@ -658,7 +679,7 @@ function Modal({
           }
         }
       ),
-      /* @__PURE__ */ jsx11(
+      /* @__PURE__ */ jsx12(
         Drawer2.Content,
         {
           style: {
@@ -684,9 +705,9 @@ function Modal({
                 gap: 16
               },
               children: [
-                /* @__PURE__ */ jsx11(Drawer2.Title, { className: "hidden", children: title }),
-                /* @__PURE__ */ jsx11(Drawer2.Description, { className: "hidden", children: title }),
-                handle && /* @__PURE__ */ jsx11(Drawer2.Handle, {}),
+                /* @__PURE__ */ jsx12(Drawer2.Title, { className: "hidden", children: title }),
+                /* @__PURE__ */ jsx12(Drawer2.Description, { className: "hidden", children: title }),
+                handle && /* @__PURE__ */ jsx12(Drawer2.Handle, {}),
                 children
               ]
             }
@@ -698,16 +719,16 @@ function Modal({
 }
 
 // src/components/Image.tsx
-import { jsx as jsx12 } from "react/jsx-runtime";
+import { jsx as jsx13 } from "react/jsx-runtime";
 function Image({ src, ...props }) {
   const url = typeof src === "string" ? src : src.src;
-  return /* @__PURE__ */ jsx12("img", { src: url, ...props });
+  return /* @__PURE__ */ jsx13("img", { src: url, ...props });
 }
 
 // src/components/Button.tsx
 import clsx4 from "clsx";
 import { cva as cva2 } from "class-variance-authority";
-import { jsx as jsx13 } from "react/jsx-runtime";
+import { jsx as jsx14 } from "react/jsx-runtime";
 var buttonVariants = cva2(
   "flex items-center justify-center cursor-pointer focus:outline-none outline-none disabled:cursor-not-allowed disabled:opacity-50",
   {
@@ -817,7 +838,7 @@ function Button({
   onClick,
   ...props
 }) {
-  return /* @__PURE__ */ jsx13(
+  return /* @__PURE__ */ jsx14(
     "button",
     {
       className: clsx4(
@@ -828,7 +849,7 @@ function Button({
         onClick?.(event);
       },
       ...props,
-      children: isLoading ? /* @__PURE__ */ jsx13(Spinner, { width: 24, height: 24 }) : children
+      children: isLoading ? /* @__PURE__ */ jsx14(Spinner, { width: 24, height: 24 }) : children
     }
   );
 }
@@ -836,7 +857,7 @@ function Button({
 // src/components/Textarea.tsx
 import { cva as cva3 } from "class-variance-authority";
 import clsx5 from "clsx";
-import { jsx as jsx14 } from "react/jsx-runtime";
+import { jsx as jsx15 } from "react/jsx-runtime";
 var textareaVariants = cva3(
   "focus:outline-none outline-none resize-none",
   {
@@ -849,12 +870,12 @@ function Textarea({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx14("textarea", { className: clsx5(textareaVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx15("textarea", { className: clsx5(textareaVariants({ className })), ...props });
 }
 
 // src/components/Canvas.tsx
 import { useEffect as useEffect3, useRef } from "react";
-import { jsx as jsx15 } from "react/jsx-runtime";
+import { jsx as jsx16 } from "react/jsx-runtime";
 function Canvas({
   image,
   size = 40,
@@ -874,11 +895,11 @@ function Canvas({
       }
     }
   }, [image, size]);
-  return /* @__PURE__ */ jsx15("canvas", { ref: canvasRef, ...props, width: size, height: size });
+  return /* @__PURE__ */ jsx16("canvas", { ref: canvasRef, ...props, width: size, height: size });
 }
 
 // src/components/Confirm.tsx
-import { jsx as jsx16, jsxs as jsxs6 } from "react/jsx-runtime";
+import { jsx as jsx17, jsxs as jsxs6 } from "react/jsx-runtime";
 function Confirm({
   title,
   description,
@@ -888,10 +909,10 @@ function Confirm({
   ...props
 }) {
   return /* @__PURE__ */ jsxs6(Modal, { title, onOpenChange, ...props, children: [
-    /* @__PURE__ */ jsx16(Typography, { size: "4", children: title }),
-    /* @__PURE__ */ jsx16("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx16(Typography, { size: "2", children: description }) }),
+    /* @__PURE__ */ jsx17(Typography, { size: "4", children: title }),
+    /* @__PURE__ */ jsx17("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx17(Typography, { size: "2", children: description }) }),
     /* @__PURE__ */ jsxs6("div", { className: "flex w-full gap-6 py-4 px-6", children: [
-      /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17(
         Button,
         {
           width: "full",
@@ -906,7 +927,7 @@ function Confirm({
           ...cancel
         }
       ),
-      /* @__PURE__ */ jsx16(
+      /* @__PURE__ */ jsx17(
         Button,
         {
           width: "full",
@@ -966,6 +987,7 @@ export {
   AmountInput,
   Button,
   Canvas,
+  Check,
   ChevronDown,
   Confirm,
   DEFAULT_STACK,
