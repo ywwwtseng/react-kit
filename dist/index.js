@@ -984,6 +984,22 @@ function useIsMounted() {
   }, []);
   return isMounted;
 }
+
+// src/hooks/useDisclosure.ts
+import { useState as useState4 } from "react";
+function useDisclosure() {
+  const [isOpen, setIsOpen] = useState4(false);
+  const onOpenChange = (open) => {
+    setIsOpen(open);
+  };
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
+  return { isOpen, onOpenChange, onOpen, onClose };
+}
 export {
   AmountInput,
   Button,
@@ -1010,6 +1026,7 @@ export {
   inputVariants,
   textareaVariants,
   useClientOnce,
+  useDisclosure,
   useIsMounted,
   useNavigate,
   useRefValue,

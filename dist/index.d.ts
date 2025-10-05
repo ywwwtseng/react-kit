@@ -203,10 +203,17 @@ declare function useClientOnce(setup: () => void | undefined | (() => void)): vo
 
 declare function useIsMounted(): boolean;
 
+declare function useDisclosure(): {
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    onOpen: () => void;
+    onClose: () => void;
+};
+
 declare function Spinner(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
 declare function ChevronDown(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
 declare function Check(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useIsMounted, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };
