@@ -92,9 +92,18 @@ export function StackNavigatorProvider({
     return route.screen;
   }, [route, stacks, screens]);
 
-  const DrawerContent = useMemo(() => {
+  const drawerScreen = useMemo(() => {
     if (route.type !== ScreenType.PAGE) {
-      return route.screen;
+      const Screen = route.screen;
+      return (
+        <DrawerScreen
+          title={route.title}
+          description={route.title}
+          style={drawer.style}
+        >
+          <Screen params={route.params} />
+        </DrawerScreen>
+      );
     }
   }, [route, stacks, screens]);
 
@@ -116,7 +125,7 @@ export function StackNavigatorProvider({
           }
 
           const route = { screen, params: options?.params || {} };
-          return [...prev, route];
+          return [...prev, route].slice(-10);
         }
 
         return prev;
@@ -151,7 +160,7 @@ export function StackNavigatorProvider({
     <StackNavigatorContext.Provider value={value}>
       <Layout
         styles={{
-          tabBar: !!DrawerContent ? { display: 'none' } : {},
+          tabBar: !!drawerScreen ? { display: 'none' } : {},
         }}
       >
         {Screen && (
@@ -159,19 +168,13 @@ export function StackNavigatorProvider({
             style={{
               height: '100%',
               overflowY: 'auto',
-              display: !!DrawerContent ? 'none' : 'block',
+              display: !!drawerScreen ? 'none' : 'block',
             }}
           >
             <Screen params={route.params} />
           </div>
         )}
-        <DrawerScreen
-          title={route.title}
-          description={route.title}
-          style={drawer.style}
-        >
-          {!!DrawerContent && <DrawerContent params={route.params} />}
-        </DrawerScreen>
+        {drawerScreen}
       </Layout>
     </StackNavigatorContext.Provider>
   );

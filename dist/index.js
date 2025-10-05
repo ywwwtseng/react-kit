@@ -89,9 +89,18 @@ function StackNavigatorProvider({
     }
     return route.screen;
   }, [route, stacks, screens]);
-  const DrawerContent = useMemo(() => {
+  const drawerScreen = useMemo(() => {
     if (route.type !== "page" /* PAGE */) {
-      return route.screen;
+      const Screen2 = route.screen;
+      return /* @__PURE__ */ jsx2(
+        DrawerScreen,
+        {
+          title: route.title,
+          description: route.title,
+          style: drawer.style,
+          children: /* @__PURE__ */ jsx2(Screen2, { params: route.params })
+        }
+      );
     }
   }, [route, stacks, screens]);
   const navigate = useCallback(
@@ -110,7 +119,7 @@ function StackNavigatorProvider({
             return prev;
           }
           const route2 = { screen, params: options?.params || {} };
-          return [...prev, route2];
+          return [...prev, route2].slice(-10);
         }
         return prev;
       });
@@ -140,7 +149,7 @@ function StackNavigatorProvider({
     Layout2,
     {
       styles: {
-        tabBar: !!DrawerContent ? { display: "none" } : {}
+        tabBar: !!drawerScreen ? { display: "none" } : {}
       },
       children: [
         Screen && /* @__PURE__ */ jsx2(
@@ -149,20 +158,12 @@ function StackNavigatorProvider({
             style: {
               height: "100%",
               overflowY: "auto",
-              display: !!DrawerContent ? "none" : "block"
+              display: !!drawerScreen ? "none" : "block"
             },
             children: /* @__PURE__ */ jsx2(Screen, { params: route.params })
           }
         ),
-        /* @__PURE__ */ jsx2(
-          DrawerScreen,
-          {
-            title: route.title,
-            description: route.title,
-            style: drawer.style,
-            children: !!DrawerContent && /* @__PURE__ */ jsx2(DrawerContent, { params: route.params })
-          }
-        )
+        drawerScreen
       ]
     }
   ) });
