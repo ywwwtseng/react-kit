@@ -24,18 +24,25 @@ type Screen = {
     screen: ElementType;
     title: string;
     type: ScreenType;
+    back?: {
+        title?: string;
+        push?: string;
+        replace?: string;
+    };
 };
 type Route = {
     name: Stack['screen'];
-    title: Screen['title'];
     params: Stack['params'];
+    back?: Screen['back'];
+    title: Screen['title'];
     type: Screen['type'];
     screen: Screen['screen'];
 };
 interface StackNavigatorContextState {
     route: Route;
     navigate: (screen: string | number, options?: {
-        params: Stack['params'];
+        params?: Stack['params'];
+        type?: 'push' | 'replace';
     }) => void;
 }
 declare const DEFAULT_STACK: Stack;
@@ -51,7 +58,8 @@ interface StackNavigatorProviderProps {
 }
 declare function StackNavigatorProvider({ screens, drawer, layout: Layout, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
 declare const useNavigate: () => (screen: string | number, options?: {
-    params: Stack["params"];
+    params?: Stack["params"];
+    type?: "push" | "replace";
 }) => void;
 declare const useRoute: () => Route;
 

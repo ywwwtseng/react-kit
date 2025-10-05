@@ -76,10 +76,11 @@ function StackNavigatorProvider({
     const screen = screens[stack.screen];
     return {
       name: stack.screen,
-      title: screen.title,
       params: stack.params,
       type: screen.type,
-      screen: screen.screen
+      title: screen.title,
+      screen: screen.screen,
+      back: screen.back
     };
   }, [stacks, screens]);
   const Screen = useMemo(() => {
@@ -111,6 +112,7 @@ function StackNavigatorProvider({
           return;
         }
       }
+      const type = options?.type || "push";
       setStacks((prev) => {
         if (screen === -1 && prev.length > 1) {
           return prev.slice(0, -1);
@@ -119,7 +121,11 @@ function StackNavigatorProvider({
             return prev;
           }
           const route2 = { screen, params: options?.params || {} };
-          return [...prev, route2].slice(-10);
+          if (type === "replace") {
+            return [...prev.slice(0, -1), route2];
+          } else {
+            return [...prev, route2].slice(-10);
+          }
         }
         return prev;
       });
@@ -469,7 +475,7 @@ function Dropdown({
     /* @__PURE__ */ jsx8(DropdownMenu.Portal, { children: /* @__PURE__ */ jsx8(
       DropdownMenu.Content,
       {
-        className: "min-w-[220px] rounded-md bg-modal p-2 m-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade",
+        className: "min-w-[220px] rounded-md bg-modal p-2 mx-2 mb-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade",
         sideOffset: 5,
         children: items.map((item) => /* @__PURE__ */ jsxs4(
           DropdownMenu.Item,

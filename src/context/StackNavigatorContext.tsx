@@ -25,12 +25,18 @@ export type Screen = {
   screen: ElementType;
   title: string;
   type: ScreenType;
+  back?: {
+    title?: string;
+    push?: string;
+    replace?: string;
+  };
 };
 
 export type Route = {
   name: Stack['screen'];
-  title: Screen['title'];
   params: Stack['params'];
+  back?: Screen['back'];
+  title: Screen['title'];
   type: Screen['type'];
   screen: Screen['screen'];
 };
@@ -39,7 +45,7 @@ export interface StackNavigatorContextState {
   route: Route;
   navigate: (
     screen: string | number,
-    options?: { params: Stack['params'] }
+    options?: { params?: Stack['params']; type?: 'push' | 'replace' }
   ) => void;
 }
 
@@ -51,7 +57,7 @@ export const StackNavigatorContext = createContext<StackNavigatorContextState>({
   route: undefined,
   navigate: (
     screen: string | number,
-    options?: { params: Stack['params'] }
+    options?: { params?: Stack['params']; type?: 'push' | 'replace' }
   ) => {},
 });
 
@@ -76,10 +82,11 @@ export function StackNavigatorProvider({
 
     return {
       name: stack.screen,
-      title: screen.title,
       params: stack.params,
       type: screen.type,
+      title: screen.title,
       screen: screen.screen,
+      back: screen.back,
     };
   }, [stacks, screens]);
 
@@ -108,13 +115,18 @@ export function StackNavigatorProvider({
   }, [route, stacks, screens]);
 
   const navigate = useCallback(
-    (screen: string | number, options?: { params: Route['params'] }) => {
+    (
+      screen: string | number,
+      options?: { params?: Route['params']; type?: 'push' | 'replace' }
+    ) => {
       if (typeof screen === 'string') {
         if (!Object.keys(screens).includes(screen)) {
           console.warn(`Screen ${screen} not found`);
           return;
         }
       }
+
+      const type = options?.type || 'push';
 
       setStacks((prev) => {
         if (screen === -1 && prev.length > 1) {
@@ -125,7 +137,12 @@ export function StackNavigatorProvider({
           }
 
           const route = { screen, params: options?.params || {} };
-          return [...prev, route].slice(-10);
+
+          if (type === 'replace') {
+            return [...prev.slice(0, -1), route];
+          } else {
+            return [...prev, route].slice(-10);
+          }
         }
 
         return prev;
