@@ -30,13 +30,13 @@ export function Modal({
           style={{
             position: 'fixed',
             inset: '0',
-            zIndex: '30',
+            zIndex: 9999,
           }}
         />
         <Drawer.Content
           style={{
             position: 'fixed',
-            zIndex: 30,
+            zIndex: 9999,
             bottom: 0,
             left: 0,
             right: 0,

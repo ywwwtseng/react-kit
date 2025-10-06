@@ -8,7 +8,6 @@ import {
   type ElementType,
 } from 'react';
 import { parseJSON } from '@ywwwtseng/ywjs';
-import { DrawerScreen, DrawerScreenProps } from '../components/DrawerScreen';
 
 export type Stack = {
   screen: string;
@@ -43,6 +42,8 @@ export type Route = {
 
 export interface StackNavigatorContextState {
   route: Route;
+  screens: Record<string, Screen>;
+  stacks: Stack[];
   navigate: (
     screen: string | number,
     options?: { params?: Stack['params']; type?: 'push' | 'replace' }
@@ -55,24 +56,21 @@ export const DEFAULT_STACK: Stack = (parseJSON(
 
 export const StackNavigatorContext = createContext<StackNavigatorContextState>({
   route: undefined,
+  screens: {},
+  stacks: [],
   navigate: (
     screen: string | number,
     options?: { params?: Stack['params']; type?: 'push' | 'replace' }
   ) => {},
 });
 
-export interface StackNavigatorProviderProps {
+export interface StackNavigatorProviderProps extends React.PropsWithChildren {
   screens: Record<string, Screen> & { Home: Screen };
-  drawer: {
-    style: DrawerScreenProps['style'];
-  };
-  layout: ElementType;
 }
 
 export function StackNavigatorProvider({
   screens,
-  drawer,
-  layout: Layout,
+  children,
 }: StackNavigatorProviderProps) {
   const [stacks, setStacks] = useState<Stack[]>([DEFAULT_STACK]);
 
@@ -89,30 +87,6 @@ export function StackNavigatorProvider({
       back: screen.back,
     };
   }, [stacks, screens]);
-
-  const Screen = useMemo(() => {
-    if (route.type !== ScreenType.PAGE) {
-      const stack = stacks[stacks.length - 2];
-      return stack ? screens[stack.screen].screen : undefined;
-    }
-
-    return route.screen;
-  }, [route, stacks, screens]);
-
-  const drawerScreen = useMemo(() => {
-    if (route.type !== ScreenType.PAGE) {
-      const Screen = route.screen;
-      return (
-        <DrawerScreen
-          title={route.title}
-          description={route.title}
-          style={drawer.style}
-        >
-          <Screen params={route.params} />
-        </DrawerScreen>
-      );
-    }
-  }, [route, stacks, screens]);
 
   const navigate = useCallback(
     (
@@ -155,8 +129,10 @@ export function StackNavigatorProvider({
     () => ({
       route,
       navigate,
+      screens,
+      stacks,
     }),
-    [route, navigate]
+    [route, navigate, screens, stacks]
   );
 
   useEffect(() => {
@@ -175,24 +151,7 @@ export function StackNavigatorProvider({
 
   return (
     <StackNavigatorContext.Provider value={value}>
-      <Layout
-        styles={{
-          tabBar: !!drawerScreen ? { display: 'none' } : {},
-        }}
-      >
-        {Screen && (
-          <div
-            style={{
-              height: '100%',
-              overflowY: 'auto',
-              display: !!drawerScreen ? 'none' : 'block',
-            }}
-          >
-            <Screen params={route.params} />
-          </div>
-        )}
-        {drawerScreen}
-      </Layout>
+      {children}
     </StackNavigatorContext.Provider>
   );
 }

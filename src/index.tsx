@@ -1,4 +1,4 @@
-export * from './context/StackNavigatorContext';
+export * from './navigation';
 
 export * from './components/Typography';
 export * from './components/AmountInput';

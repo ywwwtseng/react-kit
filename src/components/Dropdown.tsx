@@ -55,7 +55,7 @@ export function Dropdown({
             width={size === 'sm' ? 16 : 20}
             height={size === 'sm' ? 16 : 20}
             strokeWidth={1.5}
-            className="text-icon-foreground max-w-4"
+            className="max-w-4"
           />
         </button>
       </DropdownMenu.Trigger>

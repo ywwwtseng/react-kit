@@ -5,12 +5,6 @@ import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { VariantProps } from 'class-variance-authority';
 
-interface DrawerScreenProps extends React.PropsWithChildren {
-    title: string;
-    description: string;
-    style?: React.CSSProperties;
-}
-
 type Stack = {
     screen: string;
     params: Record<string, string | number | boolean | null | undefined>;
@@ -40,6 +34,8 @@ type Route = {
 };
 interface StackNavigatorContextState {
     route: Route;
+    screens: Record<string, Screen>;
+    stacks: Stack[];
     navigate: (screen: string | number, options?: {
         params?: Stack['params'];
         type?: 'push' | 'replace';
@@ -47,21 +43,30 @@ interface StackNavigatorContextState {
 }
 declare const DEFAULT_STACK: Stack;
 declare const StackNavigatorContext: React$1.Context<StackNavigatorContextState>;
-interface StackNavigatorProviderProps {
+interface StackNavigatorProviderProps extends React.PropsWithChildren {
     screens: Record<string, Screen> & {
         Home: Screen;
     };
-    drawer: {
-        style: DrawerScreenProps['style'];
-    };
-    layout: ElementType;
 }
-declare function StackNavigatorProvider({ screens, drawer, layout: Layout, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
+declare function StackNavigatorProvider({ screens, children, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
 declare const useNavigate: () => (screen: string | number, options?: {
     params?: Stack["params"];
     type?: "push" | "replace";
 }) => void;
 declare const useRoute: () => Route;
+
+interface DrawerScreenProps extends React.PropsWithChildren {
+    title: string;
+    description: string;
+    style?: React.CSSProperties;
+}
+
+interface NavigatorProps {
+    drawer: {
+        style: DrawerScreenProps['style'];
+    };
+}
+declare function Navigator({ drawer }: NavigatorProps): react_jsx_runtime.JSX.Element;
 
 type TypographySize = '12' | '11' | '10' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2' | '1';
 interface TypographyProps extends React__default.PropsWithChildren, React__default.CSSProperties {
@@ -224,4 +229,4 @@ declare function ChevronDown(props: React.SVGProps<SVGSVGElement>): react_jsx_ru
 
 declare function Check(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };
