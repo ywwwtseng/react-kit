@@ -39,7 +39,7 @@ function Header({
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: '8px',
-        zIndex: 1000,
+        zIndex: 1,
         pointerEvents: 'auto',
         ...style,
       }}
