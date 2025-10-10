@@ -5,9 +5,9 @@ import { ChevronDown, Check } from '../icons';
 import { Typography } from './Typography';
 
 export interface DropdownProps {
-  value?: string;
   items: { key: string; name: string; icon?: React.ReactNode }[];
-  showIcon?: boolean;
+  trigger?: React.ReactNode;
+  value?: string;
   size?: 'sm' | 'md';
   placeholder?: string;
   disabled?: boolean;
@@ -19,9 +19,9 @@ export interface DropdownProps {
 
 export function Dropdown({
   value,
+  trigger,
   items,
   size = 'md',
-  showIcon = true,
   classes,
   disabled,
   placeholder,
@@ -35,41 +35,43 @@ export function Dropdown({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild disabled={disabled}>
-        <button
-          className={clsx(
-            'flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer outline-none',
-            classes?.trigger
-          )}
-        >
-          {selected ? (
-            <div className="flex items-center gap-2">
-              {selected.icon && showIcon && selected.icon}
-              <Typography size={typographySize}>{selected.name}</Typography>
-            </div>
-          ) : (
-            <Typography className="text-placeholder" size={typographySize}>
-              {placeholder}
-            </Typography>
-          )}
-          <ChevronDown
-            width={size === 'sm' ? 16 : 20}
-            height={size === 'sm' ? 16 : 20}
-            strokeWidth={1.5}
-            className="max-w-4"
-          />
-        </button>
+        {trigger || (
+          <button
+            className={clsx(
+              'flex items-center justify-between gap-2 !scale-[100%] !opacity-100 cursor-pointer outline-none',
+              classes?.trigger
+            )}
+          >
+            {selected ? (
+              <div className="flex items-center gap-2">
+                {selected.icon && selected.icon}
+                <Typography size={typographySize}>{selected.name}</Typography>
+              </div>
+            ) : (
+              <Typography className="text-placeholder" size={typographySize}>
+                {placeholder}
+              </Typography>
+            )}
+            <ChevronDown
+              width={size === 'sm' ? 16 : 20}
+              height={size === 'sm' ? 16 : 20}
+              strokeWidth={1.5}
+              className="max-w-4"
+            />
+          </button>
+        )}
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[220px] rounded-md bg-modal p-2 mx-2 mb-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+          className="z-10 min-w-[220px] rounded-md bg-modal p-2 mx-2 mb-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
           sideOffset={5}
         >
           {items.map((item) => (
             <DropdownMenu.Item
               className={clsx(
                 'relative flex p-2 select-none items-center rounded-lg leading-none outline-none',
-                selected?.key === item.key && 'bg-default'
+                selected?.key === item.key && 'bg-active'
               )}
               key={item.key}
               onClick={() => {

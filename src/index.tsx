@@ -22,5 +22,3 @@ export * from './hooks/useDisclosure';
 export * from './icons';
 
 export * from './types';
-
-import './index.css';

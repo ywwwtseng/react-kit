@@ -96,13 +96,13 @@ declare function formatAmount(input: string): string;
 declare function AmountInput({ decimal, value, onChange, maxDigits, ...props }: AmountInputProps): react_jsx_runtime.JSX.Element;
 
 interface DropdownProps {
-    value?: string;
     items: {
         key: string;
         name: string;
         icon?: React.ReactNode;
     }[];
-    showIcon?: boolean;
+    trigger?: React.ReactNode;
+    value?: string;
     size?: 'sm' | 'md';
     placeholder?: string;
     disabled?: boolean;
@@ -111,7 +111,7 @@ interface DropdownProps {
     };
     onChange: (key: string) => void;
 }
-declare function Dropdown({ value, items, size, showIcon, classes, disabled, placeholder, onChange, }: DropdownProps): react_jsx_runtime.JSX.Element;
+declare function Dropdown({ value, trigger, items, size, classes, disabled, placeholder, onChange, }: DropdownProps): react_jsx_runtime.JSX.Element;
 
 declare function Root({ className, style, children, }: React.PropsWithChildren<{
     className?: string;
@@ -184,7 +184,7 @@ declare const buttonVariants: (props?: {
     variant?: "text" | "icon" | "contained";
     width?: "full";
     size?: "sm" | "md" | "xs";
-    color?: "primary" | "secondary" | "destructive";
+    color?: "active" | "primary" | "secondary" | "destructive";
     rounded?: "sm" | "md" | "full" | "lg" | "xl";
 } & class_variance_authority_types.ClassProp) => string;
 type ButtonProps = ComponentProps<'button'> & VariantProps<typeof buttonVariants> & {
@@ -229,4 +229,13 @@ declare function ChevronDown(props: React.SVGProps<SVGSVGElement>): react_jsx_ru
 
 declare function Check(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };
+declare function EN(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
+declare function TW(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
+
+declare const Flag_EN: typeof EN;
+declare const Flag_TW: typeof TW;
+declare namespace Flag {
+  export { Flag_EN as EN, Flag_TW as TW };
+}
+
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, DEFAULT_STACK, Dropdown, type DropdownProps, Flag, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };

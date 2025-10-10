@@ -23,6 +23,7 @@ export const buttonVariants = cva(
       color: {
         primary: '',
         secondary: '',
+        active: '',
         destructive: '',
       },
       rounded: {
@@ -49,6 +50,11 @@ export const buttonVariants = cva(
       },
       {
         variant: 'text',
+        color: 'active',
+        className: 'text-active [&:not(:disabled)]:hover:text-active/90',
+      },
+      {
+        variant: 'text',
         color: 'destructive',
         className:
           'text-destructive [&:not(:disabled)]:hover:text-destructive/90',
@@ -69,6 +75,11 @@ export const buttonVariants = cva(
         className: 'bg-destructive [&:not(:disabled)]:hover:bg-destructive/90',
       },
       {
+        variant: 'contained',
+        color: 'active',
+        className: 'bg-active [&:not(:disabled)]:hover:bg-active/90',
+      },
+      {
         variant: 'icon',
         color: 'primary',
         className: 'bg-primary [&:not(:disabled)]:hover:bg-primary/90',
@@ -82,6 +93,11 @@ export const buttonVariants = cva(
         variant: 'icon',
         color: 'destructive',
         className: 'bg-destructive [&:not(:disabled)]:hover:bg-destructive/90',
+      },
+      {
+        variant: 'icon',
+        color: 'active',
+        className: 'bg-active [&:not(:disabled)]:hover:bg-active/90',
       },
       {
         variant: 'icon',
