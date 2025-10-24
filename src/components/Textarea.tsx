@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import clsx from 'clsx';
 
 export const textareaVariants = cva(
-  'focus:outline-none outline-none resize-none',
+  'focus:outline-none outline-none resize-none placeholder:text-placeholder',
   {
     variants: {},
     defaultVariants: {},

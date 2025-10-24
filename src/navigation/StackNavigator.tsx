@@ -50,10 +50,6 @@ export interface StackNavigatorContextState {
   ) => void;
 }
 
-export const DEFAULT_STACK: Stack = (parseJSON(
-  sessionStorage.getItem('navigator/screen')
-) as Stack) || { screen: 'Home', params: {} };
-
 export const StackNavigatorContext = createContext<StackNavigatorContextState>({
   route: undefined,
   screens: {},
@@ -72,7 +68,12 @@ export function StackNavigatorProvider({
   screens,
   children,
 }: StackNavigatorProviderProps) {
-  const [stacks, setStacks] = useState<Stack[]>([DEFAULT_STACK]);
+  const [stacks, setStacks] = useState<Stack[]>([
+    (parseJSON(sessionStorage.getItem('navigator/screen')) as Stack) || {
+      screen: 'Home',
+      params: {},
+    },
+  ]);
 
   const route = useMemo(() => {
     const stack = stacks[stacks.length - 1];

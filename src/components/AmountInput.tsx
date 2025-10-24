@@ -47,7 +47,6 @@ export function AmountInput({
   return (
     <Input
       {...props}
-      className={props.className ? `input ${props.className}` : 'input'}
       type="text"
       value={isComposing ? inputValue : formatAmount(inputValue)}
       onCompositionStart={() => {

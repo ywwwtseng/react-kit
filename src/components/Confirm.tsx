@@ -22,7 +22,14 @@ export function Confirm({
       <div className="px-4 pb-4">
         <Typography size="2">{description}</Typography>
       </div>
-      <div className="flex w-full gap-6 py-4 px-6">
+      <div
+        style={{
+          display: 'flex',
+          width: '100%',
+          gap: 24,
+          padding: '16px 24px',
+        }}
+      >
         <Button
           width="full"
           rounded="full"
