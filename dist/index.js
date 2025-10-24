@@ -270,11 +270,14 @@ import { useState as useState2, useEffect as useEffect2 } from "react";
 import { cva } from "class-variance-authority";
 import clsx from "clsx";
 import { jsx as jsx4 } from "react/jsx-runtime";
-var inputVariants = cva("focus:outline-none outline-none", {
-  variants: {},
-  defaultVariants: {},
-  compoundVariants: []
-});
+var inputVariants = cva(
+  "focus:outline-none outline-none placeholder:text-placeholder",
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: []
+  }
+);
 function Input({
   className,
   ...props
@@ -313,7 +316,6 @@ function AmountInput({
     Input,
     {
       ...props,
-      className: props.className ? `input ${props.className}` : "input",
       type: "text",
       value: isComposing ? inputValue : formatAmount(inputValue),
       onCompositionStart: () => {
@@ -965,7 +967,7 @@ import { cva as cva3 } from "class-variance-authority";
 import clsx5 from "clsx";
 import { jsx as jsx17 } from "react/jsx-runtime";
 var textareaVariants = cva3(
-  "focus:outline-none outline-none resize-none",
+  "focus:outline-none outline-none resize-none placeholder:text-placeholder",
   {
     variants: {},
     defaultVariants: {},
