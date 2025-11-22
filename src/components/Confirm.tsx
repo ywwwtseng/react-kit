@@ -18,9 +18,9 @@ export function Confirm({
 }: ConfirmProps) {
   return (
     <Modal title={title} onOpenChange={onOpenChange} {...props}>
-      <Typography size="4">{title}</Typography>
+      <Typography size="2">{title}</Typography>
       <div className="px-4 pb-4">
-        <Typography size="2">{description}</Typography>
+        <Typography size="1">{description}</Typography>
       </div>
       <div
         style={{

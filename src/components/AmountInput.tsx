@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { Input } from './Input';
+import { useEffect, useState } from 'react';
 
 export interface AmountInputProps
   extends Omit<
@@ -11,23 +10,18 @@ export interface AmountInputProps
   decimal?: number;
   maxDigits?: number;
 }
-
 export function formatAmount(input: string) {
   if (!input) return '';
-
   const parts = input.split('.');
   const integerPart = parts[0]?.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
   // 如果原本有 "."（即使沒有小數），就保留
   if (parts.length > 1) {
     return `${integerPart}.${parts[1]}`;
   } else if (input.endsWith('.')) {
     return `${integerPart}.`;
   }
-
   return integerPart;
 }
-
 export function AmountInput({
   decimal = 0,
   value,
@@ -35,18 +29,20 @@ export function AmountInput({
   maxDigits,
   ...props
 }: AmountInputProps) {
-  const [isComposing, setIsComposing] = useState(false);
   const [inputValue, setInputValue] = useState(value);
+  const [isComposing, setIsComposing] = useState(false);
 
   useEffect(() => {
-    if (value === '') {
-      setInputValue('');
-    }
-  }, [value]);
-
+    if (inputValue === value) return;
+    if (inputValue === '0' && value === '') return;
+    if (Number(inputValue) === 0 && Number(value) === 0) return;
+    if (/^\d+\.$/.test(inputValue)) return;
+    setInputValue(value);
+  }, [value, inputValue]);
   return (
-    <Input
+    <input
       {...props}
+      className={props.className ? `input ${props.className}` : 'input'}
       type="text"
       value={isComposing ? inputValue : formatAmount(inputValue)}
       onCompositionStart={() => {
@@ -59,7 +55,6 @@ export function AmountInput({
           onChange('');
           return;
         }
-
         // 禁止開頭是小數點
         if (value.startsWith('.')) return;
         // 禁止多個小數點
@@ -73,7 +68,6 @@ export function AmountInput({
           const totalDigits = value.replace('.', '');
           if (totalDigits.length > maxDigits) return;
         }
-
         if (decimal === 0) {
           if (value === '0') {
             setInputValue('');
@@ -84,14 +78,16 @@ export function AmountInput({
           }
           return;
         }
-
         // 檢查小數點後的位數 <= decimal
         const decimalPart = value.split('.')[1];
         if (decimalPart && decimalPart.length > decimal) return;
-
         if (Number(value) >= 0) {
+          if (/^\d+\.$/.test(value)) {
+            setInputValue(value);
+            onChange(value.replace('.', ''));
+            return;
+          }
           setInputValue(value);
-
           if (/^(0|[1-9]\d*)(\.\d+)?$/.test(value)) {
             if (Number(value) === 0) {
               onChange('');
