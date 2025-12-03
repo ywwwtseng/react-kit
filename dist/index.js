@@ -510,6 +510,7 @@ import { jsx as jsx9, jsxs as jsxs5 } from "react/jsx-runtime";
 function Dropdown({
   value,
   trigger,
+  container,
   items,
   size = "md",
   classes,
@@ -546,10 +547,13 @@ function Dropdown({
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx9(DropdownMenu.Portal, { children: /* @__PURE__ */ jsx9(
+    /* @__PURE__ */ jsx9(DropdownMenu.Portal, { container, children: /* @__PURE__ */ jsx9(
       DropdownMenu.Content,
       {
-        className: "z-10 min-w-[220px] rounded-md bg-modal p-2 mx-2 mb-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade",
+        className: clsx(
+          "z-10 rounded-md bg-modal p-2 mx-2 mb-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade",
+          classes?.content
+        ),
         sideOffset: 5,
         children: items.map((item) => /* @__PURE__ */ jsxs5(
           DropdownMenu.Item,

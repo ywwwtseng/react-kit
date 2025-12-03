@@ -101,16 +101,18 @@ interface DropdownProps {
         icon?: React.ReactNode;
     }[];
     trigger?: React.ReactNode;
+    container?: Element | DocumentFragment;
     value?: string;
     size?: 'sm' | 'md';
     placeholder?: string;
     disabled?: boolean;
     classes?: {
         trigger?: string;
+        content?: string;
     };
     onChange: (key: string) => void;
 }
-declare function Dropdown({ value, trigger, items, size, classes, disabled, placeholder, onChange, }: DropdownProps): react_jsx_runtime.JSX.Element;
+declare function Dropdown({ value, trigger, container, items, size, classes, disabled, placeholder, onChange, }: DropdownProps): react_jsx_runtime.JSX.Element;
 
 declare function Root({ className, style, children, }: React.PropsWithChildren<{
     className?: string;
