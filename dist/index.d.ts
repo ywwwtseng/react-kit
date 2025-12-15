@@ -181,17 +181,15 @@ interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'sr
 }
 declare function Image({ src, ...props }: ImageProps): react_jsx_runtime.JSX.Element;
 
-declare const buttonVariants: (props?: {
-    variant?: "text" | "icon" | "contained";
-    width?: "full";
-    size?: "sm" | "md" | "xs";
-    color?: "active" | "primary" | "secondary" | "destructive";
-    rounded?: "sm" | "md" | "full" | "lg" | "xl";
-} & class_variance_authority_types.ClassProp) => string;
-type ButtonProps = ComponentProps<'button'> & VariantProps<typeof buttonVariants> & {
+type ButtonProps = ComponentProps<'button'> & {
+    variant?: 'text' | 'contained' | 'icon';
+    width?: 'full';
+    size?: 'xs' | 'sm' | 'md';
+    color?: 'primary' | 'secondary' | 'active' | 'destructive';
+    rounded?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
     isLoading?: boolean;
 };
-declare function Button({ className, variant, width, size, color, rounded, isLoading, children, onClick, ...props }: ButtonProps): react_jsx_runtime.JSX.Element;
+declare function Button({ variant, width, size, color, rounded, isLoading, children, onClick, style, disabled, ...props }: ButtonProps): react_jsx_runtime.JSX.Element;
 
 declare const inputVariants: (props?: {} & class_variance_authority_types.ClassProp) => string;
 declare function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement> & VariantProps<typeof inputVariants>): react_jsx_runtime.JSX.Element;
@@ -239,4 +237,4 @@ declare namespace Flag {
   export { Flag_EN as EN, Flag_TW as TW };
 }
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, buttonVariants, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };

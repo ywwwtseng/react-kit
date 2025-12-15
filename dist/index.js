@@ -811,144 +811,118 @@ function Image({ src, ...props }) {
 }
 
 // src/components/Button.tsx
-import clsx3 from "clsx";
-import { cva } from "class-variance-authority";
+import { useState as useState3, useMemo as useMemo4 } from "react";
 import { jsx as jsx15 } from "react/jsx-runtime";
-var buttonVariants = cva(
-  "flex items-center justify-center cursor-pointer focus:outline-none outline-none disabled:cursor-not-allowed disabled:opacity-50",
-  {
-    variants: {
-      variant: {
-        text: "text",
-        contained: "contained",
-        icon: "rounded-full"
-      },
-      width: {
-        full: "w-full"
-      },
-      size: {
-        xs: "text-xs min-h-8",
-        sm: "text-sm min-h-10",
-        md: "text-lg min-h-12"
-      },
-      color: {
-        primary: "",
-        secondary: "",
-        active: "",
-        destructive: ""
-      },
-      rounded: {
-        sm: "rounded-sm",
-        md: "rounded-md",
-        lg: "rounded-lg",
-        xl: "rounded-xl",
-        full: "rounded-full"
-      }
-    },
-    defaultVariants: {
-      variant: "text"
-    },
-    compoundVariants: [
-      {
-        variant: "text",
-        color: "primary",
-        className: "text-primary [&:not(:disabled)]:hover:text-primary/90"
-      },
-      {
-        variant: "text",
-        color: "secondary",
-        className: "text-secondary [&:not(:disabled)]:hover:text-secondary/90"
-      },
-      {
-        variant: "text",
-        color: "active",
-        className: "text-active [&:not(:disabled)]:hover:text-active/90"
-      },
-      {
-        variant: "text",
-        color: "destructive",
-        className: "text-destructive [&:not(:disabled)]:hover:text-destructive/90"
-      },
-      {
-        variant: "contained",
-        color: "primary",
-        className: "bg-primary [&:not(:disabled)]:hover:bg-primary/90"
-      },
-      {
-        variant: "contained",
-        color: "secondary",
-        className: "bg-secondary [&:not(:disabled)]:hover:bg-secondary/90"
-      },
-      {
-        variant: "contained",
-        color: "destructive",
-        className: "bg-destructive [&:not(:disabled)]:hover:bg-destructive/90"
-      },
-      {
-        variant: "contained",
-        color: "active",
-        className: "bg-active [&:not(:disabled)]:hover:bg-active/90"
-      },
-      {
-        variant: "icon",
-        color: "primary",
-        className: "bg-primary [&:not(:disabled)]:hover:bg-primary/90"
-      },
-      {
-        variant: "icon",
-        color: "secondary",
-        className: "bg-secondary [&:not(:disabled)]:hover:bg-secondary/90"
-      },
-      {
-        variant: "icon",
-        color: "destructive",
-        className: "bg-destructive [&:not(:disabled)]:hover:bg-destructive/90"
-      },
-      {
-        variant: "icon",
-        color: "active",
-        className: "bg-active [&:not(:disabled)]:hover:bg-active/90"
-      },
-      {
-        variant: "icon",
-        size: "xs",
-        className: "h-8 w-8"
-      },
-      {
-        variant: "icon",
-        size: "sm",
-        className: "h-10 w-10"
-      },
-      {
-        variant: "icon",
-        size: "md",
-        className: "h-12 w-12"
-      }
-    ]
+var colors = {
+  primary: "#3b82f6",
+  // blue-500
+  secondary: "rgba(66,66,66,0.8)",
+  // gray-800 with 80% opacity
+  active: "#10b981",
+  // emerald-500
+  destructive: "#ef4444"
+  // red-500
+};
+var sizes = {
+  xs: { fontSize: "0.75rem", minHeight: "32px", padding: "0.25rem 0.5rem" },
+  sm: { fontSize: "0.875rem", minHeight: "40px", padding: "0.5rem 0.75rem" },
+  md: { fontSize: "1.125rem", minHeight: "48px", padding: "0.75rem 1rem" }
+};
+var borderRadius = {
+  sm: "0.125rem",
+  md: "0.375rem",
+  lg: "0.5rem",
+  xl: "0.75rem",
+  full: "9999px"
+};
+var withOpacity = (color, opacity = 0.9) => {
+  if (color.startsWith("rgb")) {
+    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);
+    if (match) {
+      const originalOpacity = match[4] ? parseFloat(match[4]) : 1;
+      const newOpacity = originalOpacity * opacity;
+      return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${newOpacity})`;
+    }
   }
-);
+  const hex = color.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
 function Button({
-  className,
-  variant,
+  variant = "text",
   width,
-  size,
-  color,
+  size = "md",
+  color = "primary",
   rounded,
   isLoading = false,
   children,
   onClick,
+  style,
+  disabled,
   ...props
 }) {
+  const [isHovered, setIsHovered] = useState3(false);
+  const buttonStyle = useMemo4(() => {
+    const baseStyle = {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: disabled ? "not-allowed" : "pointer",
+      outline: "none",
+      border: "none",
+      opacity: disabled ? 0.5 : 1,
+      transition: "all 0.2s ease-in-out",
+      ...style
+    };
+    if (width === "full") {
+      baseStyle.width = "100%";
+    }
+    if (size) {
+      const sizeConfig = sizes[size];
+      baseStyle.fontSize = sizeConfig.fontSize;
+      baseStyle.minHeight = sizeConfig.minHeight;
+      if (variant !== "icon") {
+        baseStyle.padding = sizeConfig.padding;
+      }
+    }
+    if (rounded) {
+      baseStyle.borderRadius = borderRadius[rounded];
+    } else if (variant === "icon") {
+      baseStyle.borderRadius = borderRadius.full;
+    }
+    if (variant === "icon" && size) {
+      const iconSize = sizes[size].minHeight;
+      baseStyle.width = iconSize;
+      baseStyle.height = iconSize;
+      baseStyle.padding = "0";
+    }
+    const colorValue = colors[color || "primary"];
+    const hoverColor = isHovered && !disabled ? withOpacity(colorValue, 0.9) : colorValue;
+    if (variant === "text") {
+      baseStyle.backgroundColor = "transparent";
+      baseStyle.color = hoverColor;
+    } else if (variant === "contained") {
+      baseStyle.backgroundColor = hoverColor;
+      baseStyle.color = "#ffffff";
+    } else if (variant === "icon") {
+      baseStyle.backgroundColor = hoverColor;
+      baseStyle.color = "#ffffff";
+    }
+    return baseStyle;
+  }, [variant, width, size, color, rounded, isHovered, disabled, style]);
   return /* @__PURE__ */ jsx15(
     "button",
     {
-      className: clsx3(
-        buttonVariants({ variant, width, size, color, rounded, className })
-      ),
+      style: buttonStyle,
       onClick: (event) => {
-        if (isLoading) return;
+        if (isLoading || disabled) return;
         onClick?.(event);
       },
+      onMouseEnter: () => setIsHovered(true),
+      onMouseLeave: () => setIsHovered(false),
+      disabled: disabled || isLoading,
       ...props,
       children: isLoading ? /* @__PURE__ */ jsx15(Spinner, { width: 24, height: 24 }) : children
     }
@@ -956,10 +930,10 @@ function Button({
 }
 
 // src/components/Input.tsx
-import { cva as cva2 } from "class-variance-authority";
-import clsx4 from "clsx";
+import { cva } from "class-variance-authority";
+import clsx3 from "clsx";
 import { jsx as jsx16 } from "react/jsx-runtime";
-var inputVariants = cva2(
+var inputVariants = cva(
   "focus:outline-none outline-none placeholder:text-placeholder",
   {
     variants: {},
@@ -971,14 +945,14 @@ function Input({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx16("input", { className: clsx4(inputVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx16("input", { className: clsx3(inputVariants({ className })), ...props });
 }
 
 // src/components/Textarea.tsx
-import { cva as cva3 } from "class-variance-authority";
-import clsx5 from "clsx";
+import { cva as cva2 } from "class-variance-authority";
+import clsx4 from "clsx";
 import { jsx as jsx17 } from "react/jsx-runtime";
-var textareaVariants = cva3(
+var textareaVariants = cva2(
   "focus:outline-none outline-none resize-none placeholder:text-placeholder",
   {
     variants: {},
@@ -990,7 +964,7 @@ function Textarea({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx17("textarea", { className: clsx5(textareaVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx17("textarea", { className: clsx4(textareaVariants({ className })), ...props });
 }
 
 // src/components/Canvas.tsx
@@ -1106,9 +1080,9 @@ function useClientOnce(setup) {
 }
 
 // src/hooks/useIsMounted.ts
-import { useEffect as useEffect5, useState as useState3 } from "react";
+import { useEffect as useEffect5, useState as useState4 } from "react";
 function useIsMounted() {
-  const [isMounted, setIsMounted] = useState3(false);
+  const [isMounted, setIsMounted] = useState4(false);
   useEffect5(() => {
     setIsMounted(true);
   }, []);
@@ -1116,9 +1090,9 @@ function useIsMounted() {
 }
 
 // src/hooks/useDisclosure.ts
-import { useState as useState4 } from "react";
+import { useState as useState5 } from "react";
 function useDisclosure() {
-  const [isOpen, setIsOpen] = useState4(false);
+  const [isOpen, setIsOpen] = useState5(false);
   const onOpenChange = (open) => {
     setIsOpen(open);
   };
@@ -1152,7 +1126,6 @@ export {
   TabBar,
   Textarea,
   Typography,
-  buttonVariants,
   formatAmount,
   inputVariants,
   textareaVariants,
