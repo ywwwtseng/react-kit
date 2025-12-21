@@ -4,201 +4,8 @@ var __export = (target, all) => {
     __defProp(target, name, { get: all[name], enumerable: true });
 };
 
-// src/navigation/StackNavigator.tsx
-import {
-  createContext,
-  use,
-  useState,
-  useCallback,
-  useMemo,
-  useEffect
-} from "react";
-import { parseJSON } from "@ywwwtseng/ywjs";
-import { jsx } from "react/jsx-runtime";
-var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
-  ScreenType2["PAGE"] = "page";
-  ScreenType2["DRAWER"] = "drawer";
-  ScreenType2["SINGLE"] = "single";
-  return ScreenType2;
-})(ScreenType || {});
-var StackNavigatorContext = createContext({
-  route: void 0,
-  screens: {},
-  stacks: [],
-  navigate: (screen, options) => {
-  }
-});
-function StackNavigatorProvider({
-  screens,
-  children
-}) {
-  const [stacks, setStacks] = useState([
-    parseJSON(sessionStorage.getItem("navigator/screen")) || {
-      screen: "Home",
-      params: {}
-    }
-  ]);
-  const route = useMemo(() => {
-    const stack = stacks[stacks.length - 1];
-    const screen = screens[stack.screen];
-    return {
-      name: stack.screen,
-      params: stack.params,
-      type: screen.type,
-      title: screen.title,
-      screen: screen.screen,
-      back: screen.back
-    };
-  }, [stacks, screens]);
-  const navigate = useCallback(
-    (screen, options) => {
-      if (typeof screen === "string") {
-        if (!Object.keys(screens).includes(screen)) {
-          console.warn(`Screen ${screen} not found`);
-          return;
-        }
-      }
-      const type = options?.type || "push";
-      setStacks((prev) => {
-        if (screen === -1 && prev.length > 1) {
-          return prev.slice(0, -1);
-        } else if (typeof screen === "string") {
-          if (prev[prev.length - 1]?.screen === screen) {
-            return prev;
-          }
-          const route2 = { screen, params: options?.params || {} };
-          if (type === "replace") {
-            return [...prev.slice(0, -1), route2];
-          } else {
-            return [...prev, route2].slice(-10);
-          }
-        }
-        return prev;
-      });
-    },
-    [screens]
-  );
-  const value = useMemo(
-    () => ({
-      route,
-      navigate,
-      screens,
-      stacks
-    }),
-    [route, navigate, screens, stacks]
-  );
-  useEffect(() => {
-    if (route.type === "drawer") {
-      return;
-    }
-    sessionStorage.setItem(
-      "navigator/screen",
-      JSON.stringify({
-        screen: route.name,
-        params: route.params
-      })
-    );
-  }, [route]);
-  return /* @__PURE__ */ jsx(StackNavigatorContext.Provider, { value, children });
-}
-var useNavigate = () => {
-  const context = use(StackNavigatorContext);
-  if (!context) {
-    throw new Error("useNavigate must be used within a StackNavigator");
-  }
-  return context.navigate;
-};
-var useRoute = () => {
-  const context = use(StackNavigatorContext);
-  if (!context) {
-    throw new Error("useRoute must be used within a StackNavigator");
-  }
-  return context.route;
-};
-
-// src/navigation/Navigator.tsx
-import { use as use2, useMemo as useMemo2 } from "react";
-
-// src/components/DrawerScreen.tsx
-import { Drawer } from "vaul";
-import { jsx as jsx2, jsxs } from "react/jsx-runtime";
-function DrawerScreen({
-  title,
-  description,
-  style,
-  children
-}) {
-  return /* @__PURE__ */ jsx2(
-    Drawer.Root,
-    {
-      handleOnly: true,
-      direction: "right",
-      open: !!children,
-      repositionInputs: false,
-      children: /* @__PURE__ */ jsx2(Drawer.Portal, { children: /* @__PURE__ */ jsxs(
-        Drawer.Content,
-        {
-          style: {
-            height: "100vh",
-            minHeight: "100vh",
-            position: "fixed",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            outline: "none"
-          },
-          children: [
-            /* @__PURE__ */ jsx2(Drawer.Title, { style: { display: "none" }, children: title }),
-            /* @__PURE__ */ jsx2(Drawer.Description, { style: { display: "none" }, children: description }),
-            /* @__PURE__ */ jsx2("div", { className: "w-full h-full overflow-y-auto", style, children })
-          ]
-        }
-      ) })
-    }
-  );
-}
-
-// src/navigation/Navigator.tsx
-import { Fragment, jsx as jsx3, jsxs as jsxs2 } from "react/jsx-runtime";
-function Navigator({ drawer }) {
-  const { route, stacks, screens } = use2(StackNavigatorContext);
-  const Screen = useMemo2(() => {
-    if (route.type !== "page" /* PAGE */) {
-      const stack = stacks[stacks.length - 2];
-      return stack ? screens[stack.screen].screen : void 0;
-    }
-    return route.screen;
-  }, [route, stacks, screens]);
-  const drawerScreen = useMemo2(() => {
-    if (route.type !== "page" /* PAGE */) {
-      const Screen2 = route.screen;
-      return /* @__PURE__ */ jsx3(
-        DrawerScreen,
-        {
-          title: route.title,
-          description: route.title,
-          style: drawer.style,
-          children: /* @__PURE__ */ jsx3(Screen2, { params: route.params })
-        }
-      );
-    }
-  }, [route]);
-  return /* @__PURE__ */ jsxs2(Fragment, { children: [
-    Screen && /* @__PURE__ */ jsx3(
-      "div",
-      {
-        style: {
-          height: "100%",
-          overflowY: "auto",
-          display: !!drawerScreen ? "none" : "block"
-        },
-        children: /* @__PURE__ */ jsx3(Screen, { params: route.params })
-      }
-    ),
-    drawerScreen
-  ] });
-}
+// src/index.tsx
+import { default as default2 } from "react-hot-toast";
 
 // src/components/Typography.tsx
 import React from "react";
@@ -266,8 +73,8 @@ var Typography = React.memo(
 );
 
 // src/components/AmountInput.tsx
-import { useEffect as useEffect2, useState as useState2 } from "react";
-import { jsx as jsx4 } from "react/jsx-runtime";
+import { useEffect, useState } from "react";
+import { jsx } from "react/jsx-runtime";
 function formatAmount(input) {
   if (!input) return "";
   const parts = input.split(".");
@@ -286,16 +93,16 @@ function AmountInput({
   maxDigits,
   ...props
 }) {
-  const [inputValue, setInputValue] = useState2(value);
-  const [isComposing, setIsComposing] = useState2(false);
-  useEffect2(() => {
+  const [inputValue, setInputValue] = useState(value);
+  const [isComposing, setIsComposing] = useState(false);
+  useEffect(() => {
     if (inputValue === value) return;
     if (inputValue === "0" && value === "") return;
     if (Number(inputValue) === 0 && Number(value) === 0) return;
     if (/^\d+\.$/.test(inputValue)) return;
     setInputValue(value);
   }, [value, inputValue]);
-  return /* @__PURE__ */ jsx4(
+  return /* @__PURE__ */ jsx(
     "input",
     {
       ...props,
@@ -353,14 +160,14 @@ function AmountInput({
 }
 
 // src/components/Dropdown.tsx
-import { useMemo as useMemo3 } from "react";
+import { useMemo } from "react";
 import clsx from "clsx";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 // src/icons/Spinner.tsx
-import { jsx as jsx5, jsxs as jsxs3 } from "react/jsx-runtime";
+import { jsx as jsx2, jsxs } from "react/jsx-runtime";
 function Spinner(props) {
-  return /* @__PURE__ */ jsxs3(
+  return /* @__PURE__ */ jsxs(
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
@@ -372,14 +179,14 @@ function Spinner(props) {
       fill: "none",
       ...props,
       children: [
-        /* @__PURE__ */ jsx5(
+        /* @__PURE__ */ jsx2(
           "path",
           {
             d: "M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z",
             fill: "currentColor"
           }
         ),
-        /* @__PURE__ */ jsx5(
+        /* @__PURE__ */ jsx2(
           "path",
           {
             d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",
@@ -392,9 +199,9 @@ function Spinner(props) {
 }
 
 // src/icons/ChevronDown.tsx
-import { jsx as jsx6 } from "react/jsx-runtime";
+import { jsx as jsx3 } from "react/jsx-runtime";
 function ChevronDown(props) {
-  return /* @__PURE__ */ jsx6(
+  return /* @__PURE__ */ jsx3(
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
@@ -406,15 +213,15 @@ function ChevronDown(props) {
       strokeWidth: "1.5",
       "aria-hidden": "true",
       ...props,
-      children: /* @__PURE__ */ jsx6("path", { d: "m6 9 6 6 6-6" })
+      children: /* @__PURE__ */ jsx3("path", { d: "m6 9 6 6 6-6" })
     }
   );
 }
 
 // src/icons/Check.tsx
-import { jsx as jsx7 } from "react/jsx-runtime";
+import { jsx as jsx4 } from "react/jsx-runtime";
 function Check(props) {
-  return /* @__PURE__ */ jsx7(
+  return /* @__PURE__ */ jsx4(
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
@@ -426,7 +233,7 @@ function Check(props) {
       strokeWidth: "1.5",
       "aria-hidden": "true",
       ...props,
-      children: /* @__PURE__ */ jsx7("path", { d: "M20 6 9 17l-5-5" })
+      children: /* @__PURE__ */ jsx4("path", { d: "M20 6 9 17l-5-5" })
     }
   );
 }
@@ -437,9 +244,9 @@ __export(Flag_exports, {
   EN: () => EN,
   TW: () => TW
 });
-import { jsx as jsx8, jsxs as jsxs4 } from "react/jsx-runtime";
+import { jsx as jsx5, jsxs as jsxs2 } from "react/jsx-runtime";
 function EN(props) {
-  return /* @__PURE__ */ jsxs4(
+  return /* @__PURE__ */ jsxs2(
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
@@ -448,23 +255,23 @@ function EN(props) {
       viewBox: "0 0 512 512",
       ...props,
       children: [
-        /* @__PURE__ */ jsx8("mask", { id: "a", children: /* @__PURE__ */ jsx8("circle", { cx: "256", cy: "256", r: "256", fill: "#fff" }) }),
-        /* @__PURE__ */ jsxs4("g", { mask: "url(#a)", children: [
-          /* @__PURE__ */ jsx8(
+        /* @__PURE__ */ jsx5("mask", { id: "a", children: /* @__PURE__ */ jsx5("circle", { cx: "256", cy: "256", r: "256", fill: "#fff" }) }),
+        /* @__PURE__ */ jsxs2("g", { mask: "url(#a)", children: [
+          /* @__PURE__ */ jsx5(
             "path",
             {
               fill: "#eee",
               d: "m0 0 8 22-8 23v23l32 54-32 54v32l32 48-32 48v32l32 54-32 54v68l22-8 23 8h23l54-32 54 32h32l48-32 48 32h32l54-32 54 32h68l-8-22 8-23v-23l-32-54 32-54v-32l-32-48 32-48v-32l-32-54 32-54V0l-22 8-23-8h-23l-54 32-54-32h-32l-48 32-48-32h-32l-54 32L68 0H0z"
             }
           ),
-          /* @__PURE__ */ jsx8(
+          /* @__PURE__ */ jsx5(
             "path",
             {
               fill: "#0052b4",
               d: "M336 0v108L444 0Zm176 68L404 176h108zM0 176h108L0 68ZM68 0l108 108V0Zm108 512V404L68 512ZM0 444l108-108H0Zm512-108H404l108 108Zm-68 176L336 404v108z"
             }
           ),
-          /* @__PURE__ */ jsx8(
+          /* @__PURE__ */ jsx5(
             "path",
             {
               fill: "#d80027",
@@ -477,7 +284,7 @@ function EN(props) {
   );
 }
 function TW(props) {
-  return /* @__PURE__ */ jsxs4(
+  return /* @__PURE__ */ jsxs2(
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
@@ -486,19 +293,19 @@ function TW(props) {
       viewBox: "0 0 512 512",
       ...props,
       children: [
-        /* @__PURE__ */ jsx8("mask", { id: "a", children: /* @__PURE__ */ jsx8("circle", { cx: "256", cy: "256", r: "256", fill: "#fff" }) }),
-        /* @__PURE__ */ jsxs4("g", { mask: "url(#a)", children: [
-          /* @__PURE__ */ jsx8("path", { fill: "#d80027", d: "M0 256 256 0h256v512H0z" }),
-          /* @__PURE__ */ jsx8("path", { fill: "#0052b4", d: "M256 256V0H0v256z" }),
-          /* @__PURE__ */ jsx8(
+        /* @__PURE__ */ jsx5("mask", { id: "a", children: /* @__PURE__ */ jsx5("circle", { cx: "256", cy: "256", r: "256", fill: "#fff" }) }),
+        /* @__PURE__ */ jsxs2("g", { mask: "url(#a)", children: [
+          /* @__PURE__ */ jsx5("path", { fill: "#d80027", d: "M0 256 256 0h256v512H0z" }),
+          /* @__PURE__ */ jsx5("path", { fill: "#0052b4", d: "M256 256V0H0v256z" }),
+          /* @__PURE__ */ jsx5(
             "path",
             {
               fill: "#eee",
               d: "m222.6 149.8-31.3 14.7 16.7 30.3-34-6.5-4.3 34.3-23.6-25.2-23.7 25.2-4.3-34.3-34 6.5 16.7-30.3-31.2-14.7 31.2-14.7-16.6-30.3 34 6.5 4.2-34.3 23.7 25.3L169.7 77l4.3 34.3 34-6.5-16.7 30.3z"
             }
           ),
-          /* @__PURE__ */ jsx8("circle", { cx: "146.1", cy: "149.8", r: "47.7", fill: "#0052b4" }),
-          /* @__PURE__ */ jsx8("circle", { cx: "146.1", cy: "149.8", r: "41.5", fill: "#eee" })
+          /* @__PURE__ */ jsx5("circle", { cx: "146.1", cy: "149.8", r: "47.7", fill: "#0052b4" }),
+          /* @__PURE__ */ jsx5("circle", { cx: "146.1", cy: "149.8", r: "41.5", fill: "#eee" })
         ] })
       ]
     }
@@ -506,7 +313,7 @@ function TW(props) {
 }
 
 // src/components/Dropdown.tsx
-import { jsx as jsx9, jsxs as jsxs5 } from "react/jsx-runtime";
+import { jsx as jsx6, jsxs as jsxs3 } from "react/jsx-runtime";
 function Dropdown({
   value,
   trigger,
@@ -519,11 +326,11 @@ function Dropdown({
   onChange
 }) {
   const typographySize = size === "sm" ? "1" : "2";
-  const selected = useMemo3(() => {
+  const selected = useMemo(() => {
     return items.find((item) => item.key === value) ?? null;
   }, [items, value]);
-  return /* @__PURE__ */ jsxs5(DropdownMenu.Root, { children: [
-    /* @__PURE__ */ jsx9(DropdownMenu.Trigger, { asChild: true, disabled, children: trigger || /* @__PURE__ */ jsxs5(
+  return /* @__PURE__ */ jsxs3(DropdownMenu.Root, { children: [
+    /* @__PURE__ */ jsx6(DropdownMenu.Trigger, { asChild: true, disabled, children: trigger || /* @__PURE__ */ jsxs3(
       "button",
       {
         className: clsx(
@@ -531,11 +338,11 @@ function Dropdown({
           classes?.trigger
         ),
         children: [
-          selected ? /* @__PURE__ */ jsxs5("div", { className: "flex items-center gap-2", children: [
+          selected ? /* @__PURE__ */ jsxs3("div", { className: "flex items-center gap-2", children: [
             selected.icon && selected.icon,
-            /* @__PURE__ */ jsx9(Typography, { size: typographySize, children: selected.name })
-          ] }) : /* @__PURE__ */ jsx9(Typography, { className: "text-placeholder", size: typographySize, children: placeholder }),
-          /* @__PURE__ */ jsx9(
+            /* @__PURE__ */ jsx6(Typography, { size: typographySize, children: selected.name })
+          ] }) : /* @__PURE__ */ jsx6(Typography, { className: "text-placeholder", size: typographySize, children: placeholder }),
+          /* @__PURE__ */ jsx6(
             ChevronDown,
             {
               width: size === "sm" ? 16 : 20,
@@ -547,7 +354,7 @@ function Dropdown({
         ]
       }
     ) }),
-    /* @__PURE__ */ jsx9(DropdownMenu.Portal, { container, children: /* @__PURE__ */ jsx9(
+    /* @__PURE__ */ jsx6(DropdownMenu.Portal, { container, children: /* @__PURE__ */ jsx6(
       DropdownMenu.Content,
       {
         className: clsx(
@@ -555,7 +362,7 @@ function Dropdown({
           classes?.content
         ),
         sideOffset: 5,
-        children: items.map((item) => /* @__PURE__ */ jsxs5(
+        children: items.map((item) => /* @__PURE__ */ jsxs3(
           DropdownMenu.Item,
           {
             className: clsx(
@@ -566,9 +373,9 @@ function Dropdown({
               onChange(item.key);
             },
             children: [
-              item.icon ? /* @__PURE__ */ jsx9("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
-              /* @__PURE__ */ jsx9(Typography, { size: "2", children: item.name }),
-              selected?.key === item.key && /* @__PURE__ */ jsx9(Check, { className: "w-4 h-4 ml-auto" })
+              item.icon ? /* @__PURE__ */ jsx6("div", { style: { marginRight: "10px" }, children: item.icon }) : null,
+              /* @__PURE__ */ jsx6(Typography, { size: "2", children: item.name }),
+              selected?.key === item.key && /* @__PURE__ */ jsx6(Check, { className: "w-4 h-4 ml-auto" })
             ]
           },
           item.key
@@ -579,13 +386,13 @@ function Dropdown({
 }
 
 // src/components/Layout.tsx
-import { jsx as jsx10 } from "react/jsx-runtime";
+import { jsx as jsx7 } from "react/jsx-runtime";
 function Root2({
   className,
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx7(
     "div",
     {
       className,
@@ -605,7 +412,7 @@ function Header({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx7(
     "div",
     {
       style: {
@@ -630,7 +437,7 @@ function HeaderLeft({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx7(
     "div",
     {
       style: {
@@ -649,7 +456,7 @@ function HeaderTitle({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx7(
     "div",
     {
       style: {
@@ -668,7 +475,7 @@ function HeaderRight({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx7(
     "div",
     {
       style: {
@@ -687,7 +494,7 @@ function Main({
   style,
   children
 }) {
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsx7(
     "div",
     {
       style: {
@@ -709,15 +516,15 @@ var Layout = {
 };
 
 // src/components/List.tsx
-import { jsx as jsx11 } from "react/jsx-runtime";
+import { jsx as jsx8 } from "react/jsx-runtime";
 function List({ items, children, ...props }) {
-  return /* @__PURE__ */ jsx11("div", { ...props, children: items.map((item) => children(item)) });
+  return /* @__PURE__ */ jsx8("div", { ...props, children: items.map((item) => children(item)) });
 }
 
 // src/components/TabBar.tsx
-import { jsx as jsx12 } from "react/jsx-runtime";
+import { jsx as jsx9 } from "react/jsx-runtime";
 function TabBar({ style, items, renderItem }) {
-  return /* @__PURE__ */ jsx12(
+  return /* @__PURE__ */ jsx9(
     List,
     {
       style: {
@@ -739,8 +546,8 @@ function TabBar({ style, items, renderItem }) {
 
 // src/components/Modal.tsx
 import clsx2 from "clsx";
-import { Drawer as Drawer2 } from "vaul";
-import { jsx as jsx13, jsxs as jsxs6 } from "react/jsx-runtime";
+import { Drawer } from "vaul";
+import { jsx as jsx10, jsxs as jsxs4 } from "react/jsx-runtime";
 function Modal({
   type = "default",
   handle = true,
@@ -750,12 +557,12 @@ function Modal({
   classes,
   ...props
 }) {
-  const Root3 = type === "default" ? Drawer2.Root : Drawer2.NestedRoot;
-  return /* @__PURE__ */ jsxs6(Root3, { ...props, children: [
-    trigger && /* @__PURE__ */ jsx13(Drawer2.Trigger, { asChild: true, children: trigger }),
-    /* @__PURE__ */ jsxs6(Drawer2.Portal, { children: [
-      /* @__PURE__ */ jsx13(
-        Drawer2.Overlay,
+  const Root3 = type === "default" ? Drawer.Root : Drawer.NestedRoot;
+  return /* @__PURE__ */ jsxs4(Root3, { ...props, children: [
+    trigger && /* @__PURE__ */ jsx10(Drawer.Trigger, { asChild: true, children: trigger }),
+    /* @__PURE__ */ jsxs4(Drawer.Portal, { children: [
+      /* @__PURE__ */ jsx10(
+        Drawer.Overlay,
         {
           style: {
             position: "fixed",
@@ -764,8 +571,8 @@ function Modal({
           }
         }
       ),
-      /* @__PURE__ */ jsx13(
-        Drawer2.Content,
+      /* @__PURE__ */ jsx10(
+        Drawer.Content,
         {
           style: {
             position: "fixed",
@@ -775,7 +582,7 @@ function Modal({
             right: 0,
             margin: "0 4px 28px"
           },
-          children: /* @__PURE__ */ jsxs6(
+          children: /* @__PURE__ */ jsxs4(
             "div",
             {
               className: clsx2(classes?.content, "bg-modal"),
@@ -790,9 +597,9 @@ function Modal({
                 gap: 16
               },
               children: [
-                /* @__PURE__ */ jsx13(Drawer2.Title, { className: "hidden", children: title }),
-                /* @__PURE__ */ jsx13(Drawer2.Description, { className: "hidden", children: title }),
-                handle && /* @__PURE__ */ jsx13(Drawer2.Handle, {}),
+                /* @__PURE__ */ jsx10(Drawer.Title, { className: "hidden", children: title }),
+                /* @__PURE__ */ jsx10(Drawer.Description, { className: "hidden", children: title }),
+                handle && /* @__PURE__ */ jsx10(Drawer.Handle, {}),
                 children
               ]
             }
@@ -804,15 +611,15 @@ function Modal({
 }
 
 // src/components/Image.tsx
-import { jsx as jsx14 } from "react/jsx-runtime";
+import { jsx as jsx11 } from "react/jsx-runtime";
 function Image({ src, ...props }) {
   const url = typeof src === "string" ? src : src.src;
-  return /* @__PURE__ */ jsx14("img", { src: url, ...props });
+  return /* @__PURE__ */ jsx11("img", { src: url, ...props });
 }
 
 // src/components/Button.tsx
-import { useState as useState3, useMemo as useMemo4 } from "react";
-import { jsx as jsx15 } from "react/jsx-runtime";
+import { useState as useState2, useMemo as useMemo2 } from "react";
+import { jsx as jsx12 } from "react/jsx-runtime";
 var colors = {
   primary: "#3b82f6",
   // blue-500
@@ -863,8 +670,8 @@ function Button({
   disabled,
   ...props
 }) {
-  const [isHovered, setIsHovered] = useState3(false);
-  const buttonStyle = useMemo4(() => {
+  const [isHovered, setIsHovered] = useState2(false);
+  const buttonStyle = useMemo2(() => {
     const baseStyle = {
       display: "flex",
       alignItems: "center",
@@ -912,7 +719,7 @@ function Button({
     }
     return baseStyle;
   }, [variant, width, size, color, rounded, isHovered, disabled, style]);
-  return /* @__PURE__ */ jsx15(
+  return /* @__PURE__ */ jsx12(
     "button",
     {
       style: buttonStyle,
@@ -924,7 +731,7 @@ function Button({
       onMouseLeave: () => setIsHovered(false),
       disabled: disabled || isLoading,
       ...props,
-      children: isLoading ? /* @__PURE__ */ jsx15(Spinner, { width: 24, height: 24 }) : children
+      children: isLoading ? /* @__PURE__ */ jsx12(Spinner, { width: 24, height: 24 }) : children
     }
   );
 }
@@ -932,7 +739,7 @@ function Button({
 // src/components/Input.tsx
 import { cva } from "class-variance-authority";
 import clsx3 from "clsx";
-import { jsx as jsx16 } from "react/jsx-runtime";
+import { jsx as jsx13 } from "react/jsx-runtime";
 var inputVariants = cva(
   "focus:outline-none outline-none placeholder:text-placeholder",
   {
@@ -945,13 +752,13 @@ function Input({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx16("input", { className: clsx3(inputVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx13("input", { className: clsx3(inputVariants({ className })), ...props });
 }
 
 // src/components/Textarea.tsx
 import { cva as cva2 } from "class-variance-authority";
 import clsx4 from "clsx";
-import { jsx as jsx17 } from "react/jsx-runtime";
+import { jsx as jsx14 } from "react/jsx-runtime";
 var textareaVariants = cva2(
   "focus:outline-none outline-none resize-none placeholder:text-placeholder",
   {
@@ -964,19 +771,19 @@ function Textarea({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx17("textarea", { className: clsx4(textareaVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx14("textarea", { className: clsx4(textareaVariants({ className })), ...props });
 }
 
 // src/components/Canvas.tsx
-import { useEffect as useEffect3, useRef } from "react";
-import { jsx as jsx18 } from "react/jsx-runtime";
+import { useEffect as useEffect2, useRef } from "react";
+import { jsx as jsx15 } from "react/jsx-runtime";
 function Canvas({
   image,
   size = 40,
   ...props
 }) {
   const canvasRef = useRef(null);
-  useEffect3(() => {
+  useEffect2(() => {
     if (image) {
       const canvas = canvasRef.current;
       if (canvas) {
@@ -989,11 +796,11 @@ function Canvas({
       }
     }
   }, [image, size]);
-  return /* @__PURE__ */ jsx18("canvas", { ref: canvasRef, ...props, width: size, height: size });
+  return /* @__PURE__ */ jsx15("canvas", { ref: canvasRef, ...props, width: size, height: size });
 }
 
 // src/components/Confirm.tsx
-import { jsx as jsx19, jsxs as jsxs7 } from "react/jsx-runtime";
+import { jsx as jsx16, jsxs as jsxs5 } from "react/jsx-runtime";
 function Confirm({
   title,
   description,
@@ -1002,10 +809,10 @@ function Confirm({
   confirm,
   ...props
 }) {
-  return /* @__PURE__ */ jsxs7(Modal, { title, onOpenChange, ...props, children: [
-    /* @__PURE__ */ jsx19(Typography, { size: "2", children: title }),
-    /* @__PURE__ */ jsx19("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx19(Typography, { size: "1", children: description }) }),
-    /* @__PURE__ */ jsxs7(
+  return /* @__PURE__ */ jsxs5(Modal, { title, onOpenChange, ...props, children: [
+    /* @__PURE__ */ jsx16(Typography, { size: "2", children: title }),
+    /* @__PURE__ */ jsx16("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx16(Typography, { size: "1", children: description }) }),
+    /* @__PURE__ */ jsxs5(
       "div",
       {
         style: {
@@ -1015,7 +822,7 @@ function Confirm({
           padding: "16px 24px"
         },
         children: [
-          /* @__PURE__ */ jsx19(
+          /* @__PURE__ */ jsx16(
             Button,
             {
               width: "full",
@@ -1030,7 +837,7 @@ function Confirm({
               ...cancel
             }
           ),
-          /* @__PURE__ */ jsx19(
+          /* @__PURE__ */ jsx16(
             Button,
             {
               width: "full",
@@ -1062,10 +869,10 @@ function useRefValue(value) {
 }
 
 // src/hooks/useClientOnce.ts
-import { useEffect as useEffect4, useRef as useRef2 } from "react";
+import { useEffect as useEffect3, useRef as useRef2 } from "react";
 function useClientOnce(setup) {
   const canCall = useRef2(true);
-  useEffect4(() => {
+  useEffect3(() => {
     if (!canCall.current) {
       return;
     }
@@ -1080,19 +887,19 @@ function useClientOnce(setup) {
 }
 
 // src/hooks/useIsMounted.ts
-import { useEffect as useEffect5, useState as useState4 } from "react";
+import { useEffect as useEffect4, useState as useState3 } from "react";
 function useIsMounted() {
-  const [isMounted, setIsMounted] = useState4(false);
-  useEffect5(() => {
+  const [isMounted, setIsMounted] = useState3(false);
+  useEffect4(() => {
     setIsMounted(true);
   }, []);
   return isMounted;
 }
 
 // src/hooks/useDisclosure.ts
-import { useState as useState5 } from "react";
+import { useState as useState4 } from "react";
 function useDisclosure() {
-  const [isOpen, setIsOpen] = useState5(false);
+  const [isOpen, setIsOpen] = useState4(false);
   const onOpenChange = (open) => {
     setIsOpen(open);
   };
@@ -1104,8 +911,668 @@ function useDisclosure() {
   };
   return { isOpen, onOpenChange, onOpen, onClose };
 }
+
+// src/navigation/StackNavigator.tsx
+import {
+  createContext,
+  use,
+  useState as useState5,
+  useCallback,
+  useMemo as useMemo3,
+  useEffect as useEffect5
+} from "react";
+import { parseJSON } from "@ywwwtseng/ywjs";
+import { jsx as jsx17 } from "react/jsx-runtime";
+var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
+  ScreenType2["PAGE"] = "page";
+  ScreenType2["DRAWER"] = "drawer";
+  ScreenType2["SINGLE"] = "single";
+  return ScreenType2;
+})(ScreenType || {});
+var StackNavigatorContext = createContext({
+  route: void 0,
+  screens: {},
+  stacks: [],
+  navigate: (screen, options) => {
+  }
+});
+function StackNavigatorProvider({
+  screens,
+  children
+}) {
+  const [stacks, setStacks] = useState5([
+    parseJSON(sessionStorage.getItem("navigator/screen")) || {
+      screen: "Home",
+      params: {}
+    }
+  ]);
+  const route = useMemo3(() => {
+    const stack = stacks[stacks.length - 1];
+    const screen = screens[stack.screen];
+    return {
+      name: stack.screen,
+      params: stack.params,
+      type: screen.type,
+      title: screen.title,
+      screen: screen.screen,
+      back: screen.back
+    };
+  }, [stacks, screens]);
+  const navigate = useCallback(
+    (screen, options) => {
+      if (typeof screen === "string") {
+        if (!Object.keys(screens).includes(screen)) {
+          console.warn(`Screen ${screen} not found`);
+          return;
+        }
+      }
+      const type = options?.type || "push";
+      setStacks((prev) => {
+        if (screen === -1 && prev.length > 1) {
+          return prev.slice(0, -1);
+        } else if (typeof screen === "string") {
+          if (prev[prev.length - 1]?.screen === screen) {
+            return prev;
+          }
+          const route2 = { screen, params: options?.params || {} };
+          if (type === "replace") {
+            return [...prev.slice(0, -1), route2];
+          } else {
+            return [...prev, route2].slice(-10);
+          }
+        }
+        return prev;
+      });
+    },
+    [screens]
+  );
+  const value = useMemo3(
+    () => ({
+      route,
+      navigate,
+      screens,
+      stacks
+    }),
+    [route, navigate, screens, stacks]
+  );
+  useEffect5(() => {
+    if (route.type === "drawer") {
+      return;
+    }
+    sessionStorage.setItem(
+      "navigator/screen",
+      JSON.stringify({
+        screen: route.name,
+        params: route.params
+      })
+    );
+  }, [route]);
+  return /* @__PURE__ */ jsx17(StackNavigatorContext.Provider, { value, children });
+}
+var useNavigate = () => {
+  const context = use(StackNavigatorContext);
+  if (!context) {
+    throw new Error("useNavigate must be used within a StackNavigator");
+  }
+  return context.navigate;
+};
+var useRoute = () => {
+  const context = use(StackNavigatorContext);
+  if (!context) {
+    throw new Error("useRoute must be used within a StackNavigator");
+  }
+  return context.route;
+};
+
+// src/navigation/Navigator.tsx
+import { use as use2, useMemo as useMemo4 } from "react";
+
+// src/components/DrawerScreen.tsx
+import { Drawer as Drawer2 } from "vaul";
+import { jsx as jsx18, jsxs as jsxs6 } from "react/jsx-runtime";
+function DrawerScreen({
+  title,
+  description,
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx18(
+    Drawer2.Root,
+    {
+      handleOnly: true,
+      direction: "right",
+      open: !!children,
+      repositionInputs: false,
+      children: /* @__PURE__ */ jsx18(Drawer2.Portal, { children: /* @__PURE__ */ jsxs6(
+        Drawer2.Content,
+        {
+          style: {
+            height: "100vh",
+            minHeight: "100vh",
+            position: "fixed",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            outline: "none"
+          },
+          children: [
+            /* @__PURE__ */ jsx18(Drawer2.Title, { style: { display: "none" }, children: title }),
+            /* @__PURE__ */ jsx18(Drawer2.Description, { style: { display: "none" }, children: description }),
+            /* @__PURE__ */ jsx18("div", { className: "w-full h-full overflow-y-auto", style, children })
+          ]
+        }
+      ) })
+    }
+  );
+}
+
+// src/navigation/Navigator.tsx
+import { Fragment, jsx as jsx19, jsxs as jsxs7 } from "react/jsx-runtime";
+function Navigator({ drawer }) {
+  const { route, stacks, screens } = use2(StackNavigatorContext);
+  const Screen = useMemo4(() => {
+    if (route.type !== "page" /* PAGE */) {
+      const stack = stacks[stacks.length - 2];
+      return stack ? screens[stack.screen].screen : void 0;
+    }
+    return route.screen;
+  }, [route, stacks, screens]);
+  const drawerScreen = useMemo4(() => {
+    if (route.type !== "page" /* PAGE */) {
+      const Screen2 = route.screen;
+      return /* @__PURE__ */ jsx19(
+        DrawerScreen,
+        {
+          title: route.title,
+          description: route.title,
+          style: drawer.style,
+          children: /* @__PURE__ */ jsx19(Screen2, { params: route.params })
+        }
+      );
+    }
+  }, [route]);
+  return /* @__PURE__ */ jsxs7(Fragment, { children: [
+    Screen && /* @__PURE__ */ jsx19(
+      "div",
+      {
+        style: {
+          height: "100%",
+          overflowY: "auto",
+          display: !!drawerScreen ? "none" : "block"
+        },
+        children: /* @__PURE__ */ jsx19(Screen, { params: route.params })
+      }
+    ),
+    drawerScreen
+  ] });
+}
+
+// src/app/AppContext.tsx
+import { Toaster } from "react-hot-toast";
+
+// src/app/ClientContext.tsx
+import {
+  useMemo as useMemo5,
+  useCallback as useCallback2,
+  createContext as createContext2,
+  use as use3
+} from "react";
+import { Request } from "@ywwwtseng/request";
+import { jsx as jsx20 } from "react/jsx-runtime";
+var ClientContext = createContext2(void 0);
+function ClientProvider({
+  url,
+  transformRequest,
+  children
+}) {
+  const request = useMemo5(
+    () => new Request({
+      transformRequest
+    }),
+    [transformRequest]
+  );
+  const query = useCallback2(
+    (path, params) => {
+      return request.post(url, { type: "query", path, params: params ?? {} });
+    },
+    [request]
+  );
+  const mutate = useCallback2(
+    (action, payload) => {
+      if (payload instanceof FormData) {
+        payload.append("mutation:type", "mutate");
+        payload.append("mutation:action", action);
+        return request.post(url, payload);
+      }
+      return request.post(url, { type: "mutate", action, payload });
+    },
+    [request]
+  );
+  const value = useMemo5(
+    () => ({
+      query,
+      mutate
+    }),
+    [query, mutate]
+  );
+  return /* @__PURE__ */ jsx20(ClientContext.Provider, { value, children });
+}
+function useClient() {
+  const context = use3(ClientContext);
+  if (!context) {
+    throw new Error("useClient must be used within a ClientProvider");
+  }
+  return context;
+}
+
+// src/app/StoreContext.tsx
+import {
+  createContext as createContext3,
+  useRef as useRef3,
+  useCallback as useCallback3,
+  useMemo as useMemo6
+} from "react";
+import { create } from "zustand";
+import { produce } from "immer";
+import { merge } from "@ywwwtseng/ywjs";
+import { jsx as jsx21 } from "react/jsx-runtime";
+var StoreContext = createContext3(
+  void 0
+);
+var getQueryKey = (path, params) => {
+  return params && Object.keys(params).length > 0 ? JSON.stringify({ path, params }) : path;
+};
+var useStore = create((set) => ({
+  state: {},
+  loading: [],
+  update: (commands) => {
+    set((store) => {
+      return produce(store, (draft) => {
+        for (const command of commands) {
+          if (command.type === "update" && typeof command.payload === "function") {
+            return command.payload(draft);
+          } else {
+            if (command.type === "update" && command.target) {
+              draft.state[command.target] = command.payload;
+            } else if (command.type === "merge" && command.target) {
+              draft.state[command.target] = merge(
+                draft.state[command.target],
+                command.payload
+              );
+            } else if (command.type === "replace") {
+              const payload = command.payload;
+              const target = command.target || "id";
+              if (typeof payload === "object" && payload && target in payload) {
+                for (const key of Object.keys(draft.state)) {
+                  const state = draft.state[key];
+                  if (!Array.isArray(state)) continue;
+                  const index = state.findIndex((item) => {
+                    if (item[target] !== payload[target]) return false;
+                    const itemKeys = Object.keys(item);
+                    const payloadKeys = Object.keys(payload);
+                    if (itemKeys.length !== payloadKeys.length) return false;
+                    return itemKeys.every((key2) => payloadKeys.includes(key2));
+                  });
+                  if (index !== -1) {
+                    state[index] = payload;
+                  }
+                }
+              }
+            } else if (command.type === "unshift" && command.target) {
+              const state = draft.state[command.target];
+              if (Array.isArray(state)) {
+                state.unshift(command.payload);
+              }
+            } else if (command.type === "push" && command.target) {
+              const state = draft.state[command.target];
+              if (Array.isArray(state)) {
+                state.push(command.payload);
+              }
+            } else if (command.type === "delete" && command.target) {
+              const payload = command.payload;
+              const target = command.target || "id";
+              for (const key of Object.keys(draft.state)) {
+                const state = draft.state[key];
+                if (!Array.isArray(state)) continue;
+                const index = state.findIndex(
+                  (item) => item[target] === payload
+                );
+                if (index !== -1) {
+                  state.splice(index, 1);
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+}));
+function StoreProvider({ children }) {
+  const navigate = useNavigate();
+  const client = useClient();
+  const { update } = useStore();
+  const loadingRef = useRef3([]);
+  const query = useCallback3(
+    (path, params, options) => {
+      const key = getQueryKey(path, params);
+      loadingRef.current.push(key);
+      update([
+        {
+          type: "update",
+          target: "loading",
+          payload: (draft) => {
+            draft.loading.push(key);
+          }
+        }
+      ]);
+      return client.query(path, params).then((data) => {
+        loadingRef.current = loadingRef.current.filter((k) => k !== key);
+        update([
+          ...data.commands ?? [],
+          {
+            type: "update",
+            target: "loading",
+            payload: (draft) => {
+              draft.loading = draft.loading.filter((k) => k !== key);
+            }
+          }
+        ]);
+        if (data.navigate) {
+          navigate(data.navigate.screen, {
+            type: "replace",
+            params: data.navigate.params
+          });
+        }
+        if (data.notify) {
+          options?.onNotify?.(data.notify);
+        }
+        return { key, data };
+      }).catch((error) => {
+        loadingRef.current = loadingRef.current.filter((k) => k !== key);
+        update([
+          {
+            type: "update",
+            target: "loading",
+            payload: (draft) => {
+              draft.loading = draft.loading.filter((k) => k !== key);
+            }
+          }
+        ]);
+        throw error;
+      });
+    },
+    [client.query]
+  );
+  const mutate = useCallback3(
+    (action, payload, options) => {
+      return client.mutate(action, payload).then((data) => {
+        if (data.commands) {
+          update(data.commands);
+        }
+        if (data.navigate) {
+          navigate(data.navigate.screen, {
+            type: "replace",
+            params: data.navigate.params
+          });
+        }
+        return { data };
+      });
+    },
+    [client.mutate]
+  );
+  const clearData = useCallback3((key) => {
+    update([
+      {
+        type: "update",
+        target: "state",
+        payload: (draft) => {
+          delete draft.state[key];
+        }
+      }
+    ]);
+  }, [update]);
+  const value = useMemo6(
+    () => ({
+      query,
+      mutate,
+      update,
+      clearData,
+      loadingRef
+    }),
+    [query, mutate, update, loadingRef, clearData]
+  );
+  return /* @__PURE__ */ jsx21(StoreContext.Provider, { value, children });
+}
+
+// src/app/AppContext.tsx
+import { jsx as jsx22, jsxs as jsxs8 } from "react/jsx-runtime";
+function AppProvider({
+  url,
+  transformRequest,
+  toasterProps,
+  children
+}) {
+  return /* @__PURE__ */ jsxs8(ClientProvider, { url, transformRequest, children: [
+    /* @__PURE__ */ jsx22(StoreProvider, { children }),
+    /* @__PURE__ */ jsx22(Toaster, { ...toasterProps })
+  ] });
+}
+
+// src/app/hooks/useInfiniteQuery.ts
+import { use as use4, useMemo as useMemo7, useState as useState6, useCallback as useCallback4, useEffect as useEffect6 } from "react";
+var getNextPageParam = (lastPage) => {
+  return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
+};
+function useInfiniteQuery(path, options) {
+  const route = useRoute();
+  const refetchOnMount = options?.refetchOnMount ?? false;
+  const enabled = options?.enabled ?? true;
+  const state = useStore((store) => store.state);
+  const [pageKeys, setPageKeys] = useState6([]);
+  const data = useMemo7(() => {
+    return pageKeys.map((key) => state[key]).filter(Boolean);
+  }, [pageKeys, state]);
+  const context = use4(StoreContext);
+  if (!context) {
+    throw new Error("useInfiniteQuery must be used within a TMA");
+  }
+  const { query, update, loadingRef } = context;
+  const hasNextPage = useMemo7(() => {
+    const page = data[data.length - 1];
+    if (Array.isArray(page)) {
+      const limit = options.params?.limit;
+      if (typeof limit === "number") {
+        return page.length === limit;
+      }
+      if (page.length === 0) {
+        return false;
+      }
+    }
+    return true;
+  }, [data]);
+  const fetchNextPage = useCallback4(() => {
+    if (!hasNextPage) {
+      return;
+    }
+    const params = options?.params ?? {};
+    if (!enabled) {
+      return;
+    }
+    const cursor = getNextPageParam(
+      data ? data[data.length - 1] : void 0
+    );
+    if (cursor) {
+      params.cursor = cursor;
+    }
+    const queryKey = getQueryKey(path, params);
+    if (loadingRef.current.includes(queryKey)) {
+      return;
+    }
+    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
+    query(path, params);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data]);
+  const isLoading = useMemo7(() => {
+    if (!enabled) {
+      return false;
+    }
+    return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
+  }, [pageKeys, state, enabled]);
+  useEffect6(() => {
+    if (!enabled) {
+      return;
+    }
+    const params = options?.params ?? {};
+    const queryKey = getQueryKey(path, params);
+    if (loadingRef.current.includes(queryKey)) {
+      return;
+    }
+    if (state[queryKey] !== void 0 && refetchOnMount === false) {
+      return;
+    }
+    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
+    query(path, params);
+    return () => {
+      if (refetchOnMount) {
+        update([
+          {
+            type: "update",
+            payload: (draft) => {
+              pageKeys.forEach((page) => {
+                delete draft.state[page];
+              });
+            }
+          }
+        ]);
+        setPageKeys([]);
+      }
+    };
+  }, [path, JSON.stringify(options), enabled, route.name]);
+  return {
+    data: data.length > 0 ? data.flat() : void 0,
+    isLoading,
+    hasNextPage,
+    fetchNextPage
+  };
+}
+
+// src/app/hooks/useMutation.ts
+import { use as use5, useState as useState7, useCallback as useCallback5 } from "react";
+import toast from "react-hot-toast";
+function useMutation(action, { t, onError, onSuccess } = {}) {
+  const context = use5(StoreContext);
+  if (!context) {
+    throw new Error("useMutation must be used within a StoreProvider");
+  }
+  const [isLoading, setIsLoading] = useState7(false);
+  const isLoadingRef = useRefValue(isLoading);
+  const mutate = useCallback5(
+    (payload, options) => {
+      if (isLoadingRef.current) {
+        return Promise.reject({
+          message: "Already loading"
+        });
+      }
+      isLoadingRef.current = true;
+      setIsLoading(true);
+      return context.mutate(action, payload, options).then(({ data }) => {
+        if (data.notify) {
+          (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
+        }
+        onSuccess?.(data);
+        return data;
+      }).catch((res) => {
+        onError?.(res);
+        return {
+          ok: false
+        };
+      }).finally(() => {
+        isLoadingRef.current = false;
+        setIsLoading(false);
+      });
+    },
+    [context.mutate, action]
+  );
+  return {
+    mutate,
+    isLoading
+  };
+}
+
+// src/app/hooks/useQuery.ts
+import { use as use6, useEffect as useEffect7, useCallback as useCallback6, useMemo as useMemo8, useRef as useRef4 } from "react";
+import toast2 from "react-hot-toast";
+function useQuery(path, options) {
+  const context = use6(StoreContext);
+  if (!context) {
+    throw new Error("useQuery must be used within a StoreProvider");
+  }
+  const { query, clearData, loadingRef } = context;
+  const route = useRoute();
+  const key = useMemo8(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
+  const currentKeyRef = useRef4(key);
+  const params = options?.params ?? {};
+  const refetchOnMount = options?.refetchOnMount ?? false;
+  const enabled = options?.enabled ?? true;
+  const isLoading = useStore((store) => store.loading).includes(key);
+  const data = useStore((store) => store.state[key]);
+  useEffect7(() => {
+    currentKeyRef.current = key;
+    return () => {
+      if (options?.autoClearCache) {
+        clearData(key);
+      }
+    };
+  }, [key]);
+  useEffect7(() => {
+    if (!enabled) {
+      return;
+    }
+    if (loadingRef.current.includes(key)) {
+      return;
+    }
+    if (data !== void 0 && refetchOnMount === false) {
+      return;
+    }
+    query(path, params, {
+      onNotify: (notify) => {
+        (toast2[notify.type] || toast2)?.(options?.t?.(notify.message) ?? notify.message);
+      }
+    }).then(({ key: key2 }) => {
+      if (options?.autoClearCache && key2 !== currentKeyRef.current) {
+        clearData(key2);
+      }
+    });
+  }, [key, enabled, route.name]);
+  const refetch = useCallback6(() => {
+    if (!enabled) {
+      return;
+    }
+    if (loadingRef.current.includes(key)) {
+      return;
+    }
+    query(path, params).then(({ key: key2 }) => {
+      if (options?.autoClearCache && key2 !== currentKeyRef.current) {
+        clearData(key2);
+      }
+    });
+  }, [key, enabled, route.name]);
+  return {
+    refetch,
+    isLoading,
+    data
+  };
+}
+
+// src/app/hooks/useStoreState.ts
+import { get } from "@ywwwtseng/ywjs";
+function useStoreState(path) {
+  return useStore((store) => get(store.state, path));
+}
 export {
   AmountInput,
+  AppProvider,
   Button,
   Canvas,
   Check,
@@ -1129,10 +1596,15 @@ export {
   formatAmount,
   inputVariants,
   textareaVariants,
+  default2 as toast,
   useClientOnce,
   useDisclosure,
+  useInfiniteQuery,
   useIsMounted,
+  useMutation,
   useNavigate,
+  useQuery,
   useRefValue,
-  useRoute
+  useRoute,
+  useStoreState
 };

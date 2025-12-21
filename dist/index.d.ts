@@ -1,71 +1,12 @@
-import * as react_jsx_runtime from 'react/jsx-runtime';
+import { ToasterProps } from 'react-hot-toast';
+export { default as toast } from 'react-hot-toast';
 import * as React$1 from 'react';
-import React__default, { ElementType, ComponentProps } from 'react';
+import React__default, { ComponentProps, ElementType, PropsWithChildren } from 'react';
+import * as react_jsx_runtime from 'react/jsx-runtime';
 import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { VariantProps } from 'class-variance-authority';
-
-type Stack = {
-    screen: string;
-    params: Record<string, string | number | boolean | null | undefined>;
-};
-declare enum ScreenType {
-    PAGE = "page",
-    DRAWER = "drawer",
-    SINGLE = "single"
-}
-type Screen = {
-    screen: ElementType;
-    title: string;
-    type: ScreenType;
-    back?: {
-        title?: string;
-        push?: string;
-        replace?: string;
-    };
-};
-type Route = {
-    name: Stack['screen'];
-    params: Stack['params'];
-    back?: Screen['back'];
-    title: Screen['title'];
-    type: Screen['type'];
-    screen: Screen['screen'];
-};
-interface StackNavigatorContextState {
-    route: Route;
-    screens: Record<string, Screen>;
-    stacks: Stack[];
-    navigate: (screen: string | number, options?: {
-        params?: Stack['params'];
-        type?: 'push' | 'replace';
-    }) => void;
-}
-declare const StackNavigatorContext: React$1.Context<StackNavigatorContextState>;
-interface StackNavigatorProviderProps extends React.PropsWithChildren {
-    screens: Record<string, Screen> & {
-        Home: Screen;
-    };
-}
-declare function StackNavigatorProvider({ screens, children, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
-declare const useNavigate: () => (screen: string | number, options?: {
-    params?: Stack["params"];
-    type?: "push" | "replace";
-}) => void;
-declare const useRoute: () => Route;
-
-interface DrawerScreenProps extends React.PropsWithChildren {
-    title: string;
-    description: string;
-    style?: React.CSSProperties;
-}
-
-interface NavigatorProps {
-    drawer: {
-        style: DrawerScreenProps['style'];
-    };
-}
-declare function Navigator({ drawer }: NavigatorProps): react_jsx_runtime.JSX.Element;
+import { ErrorResponse } from '@ywwwtseng/ywjs';
 
 type TypographySize = '12' | '11' | '10' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2' | '1';
 interface TypographyProps extends React__default.PropsWithChildren, React__default.CSSProperties {
@@ -222,6 +163,143 @@ declare function useDisclosure(): {
     onClose: () => void;
 };
 
+type Stack = {
+    screen: string;
+    params: Record<string, string | number | boolean | null | undefined>;
+};
+declare enum ScreenType {
+    PAGE = "page",
+    DRAWER = "drawer",
+    SINGLE = "single"
+}
+type Screen = {
+    screen: ElementType;
+    title: string;
+    type: ScreenType;
+    back?: {
+        title?: string;
+        push?: string;
+        replace?: string;
+    };
+};
+type Route = {
+    name: Stack['screen'];
+    params: Stack['params'];
+    back?: Screen['back'];
+    title: Screen['title'];
+    type: Screen['type'];
+    screen: Screen['screen'];
+};
+interface StackNavigatorContextState {
+    route: Route;
+    screens: Record<string, Screen>;
+    stacks: Stack[];
+    navigate: (screen: string | number, options?: {
+        params?: Stack['params'];
+        type?: 'push' | 'replace';
+    }) => void;
+}
+declare const StackNavigatorContext: React$1.Context<StackNavigatorContextState>;
+interface StackNavigatorProviderProps extends React.PropsWithChildren {
+    screens: Record<string, Screen> & {
+        Home: Screen;
+    };
+}
+declare function StackNavigatorProvider({ screens, children, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
+declare const useNavigate: () => (screen: string | number, options?: {
+    params?: Stack["params"];
+    type?: "push" | "replace";
+}) => void;
+declare const useRoute: () => Route;
+
+interface DrawerScreenProps extends React.PropsWithChildren {
+    title: string;
+    description: string;
+    style?: React.CSSProperties;
+}
+
+interface NavigatorProps {
+    drawer: {
+        style: DrawerScreenProps['style'];
+    };
+}
+declare function Navigator({ drawer }: NavigatorProps): react_jsx_runtime.JSX.Element;
+
+type QueryParams = Record<string, string | number | boolean | null | undefined>;
+
+interface ClientProviderProps extends PropsWithChildren {
+    url: string;
+    transformRequest?: (headers: Headers) => Headers;
+}
+
+interface AppProviderProps extends React__default.PropsWithChildren, Omit<ClientProviderProps, 'children'> {
+    toasterProps?: ToasterProps;
+}
+declare function AppProvider({ url, transformRequest, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
+
+interface UseQueryOptions$1 {
+    params: QueryParams & {
+        limit: number;
+    };
+    refetchOnMount?: boolean;
+    enabled?: boolean;
+}
+declare function useInfiniteQuery<T = unknown>(path: string, options: UseQueryOptions$1): {
+    data: T | undefined;
+    isLoading: boolean;
+    hasNextPage: boolean;
+    fetchNextPage: () => void;
+};
+
+interface Command {
+    type: 'update' | 'merge' | 'replace' | 'unshift' | 'push' | 'delete';
+    target?: string;
+    payload: unknown;
+}
+interface MutateOptions {
+}
+interface Notify {
+    type?: 'info' | 'success' | 'warning' | 'error' | 'default';
+    message: string;
+}
+interface ResponseData {
+    commands?: Command[];
+    data?: unknown;
+    notify?: Notify;
+    navigate?: {
+        screen: string;
+        params: Record<string, string | number | boolean>;
+    };
+    ok: boolean;
+}
+
+interface UseMutationOptions {
+    t?: (key: string) => string;
+    onError?: (error: {
+        data: ErrorResponse;
+    }) => void;
+    onSuccess?: (data: ResponseData) => void;
+}
+declare function useMutation(action: string, { t, onError, onSuccess }?: UseMutationOptions): {
+    mutate: <T = unknown>(payload?: T, options?: MutateOptions) => Promise<ResponseData>;
+    isLoading: boolean;
+};
+
+interface UseQueryOptions {
+    params?: QueryParams;
+    refetchOnMount?: boolean;
+    autoClearCache?: boolean;
+    enabled?: boolean;
+    t?: (key: string) => string;
+}
+declare function useQuery<T = unknown>(path: string, options?: UseQueryOptions): {
+    refetch: () => void;
+    isLoading: boolean;
+    data: T | undefined;
+};
+
+declare function useStoreState<T = unknown>(path: string | string[]): T | undefined;
+
 declare function Spinner(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
 declare function ChevronDown(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
@@ -237,4 +315,4 @@ declare namespace Flag {
   export { Flag_EN as EN, Flag_TW as TW };
 }
 
-export { AmountInput, type AmountInputProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useIsMounted, useNavigate, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute, useStoreState };
