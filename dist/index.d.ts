@@ -29,11 +29,12 @@ declare const Typography: React__default.MemoExoticComponent<({ as, align, weigh
 interface AmountInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
     value: string;
     onChange: (value: string) => void;
+    onInputChange?: (value: string) => void;
     decimal?: number;
     maxDigits?: number;
 }
 declare function formatAmount(input: string): string;
-declare function AmountInput({ decimal, value, onChange, maxDigits, ...props }: AmountInputProps): react_jsx_runtime.JSX.Element;
+declare function AmountInput({ decimal, value, onChange, onInputChange, maxDigits, ...props }: AmountInputProps): react_jsx_runtime.JSX.Element;
 
 interface DropdownProps {
     items: {

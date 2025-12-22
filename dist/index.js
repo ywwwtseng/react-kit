@@ -75,10 +75,59 @@ var Typography = React.memo(
 // src/components/AmountInput.tsx
 import { useEffect, useState } from "react";
 import { jsx } from "react/jsx-runtime";
+function toPlainString(num) {
+  return String(num).replace(
+    /(-?)(\d*)\.?(\d*)e([+-]\d+)/,
+    (_, sign, int, frac, exp) => {
+      exp = Number(exp);
+      const digits = int + frac;
+      if (exp < 0) {
+        const pos = int.length + exp;
+        return sign + "0." + "0".repeat(-pos) + digits;
+      } else {
+        return sign + digits + "0".repeat(exp - frac.length);
+      }
+    }
+  );
+}
+function isMobile() {
+  const ua = navigator.userAgent;
+  const isTouch = navigator.maxTouchPoints > 0;
+  const isMobileUA = /Android|iPhone|iPad|iPod|Windows Phone/i.test(ua);
+  return isMobileUA || isTouch;
+}
 function formatAmount(input) {
   if (!input) return "";
   const parts = input.split(".");
-  const integerPart = parts[0]?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const rawIntegerPart = parts[0] || "";
+  if (rawIntegerPart === "" || /^0+$/.test(rawIntegerPart)) {
+    const integerPart2 = rawIntegerPart;
+    if (parts.length > 1) {
+      return `${integerPart2}.${parts[1]}`;
+    } else if (input.endsWith(".")) {
+      return `${integerPart2}.`;
+    }
+    return integerPart2;
+  }
+  const leadingZerosMatch = rawIntegerPart.match(/^(0+)/);
+  if (leadingZerosMatch) {
+    const leadingZeros = leadingZerosMatch[1];
+    const significantPart = rawIntegerPart.slice(leadingZeros.length);
+    if (significantPart) {
+      const formattedSignificant = significantPart.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+      );
+      const integerPart2 = leadingZeros + formattedSignificant;
+      if (parts.length > 1) {
+        return `${integerPart2}.${parts[1]}`;
+      } else if (input.endsWith(".")) {
+        return `${integerPart2}.`;
+      }
+      return integerPart2;
+    }
+  }
+  const integerPart = rawIntegerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   if (parts.length > 1) {
     return `${integerPart}.${parts[1]}`;
   } else if (input.endsWith(".")) {
@@ -90,18 +139,29 @@ function AmountInput({
   decimal = 0,
   value,
   onChange,
+  onInputChange,
   maxDigits,
   ...props
 }) {
   const [inputValue, setInputValue] = useState(value);
   const [isComposing, setIsComposing] = useState(false);
   useEffect(() => {
-    if (inputValue === value) return;
-    if (inputValue === "0" && value === "") return;
-    if (Number(inputValue) === 0 && Number(value) === 0) return;
-    if (/^\d+\.$/.test(inputValue)) return;
-    setInputValue(value);
+    if (inputValue === "." && value === "") {
+      return;
+    }
+    if (inputValue === "0" && value === "") {
+      setInputValue("");
+    }
+    if (Number(inputValue) === Number(value)) return;
+    if (inputValue !== "" && value === "") {
+      setInputValue("");
+    } else {
+      setInputValue(value);
+    }
   }, [value, inputValue]);
+  useEffect(() => {
+    onInputChange?.(inputValue);
+  }, [inputValue, onInputChange]);
   return /* @__PURE__ */ jsx(
     "input",
     {
@@ -109,20 +169,25 @@ function AmountInput({
       className: props.className ? `input ${props.className}` : "input",
       type: "text",
       value: isComposing ? inputValue : formatAmount(inputValue),
-      onCompositionStart: () => {
-        setIsComposing(true);
-      },
       onChange: (e) => {
-        const value2 = e.target.value.replace(/,/g, "");
-        if (value2 === "") {
-          setInputValue("");
+        if (isMobile()) {
+          setIsComposing(true);
+        }
+        let value2 = e.target.value.replace(/,/g, "");
+        if (value2 === "" || value2 === ".") {
+          setInputValue(value2);
           onChange("");
           return;
         }
-        if (value2.startsWith(".")) return;
+        if (value2.startsWith(".") && value2.length > 1) {
+          const previousValue = inputValue.replace(/,/g, "");
+          if (previousValue.startsWith("0.") && previousValue.slice(1) === value2) {
+          } else {
+            value2 = "0" + value2;
+          }
+        }
         if ((value2.match(/\./g) || []).length > 1) return;
-        if (!/^\d*\.?\d*$/.test(value2)) return;
-        if (/^0\d+/.test(value2) && !/^0\.\d*$/.test(value2)) return;
+        if (!/^\.?\d*\.?\d*$/.test(value2)) return;
         if (typeof maxDigits === "number") {
           const totalDigits = value2.replace(".", "");
           if (totalDigits.length > maxDigits) return;
@@ -140,19 +205,8 @@ function AmountInput({
         const decimalPart = value2.split(".")[1];
         if (decimalPart && decimalPart.length > decimal) return;
         if (Number(value2) >= 0) {
-          if (/^\d+\.$/.test(value2)) {
-            setInputValue(value2);
-            onChange(value2.replace(".", ""));
-            return;
-          }
           setInputValue(value2);
-          if (/^(0|[1-9]\d*)(\.\d+)?$/.test(value2)) {
-            if (Number(value2) === 0) {
-              onChange("");
-            } else {
-              onChange(value2);
-            }
-          }
+          onChange(toPlainString(Number(value2)));
         }
       }
     }
