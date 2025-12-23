@@ -1,43 +1,43 @@
 import { use, useEffect, useCallback, useMemo, useRef } from 'react';
 import toast from 'react-hot-toast';
 import { useRoute } from '../../navigation';
+import { useI18n } from './useI18n';
+import { useClient } from './useClient';
 import {
-  useStore,
-  StoreContext,
-  getQueryKey,
-} from '../StoreContext';
+  useAppStateStore,
+  AppStateContext,
+  type AppStateContextState,
+} from '../AppStateContext';
 import { type QueryParams } from '../types';
+import { getQueryKey } from '../utils';
 
-interface UseQueryOptions {
+export interface UseQueryOptions {
   params?: QueryParams;
   refetchOnMount?: boolean;
   autoClearCache?: boolean;
   enabled?: boolean;
-  t?: (key: string) => string;
 }
 
 export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
-  const context = use(StoreContext);
+  const { t } = useI18n();
+  const { query, loadingRef } = useClient();
+  const { clear } = use(AppStateContext) as AppStateContextState;
 
-  if (!context) {
-    throw new Error('useQuery must be used within a StoreProvider');
-  }
-  const { query, clearData, loadingRef } = context;
   const route = useRoute();
   const key = useMemo(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
   const currentKeyRef = useRef<string | null>(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
-  const isLoading = useStore((store) => store.loading).includes(key);
-  const data = useStore((store) => store.state[key]);
+  const isLoading = useAppStateStore((store) => store.loading).includes(key);
+  const data = useAppStateStore((store) => store.state[key]);
 
   useEffect(() => {
     currentKeyRef.current = key;
 
     return () => {
       if (options?.autoClearCache) {
-        clearData(key);
+        clear(key);
       }
     };
   }, [key]);
@@ -57,11 +57,11 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
    
     query(path, params, {
       onNotify: (notify) => {
-        (toast[notify.type] || toast)?.(options?.t?.(notify.message) ?? notify.message);
+        (toast[notify.type] || toast)?.(t?.(notify.message) ?? notify.message);
       },
     }).then(({ key }) => {
       if (options?.autoClearCache && key !== currentKeyRef.current) {
-        clearData(key);
+        clear(key);
       }
     });
   }, [key, enabled, route.name]);
@@ -77,7 +77,7 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
    
     query(path, params).then(({ key }) => {
       if (options?.autoClearCache && key !== currentKeyRef.current) {
-        clearData(key);
+        clear(key);
       }
     });
   }, [key, enabled, route.name]);

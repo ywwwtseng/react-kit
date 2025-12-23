@@ -6,7 +6,6 @@ export * from './components/Layout';
 export * from './components/TabBar';
 export * from './components/List';
 export * from './components/Modal';
-export * from './components/Image';
 export * from './components/Button';
 export * from './components/Input';
 export * from './components/Textarea';
@@ -22,4 +21,3 @@ export * from './navigation';
 export * from './app';
 
 export * from './icons';
-export * from './types';

@@ -1,24 +1,32 @@
 import React from 'react';
 import { Toaster, ToasterProps } from 'react-hot-toast';
 import { ClientProvider, ClientProviderProps } from './ClientContext';
-import { StoreProvider } from './StoreContext';
+import { AppStateProvider } from './AppStateContext';
+import { I18nProvider, I18nProviderProps } from './I18nContext';
 
 export interface AppProviderProps
   extends React.PropsWithChildren,
     Omit<ClientProviderProps, 'children'> {
-      toasterProps?: ToasterProps;
+      toasterProps?: Omit<ToasterProps, 'children'>;
+      i18nProps?: Omit<I18nProviderProps, 'children'>;
     }
 
 export function AppProvider({
   url,
   transformRequest,
-  toasterProps,
+  onError,
+  i18nProps = {},
+  toasterProps = {},
   children,
 }: AppProviderProps) {
   return (
-    <ClientProvider url={url} transformRequest={transformRequest}>
-      <StoreProvider>{children}</StoreProvider>
+    <AppStateProvider>
+      <ClientProvider url={url} transformRequest={transformRequest} onError={onError}>
+        <I18nProvider {...i18nProps}>
+          {children}
+        </I18nProvider>
+      </ClientProvider>
       <Toaster {...toasterProps} />
-    </ClientProvider>
+    </AppStateProvider>
   );
 }

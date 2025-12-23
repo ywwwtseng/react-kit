@@ -1,12 +1,13 @@
 import { use, useMemo, useState, useCallback, useEffect } from 'react';
 import { useRoute } from '../../navigation';
 import {
-  useStore,
-  StoreContext,
-  getQueryKey,
-  type Store,
-  
-} from '../StoreContext';
+  useAppStateStore,
+  AppStateContext,
+  type AppState,
+  type AppStateContextState,
+} from '../AppStateContext';
+import { useClient } from './useClient';
+import { getQueryKey } from '../utils';
 import { type QueryParams } from '../types';
 
 const getNextPageParam = <T>(lastPage: T | undefined): string | null => {
@@ -35,19 +36,14 @@ export function useInfiniteQuery<T = unknown>(
   const route = useRoute();
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
-  const state = useStore((store) => store.state);
+  const state = useAppStateStore((store) => store.state);
   const [pageKeys, setPageKeys] = useState<string[]>([]);
   const data = useMemo(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean) as T[];
   }, [pageKeys, state]);
 
-  const context = use(StoreContext);
-
-  if (!context) {
-    throw new Error('useInfiniteQuery must be used within a TMA');
-  }
-
-  const { query, update, loadingRef } = context;
+  const { update } = use(AppStateContext) as AppStateContextState;
+  const { query, loadingRef } = useClient();
 
   const hasNextPage = useMemo(() => {
     const page = data[data.length - 1];
@@ -131,7 +127,7 @@ export function useInfiniteQuery<T = unknown>(
         update([
           {
             type: 'update',
-            payload: (draft: Store) => {
+            payload: (draft: AppState) => {
               pageKeys.forEach((page) => {
                 delete draft.state[page];
               });

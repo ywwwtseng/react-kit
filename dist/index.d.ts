@@ -1,12 +1,13 @@
 import { ToasterProps } from 'react-hot-toast';
 export { default as toast } from 'react-hot-toast';
 import * as React$1 from 'react';
-import React__default, { ComponentProps, ElementType, PropsWithChildren } from 'react';
+import React__default, { ComponentProps, ElementType, RefObject, PropsWithChildren } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
 import { VariantProps } from 'class-variance-authority';
-import { ErrorResponse } from '@ywwwtseng/ywjs';
+import { AppError, Locales, ErrorResponse } from '@ywwwtseng/ywjs';
+import * as zustand from 'zustand';
 
 type TypographySize = '12' | '11' | '10' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2' | '1';
 interface TypographyProps extends React__default.PropsWithChildren, React__default.CSSProperties {
@@ -114,15 +115,6 @@ type ModalProps = DialogProps & {
 };
 declare function Modal({ type, handle, trigger, title, children, classes, ...props }: ModalProps): react_jsx_runtime.JSX.Element;
 
-type ImageSrc = string | {
-    src: string;
-};
-
-interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> {
-    src: ImageSrc;
-}
-declare function Image({ src, ...props }: ImageProps): react_jsx_runtime.JSX.Element;
-
 type ButtonProps = ComponentProps<'button'> & {
     variant?: 'text' | 'contained' | 'icon';
     width?: 'full';
@@ -227,16 +219,76 @@ interface NavigatorProps {
 declare function Navigator({ drawer }: NavigatorProps): react_jsx_runtime.JSX.Element;
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>;
+interface Command {
+    type: 'update' | 'merge' | 'replace' | 'unshift' | 'push' | 'delete';
+    target?: string;
+    payload: unknown;
+}
+interface Notify {
+    type?: 'success' | 'error' | 'default';
+    message: string;
+}
+interface ResponseData {
+    error?: number;
+    message?: string;
+    commands?: Command[];
+    data?: unknown;
+    notify?: Notify;
+    navigate?: {
+        screen: string;
+        params: Record<string, string | number | boolean>;
+    };
+    ok: boolean;
+}
 
+interface ClientContextState {
+    loadingRef: RefObject<string[]>;
+    query: (path: string, params?: QueryParams, options?: {
+        onNotify?: (notify: Notify) => void;
+    }) => Promise<{
+        key: string;
+        data: ResponseData;
+    }>;
+    mutate: (action: string, payload?: unknown) => Promise<{
+        data: ResponseData;
+    }>;
+}
+declare const ClientContext: React$1.Context<ClientContextState>;
 interface ClientProviderProps extends PropsWithChildren {
     url: string;
     transformRequest?: (headers: Headers) => Headers;
+    onError?: (error: AppError) => void;
+}
+declare function ClientProvider({ url, transformRequest, onError, children, }: ClientProviderProps): react_jsx_runtime.JSX.Element;
+
+interface AppStateContextState {
+    update: (commands: Command[]) => void;
+    clear: (key: string) => void;
+}
+declare const AppStateContext: React$1.Context<AppStateContextState>;
+type AppState = {
+    state: Record<string, unknown>;
+    loading: string[];
+    update: (commands: Command[]) => void;
+};
+declare const useAppStateStore: zustand.UseBoundStore<zustand.StoreApi<AppState>>;
+declare function AppStateProvider({ children }: PropsWithChildren): react_jsx_runtime.JSX.Element;
+
+interface I18nContextState {
+    t: (key: string, params?: Record<string, string | number>) => string;
+    language_code: string;
+}
+interface I18nProviderProps extends PropsWithChildren {
+    locales?: Locales;
+    path?: [string, ...string[]];
+    callback?: string;
 }
 
 interface AppProviderProps extends React__default.PropsWithChildren, Omit<ClientProviderProps, 'children'> {
-    toasterProps?: ToasterProps;
+    toasterProps?: Omit<ToasterProps, 'children'>;
+    i18nProps?: Omit<I18nProviderProps, 'children'>;
 }
-declare function AppProvider({ url, transformRequest, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
+declare function AppProvider({ url, transformRequest, onError, i18nProps, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
 
 interface UseQueryOptions$1 {
     params: QueryParams & {
@@ -252,37 +304,14 @@ declare function useInfiniteQuery<T = unknown>(path: string, options: UseQueryOp
     fetchNextPage: () => void;
 };
 
-interface Command {
-    type: 'update' | 'merge' | 'replace' | 'unshift' | 'push' | 'delete';
-    target?: string;
-    payload: unknown;
-}
-interface MutateOptions {
-}
-interface Notify {
-    type?: 'info' | 'success' | 'warning' | 'error' | 'default';
-    message: string;
-}
-interface ResponseData {
-    commands?: Command[];
-    data?: unknown;
-    notify?: Notify;
-    navigate?: {
-        screen: string;
-        params: Record<string, string | number | boolean>;
-    };
-    ok: boolean;
-}
-
 interface UseMutationOptions {
-    t?: (key: string) => string;
     onError?: (error: {
         data: ErrorResponse;
     }) => void;
     onSuccess?: (data: ResponseData) => void;
 }
-declare function useMutation(action: string, { t, onError, onSuccess }?: UseMutationOptions): {
-    mutate: <T = unknown>(payload?: T, options?: MutateOptions) => Promise<ResponseData>;
+declare function useMutation(action: string, { onError, onSuccess }?: UseMutationOptions): {
+    mutate: <T = unknown>(payload?: T) => Promise<ResponseData>;
     isLoading: boolean;
 };
 
@@ -291,7 +320,6 @@ interface UseQueryOptions {
     refetchOnMount?: boolean;
     autoClearCache?: boolean;
     enabled?: boolean;
-    t?: (key: string) => string;
 }
 declare function useQuery<T = unknown>(path: string, options?: UseQueryOptions): {
     refetch: () => void;
@@ -299,7 +327,13 @@ declare function useQuery<T = unknown>(path: string, options?: UseQueryOptions):
     data: T | undefined;
 };
 
-declare function useStoreState<T = unknown>(path: string | string[]): T | undefined;
+declare function useAppState<T = unknown>(path: string | string[]): T | undefined;
+
+declare function useClient(): ClientContextState;
+
+declare function useI18n(): I18nContextState;
+
+declare function getQueryKey(path: string, params?: QueryParams): string;
 
 declare function Spinner(props: React.SVGProps<SVGSVGElement>): react_jsx_runtime.JSX.Element;
 
@@ -316,4 +350,4 @@ declare namespace Flag {
   export { Flag_EN as EN, Flag_TW as TW };
 }
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, Button, type ButtonProps, Canvas, Check, ChevronDown, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Image, type ImageProps, type ImageSrc, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, formatAmount, inputVariants, textareaVariants, useClientOnce, useDisclosure, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute, useStoreState };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Notify, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };

@@ -1,36 +1,28 @@
-import { use, useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { ErrorResponse } from '@ywwwtseng/ywjs';
 import toast from 'react-hot-toast';
+import { useClient } from './useClient';
+import { useI18n } from './useI18n';
 import { useRefValue } from '../../hooks/useRefValue';
-import {
-  type ResponseData,
-  MutateOptions,
-  StoreContext,
-} from '../StoreContext';
+import type { ResponseData } from '../types';
 
 export interface UseMutationOptions {
-  t?: (key: string) => string;
   onError?: (error: { data: ErrorResponse }) => void;
   onSuccess?: (data: ResponseData) => void;
 }
 
 export function useMutation(
   action: string,
-  { t, onError, onSuccess }: UseMutationOptions = {}
+  { onError, onSuccess }: UseMutationOptions = {}
 ) {
-  const context = use(StoreContext);
-
-  if (!context) {
-    throw new Error('useMutation must be used within a StoreProvider');
-  }
-
+  const client = useClient();
+  const { t } = useI18n();
   const [isLoading, setIsLoading] = useState(false);
   const isLoadingRef = useRefValue(isLoading);
 
   const mutate = useCallback(
     <T = unknown>(
       payload?: T,
-      options?: MutateOptions
     ): Promise<ResponseData> => {
       if (isLoadingRef.current) {
         return Promise.reject({
@@ -41,8 +33,8 @@ export function useMutation(
       isLoadingRef.current = true;
       setIsLoading(true);
 
-      return context
-        .mutate(action, payload, options)
+      return client
+        .mutate(action, payload)
         .then(({ data }: { data: ResponseData }) => {
 
           if (data.notify) {
@@ -64,7 +56,7 @@ export function useMutation(
           setIsLoading(false);
         });
     },
-    [context.mutate, action]
+    [client.mutate, action]
   );
 
   return {

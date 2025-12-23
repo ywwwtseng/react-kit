@@ -36,7 +36,13 @@ export function DrawerScreen({
           <Drawer.Description style={{ display: 'none' }}>
             {description}
           </Drawer.Description>
-          <div className="w-full h-full overflow-y-auto" style={style}>
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              overflowY: 'auto',
+              ...style,
+            }}>
             {children}
           </div>
         </Drawer.Content>

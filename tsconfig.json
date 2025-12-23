@@ -7,6 +7,6 @@
     "target": "ESNext",
     "moduleResolution": "bundler"
   },
-  "include": ["src/index.tsx"],
+  "include": ["src/index.ts"],
   "exclude": ["dist"],
 }

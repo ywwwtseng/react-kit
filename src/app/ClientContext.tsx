@@ -1,19 +1,28 @@
+import { AppError, ErrorCodes } from '@ywwwtseng/ywjs';
 import {
+  RefObject,
+  useRef,
   useMemo,
   useCallback,
   createContext,
-  use,
   type PropsWithChildren,
 } from 'react';
 import { Request } from '@ywwwtseng/request';
-import { type QueryParams } from './types';
+import { useNavigate } from '../navigation';
+import { useAppStateStore, type AppState } from './AppStateContext';
+import type { QueryParams, ResponseData, Notify } from './types';
+import { getQueryKey } from './utils';
 
 export interface ClientContextState {
+  loadingRef: RefObject<string[]>;
   query: (
     path: string,
-    params?: QueryParams
-  ) => Promise<unknown>;
-  mutate: <TPayload>(action: string, payload: TPayload) => Promise<unknown>;
+    params?: QueryParams,
+    options?: {
+      onNotify?: (notify: Notify) => void;
+    }
+  ) => Promise<{ key: string; data: ResponseData }>;
+  mutate: (action: string, payload?: unknown) => Promise<{ data: ResponseData }>;
 }
 
 export const ClientContext = createContext<
@@ -23,13 +32,18 @@ export const ClientContext = createContext<
 export interface ClientProviderProps extends PropsWithChildren {
   url: string;
   transformRequest?: (headers: Headers) => Headers;
+  onError?: (error: AppError) => void;
 }
 
 export function ClientProvider({
   url,
   transformRequest,
+  onError,
   children,
 }: ClientProviderProps) {
+  const loadingRef = useRef<string[]>([]);
+  const navigate = useNavigate();
+  const { update } = useAppStateStore();
   const request = useMemo(
     () =>
       new Request({
@@ -38,22 +52,114 @@ export function ClientProvider({
     [transformRequest]
   );
 
+  // const query = useCallback(
+  //   (path: string, params?: QueryParams) => {
+  //     return request.post(url, { type: 'query', path, params: params ?? {} });
+  //   },
+  //   [request]
+  // );
+
   const query = useCallback(
-    (path: string, params?: QueryParams) => {
-      return request.post(url, { type: 'query', path, params: params ?? {} });
+    (
+      path: string,
+      params?: QueryParams,
+      options?: {
+        onNotify?: (notify: Notify) => void;
+      }
+    ) => {
+      const key = getQueryKey(path, params);
+
+      loadingRef.current.push(key);
+
+      update([
+        {
+          type: 'update',
+          target: 'loading',
+          payload: (draft: AppState) => {
+            draft.loading.push(key);
+          },
+        },
+      ]);
+
+      return request.post(url, { type: 'query', path, params: params ?? {} })
+        .then((data: ResponseData) => {
+          loadingRef.current = loadingRef.current.filter((k) => k !== key);
+
+          update([
+            ...(data.commands ?? []),
+            {
+              type: 'update',
+              target: 'loading',
+              payload: (draft: AppState) => {
+                draft.loading = draft.loading.filter((k) => k !== key);
+              },
+            },
+          ]);
+
+         
+
+          if (data.navigate) {
+            navigate(data.navigate.screen, {
+              type: 'replace',
+              params: data.navigate.params,
+            });
+          }
+
+          if (data.notify) {
+            options?.onNotify?.(data.notify);
+          }
+
+          return { key, data };
+        })
+        .catch((error) => {
+          loadingRef.current = loadingRef.current.filter((k) => k !== key);
+
+          onError?.(error);
+
+          update([
+            {
+              type: 'update',
+              target: 'loading',
+              payload: (draft: AppState) => {
+                draft.loading = draft.loading.filter((k) => k !== key);
+              },
+            },
+          ]);
+
+          throw error;
+        });
     },
     [request]
   );
 
   const mutate = useCallback(
-    (action: string, payload: unknown) => {
-      if (payload instanceof FormData) {
-        payload.append('mutation:type', 'mutate');
-        payload.append('mutation:action', action);
-        return request.post(url, payload);
-      }
+    async (action: string, payload?: unknown) => {
+      try {
+        let data: ResponseData;
+        if (payload instanceof FormData) {
+          payload.append('mutation:type', 'mutate');
+          payload.append('mutation:action', action);
+          data = await request.post(url, payload);
+        } else {
+          data = await request.post(url, { type: 'mutate', action, payload });
+        }
 
-      return request.post(url, { type: 'mutate', action, payload });
+        if (data.commands) {
+          update(data.commands);
+        }
+
+        if (data.navigate) {
+          navigate(data.navigate.screen, {
+            type: 'replace',
+            params: data.navigate.params,
+          });
+        }
+
+        return { data };
+      } catch (error) {
+        onError?.(error);
+        throw error;
+      }
     },
     [request]
   );
@@ -62,8 +168,9 @@ export function ClientProvider({
     () => ({
       query,
       mutate,
+      loadingRef
     }),
-    [query, mutate]
+    [query, mutate, loadingRef]
   );
 
   return (
@@ -71,14 +178,4 @@ export function ClientProvider({
       {children}
     </ClientContext.Provider>
   );
-}
-
-export function useClient(): ClientContextState {
-  const context = use(ClientContext);
-
-  if (!context) {
-    throw new Error('useClient must be used within a ClientProvider');
-  }
-
-  return context;
 }
