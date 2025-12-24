@@ -193,10 +193,11 @@ interface StackNavigatorContextState {
     }) => void;
 }
 declare const StackNavigatorContext: React$1.Context<StackNavigatorContextState>;
-interface StackNavigatorProviderProps extends React.PropsWithChildren {
+interface StackNavigatorProviderProps {
     screens: Record<string, Screen> & {
         Home: Screen;
     };
+    children: React.ReactNode | ((state: StackNavigatorContextState) => React.ReactNode);
 }
 declare function StackNavigatorProvider({ screens, children, }: StackNavigatorProviderProps): react_jsx_runtime.JSX.Element;
 declare const useNavigate: () => (screen: string | number, options?: {

@@ -60,8 +60,9 @@ export const StackNavigatorContext = createContext<StackNavigatorContextState>({
   ) => {},
 });
 
-export interface StackNavigatorProviderProps extends React.PropsWithChildren {
+export interface StackNavigatorProviderProps {
   screens: Record<string, Screen> & { Home: Screen };
+  children: React.ReactNode | ((state: StackNavigatorContextState) => React.ReactNode);
 }
 
 export function StackNavigatorProvider({
@@ -152,7 +153,7 @@ export function StackNavigatorProvider({
 
   return (
     <StackNavigatorContext.Provider value={value}>
-      {children}
+      {typeof children === 'function' ? children(value) : children}
     </StackNavigatorContext.Provider>
   );
 }

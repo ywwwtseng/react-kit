@@ -1,7 +1,7 @@
 import { use, useMemo } from 'react';
 import { DrawerScreen, DrawerScreenProps } from '../components/DrawerScreen';
-import { StackNavigatorContext } from './StackNavigator';
-import { ScreenType } from './StackNavigator';
+import { StackNavigatorContext } from './StackNavigatorContext';
+import { ScreenType } from './StackNavigatorContext';
 
 export interface NavigatorProps {
   drawer: {

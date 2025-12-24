@@ -959,7 +959,7 @@ function useDisclosure() {
   return { isOpen, onOpenChange, onOpen, onClose };
 }
 
-// src/navigation/StackNavigator.tsx
+// src/navigation/StackNavigatorContext.tsx
 import {
   createContext,
   use,
@@ -1054,7 +1054,7 @@ function StackNavigatorProvider({
       })
     );
   }, [route]);
-  return /* @__PURE__ */ jsx16(StackNavigatorContext.Provider, { value, children });
+  return /* @__PURE__ */ jsx16(StackNavigatorContext.Provider, { value, children: typeof children === "function" ? children(value) : children });
 }
 var useNavigate = () => {
   const context = use(StackNavigatorContext);
