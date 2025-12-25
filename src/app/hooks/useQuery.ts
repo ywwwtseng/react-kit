@@ -55,11 +55,10 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
       return;
     }
    
-    query(path, params, {
-      onNotify: (notify) => {
-        (toast[notify.type] || toast)?.(t?.(notify.message) ?? notify.message);
-      },
-    }).then(({ key }) => {
+    query(path, params).then(({ key, data }) => {
+      if (data.notify) {
+        (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
+      }
       if (options?.autoClearCache && key !== currentKeyRef.current) {
         clear(key);
       }

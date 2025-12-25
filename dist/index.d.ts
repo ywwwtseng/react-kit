@@ -244,9 +244,7 @@ interface ResponseData {
 
 interface ClientContextState {
     loadingRef: RefObject<string[]>;
-    query: (path: string, params?: QueryParams, options?: {
-        onNotify?: (notify: Notify) => void;
-    }) => Promise<{
+    query: (path: string, params?: QueryParams) => Promise<{
         key: string;
         data: ResponseData;
     }>;
@@ -306,9 +304,7 @@ declare function useInfiniteQuery<T = unknown>(path: string, options: UseQueryOp
 };
 
 interface UseMutationOptions {
-    onError?: (error: {
-        data: ErrorResponse;
-    }) => void;
+    onError?: (error: ErrorResponse) => void;
     onSuccess?: (data: ResponseData) => void;
 }
 declare function useMutation(action: string, { onError, onSuccess }?: UseMutationOptions): {

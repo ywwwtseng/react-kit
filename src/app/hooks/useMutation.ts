@@ -7,7 +7,7 @@ import { useRefValue } from '../../hooks/useRefValue';
 import type { ResponseData } from '../types';
 
 export interface UseMutationOptions {
-  onError?: (error: { data: ErrorResponse }) => void;
+  onError?: (error: ErrorResponse) => void;
   onSuccess?: (data: ResponseData) => void;
 }
 
@@ -36,7 +36,6 @@ export function useMutation(
       return client
         .mutate(action, payload)
         .then(({ data }: { data: ResponseData }) => {
-
           if (data.notify) {
             (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
           }
@@ -46,7 +45,7 @@ export function useMutation(
           return data;
         })
         .catch((res: { data: ErrorResponse }) => {
-          onError?.(res);
+          onError?.(res.data);
           return {
             ok: false,
           };

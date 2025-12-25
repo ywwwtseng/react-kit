@@ -1167,6 +1167,7 @@ function Navigator({ drawer }) {
 }
 
 // src/app/ClientContext.tsx
+import { AppError } from "@ywwwtseng/ywjs";
 import {
   useRef as useRef3,
   useMemo as useMemo6,
@@ -1301,7 +1302,7 @@ function ClientProvider({
     [transformRequest]
   );
   const query = useCallback3(
-    (path, params, options) => {
+    async (path, params, options) => {
       const key = getQueryKey(path, params);
       loadingRef.current.push(key);
       update([
@@ -1313,18 +1314,14 @@ function ClientProvider({
           }
         }
       ]);
-      return request.post(url, { type: "query", path, params: params ?? {} }).then((data) => {
-        loadingRef.current = loadingRef.current.filter((k) => k !== key);
-        update([
-          ...data.commands ?? [],
-          {
-            type: "update",
-            target: "loading",
-            payload: (draft) => {
-              draft.loading = draft.loading.filter((k) => k !== key);
-            }
-          }
-        ]);
+      try {
+        const data = await request.post(url, { type: "query", path, params: params ?? {} });
+        if (data.commands) {
+          update(data.commands);
+        }
+        if (data.error) {
+          throw new AppError(data.error, data.message ?? "Unknown error");
+        }
         if (data.navigate) {
           navigate(data.navigate.screen, {
             type: "replace",
@@ -1335,9 +1332,11 @@ function ClientProvider({
           options?.onNotify?.(data.notify);
         }
         return { key, data };
-      }).catch((error) => {
-        loadingRef.current = loadingRef.current.filter((k) => k !== key);
+      } catch (error) {
         onError?.(error);
+        throw error;
+      } finally {
+        loadingRef.current = loadingRef.current.filter((k) => k !== key);
         update([
           {
             type: "update",
@@ -1347,8 +1346,7 @@ function ClientProvider({
             }
           }
         ]);
-        throw error;
-      });
+      }
     },
     [request]
   );
@@ -1362,6 +1360,9 @@ function ClientProvider({
           data = await request.post(url, payload);
         } else {
           data = await request.post(url, { type: "mutate", action, payload });
+        }
+        if (data.error) {
+          throw new AppError(data.error, data.message ?? "Unknown error");
         }
         if (data.commands) {
           update(data.commands);
@@ -1605,7 +1606,7 @@ function useMutation(action, { onError, onSuccess } = {}) {
         onSuccess?.(data);
         return data;
       }).catch((res) => {
-        onError?.(res);
+        onError?.(res.data);
         return {
           ok: false
         };
@@ -1655,11 +1656,10 @@ function useQuery(path, options) {
     if (data !== void 0 && refetchOnMount === false) {
       return;
     }
-    query(path, params, {
-      onNotify: (notify) => {
-        (toast2[notify.type] || toast2)?.(t?.(notify.message) ?? notify.message);
+    query(path, params).then(({ key: key2, data: data2 }) => {
+      if (data2.notify) {
+        (toast2[data2.notify.type] || toast2)?.(t?.(data2.notify.message) ?? data2.notify.message);
       }
-    }).then(({ key: key2 }) => {
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);
       }

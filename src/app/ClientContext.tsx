@@ -1,4 +1,4 @@
-import { AppError, ErrorCodes } from '@ywwwtseng/ywjs';
+import { AppError } from '@ywwwtseng/ywjs';
 import {
   RefObject,
   useRef,
@@ -18,9 +18,6 @@ export interface ClientContextState {
   query: (
     path: string,
     params?: QueryParams,
-    options?: {
-      onNotify?: (notify: Notify) => void;
-    }
   ) => Promise<{ key: string; data: ResponseData }>;
   mutate: (action: string, payload?: unknown) => Promise<{ data: ResponseData }>;
 }
@@ -52,15 +49,8 @@ export function ClientProvider({
     [transformRequest]
   );
 
-  // const query = useCallback(
-  //   (path: string, params?: QueryParams) => {
-  //     return request.post(url, { type: 'query', path, params: params ?? {} });
-  //   },
-  //   [request]
-  // );
-
   const query = useCallback(
-    (
+    async (
       path: string,
       params?: QueryParams,
       options?: {
@@ -70,7 +60,6 @@ export function ClientProvider({
       const key = getQueryKey(path, params);
 
       loadingRef.current.push(key);
-
       update([
         {
           type: 'update',
@@ -81,53 +70,47 @@ export function ClientProvider({
         },
       ]);
 
-      return request.post(url, { type: 'query', path, params: params ?? {} })
-        .then((data: ResponseData) => {
-          loadingRef.current = loadingRef.current.filter((k) => k !== key);
+      try {
+        const data = await request.post<ResponseData>(url, { type: 'query', path, params: params ?? {} });
 
-          update([
-            ...(data.commands ?? []),
-            {
-              type: 'update',
-              target: 'loading',
-              payload: (draft: AppState) => {
-                draft.loading = draft.loading.filter((k) => k !== key);
-              },
+        if (data.commands) {
+          update(data.commands);
+        }
+
+        if (data.error) {
+          throw new AppError(data.error, data.message ?? 'Unknown error');
+        }
+
+        
+
+        if (data.navigate) {
+          navigate(data.navigate.screen, {
+            type: 'replace',
+            params: data.navigate.params,
+          });
+        }
+
+        if (data.notify) {
+          options?.onNotify?.(data.notify);
+        }
+
+        return { key, data };
+      } catch (error) {
+        onError?.(error);
+        throw error;
+      } finally {
+        loadingRef.current = loadingRef.current.filter((k) => k !== key);
+
+        update([
+          {
+            type: 'update',
+            target: 'loading',
+            payload: (draft: AppState) => {
+              draft.loading = draft.loading.filter((k) => k !== key);
             },
-          ]);
-
-         
-
-          if (data.navigate) {
-            navigate(data.navigate.screen, {
-              type: 'replace',
-              params: data.navigate.params,
-            });
-          }
-
-          if (data.notify) {
-            options?.onNotify?.(data.notify);
-          }
-
-          return { key, data };
-        })
-        .catch((error) => {
-          loadingRef.current = loadingRef.current.filter((k) => k !== key);
-
-          onError?.(error);
-
-          update([
-            {
-              type: 'update',
-              target: 'loading',
-              payload: (draft: AppState) => {
-                draft.loading = draft.loading.filter((k) => k !== key);
-              },
-            },
-          ]);
-
-          throw error;
-        });
+          },
+        ]);
+      }
     },
     [request]
   );
@@ -142,6 +125,10 @@ export function ClientProvider({
           data = await request.post(url, payload);
         } else {
           data = await request.post(url, { type: 'mutate', action, payload });
+        }
+
+        if (data.error) {
+          throw new AppError(data.error, data.message ?? 'Unknown error');
         }
 
         if (data.commands) {
