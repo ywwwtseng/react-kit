@@ -1627,10 +1627,12 @@ function useMutation(action, { onError, onSuccess } = {}) {
 import { use as use7, useEffect as useEffect7, useCallback as useCallback7, useMemo as useMemo9, useRef as useRef4 } from "react";
 import toast2 from "react-hot-toast";
 function useQuery(path, options) {
+  const isUnMountedRef = useRef4(false);
   const { t } = useI18n();
   const { query, loadingRef } = useClient();
   const { clear } = use7(AppStateContext);
   const route = useRoute();
+  const currentRouteRef = useRef4(route.name);
   const key = useMemo9(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
   const currentKeyRef = useRef4(key);
   const params = options?.params ?? {};
@@ -1638,6 +1640,19 @@ function useQuery(path, options) {
   const enabled = options?.enabled ?? true;
   const isLoading = useAppStateStore((store) => store.loading).includes(key);
   const data = useAppStateStore((store) => store.state[key]);
+  const refetch = useCallback7(() => {
+    if (!enabled) {
+      return;
+    }
+    if (loadingRef.current.includes(key)) {
+      return;
+    }
+    query(path, params).then(({ key: key2 }) => {
+      if (options?.autoClearCache && key2 !== currentKeyRef.current) {
+        clear(key2);
+      }
+    });
+  }, [key, enabled, route.name]);
   useEffect7(() => {
     currentKeyRef.current = key;
     return () => {
@@ -1647,6 +1662,14 @@ function useQuery(path, options) {
     };
   }, [key]);
   useEffect7(() => {
+    return () => {
+      isUnMountedRef.current = true;
+    };
+  }, []);
+  useEffect7(() => {
+    if (isUnMountedRef.current) {
+      return;
+    }
     if (!enabled) {
       return;
     }
@@ -1656,23 +1679,13 @@ function useQuery(path, options) {
     if (data !== void 0 && refetchOnMount === false) {
       return;
     }
+    if (refetchOnMount && currentRouteRef.current !== route.name) {
+      return;
+    }
     query(path, params).then(({ key: key2, data: data2 }) => {
       if (data2.notify) {
         (toast2[data2.notify.type] || toast2)?.(t?.(data2.notify.message) ?? data2.notify.message);
       }
-      if (options?.autoClearCache && key2 !== currentKeyRef.current) {
-        clear(key2);
-      }
-    });
-  }, [key, enabled, route.name]);
-  const refetch = useCallback7(() => {
-    if (!enabled) {
-      return;
-    }
-    if (loadingRef.current.includes(key)) {
-      return;
-    }
-    query(path, params).then(({ key: key2 }) => {
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);
       }

@@ -19,11 +19,12 @@ export interface UseQueryOptions {
 }
 
 export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
+  const isUnMountedRef = useRef(false);
   const { t } = useI18n();
   const { query, loadingRef } = useClient();
   const { clear } = use(AppStateContext) as AppStateContextState;
-
   const route = useRoute();
+  const currentRouteRef = useRef<string>(route.name);
   const key = useMemo(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
   const currentKeyRef = useRef<string | null>(key);
   const params = options?.params ?? {};
@@ -31,39 +32,6 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
   const enabled = options?.enabled ?? true;
   const isLoading = useAppStateStore((store) => store.loading).includes(key);
   const data = useAppStateStore((store) => store.state[key]);
-
-  useEffect(() => {
-    currentKeyRef.current = key;
-
-    return () => {
-      if (options?.autoClearCache) {
-        clear(key);
-      }
-    };
-  }, [key]);
-
-  useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-
-    if (loadingRef.current.includes(key)) {
-      return;
-    }
-
-    if (data !== undefined && refetchOnMount === false) {
-      return;
-    }
-   
-    query(path, params).then(({ key, data }) => {
-      if (data.notify) {
-        (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
-      }
-      if (options?.autoClearCache && key !== currentKeyRef.current) {
-        clear(key);
-      }
-    });
-  }, [key, enabled, route.name]);
 
   const refetch = useCallback(() => {
     if (!enabled) {
@@ -80,6 +48,54 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
       }
     });
   }, [key, enabled, route.name]);
+
+  useEffect(() => {
+    currentKeyRef.current = key;
+
+    return () => {
+      if (options?.autoClearCache) {
+        clear(key);
+      }
+    };
+  }, [key]);
+
+  useEffect(() => {
+    return () => {
+      isUnMountedRef.current = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isUnMountedRef.current) {
+      return;
+    }
+
+    if (!enabled) {
+      return;
+    }
+
+    if (loadingRef.current.includes(key)) {
+      return;
+    }
+
+    if (data !== undefined && refetchOnMount === false) {
+      return;
+    }
+
+    if (refetchOnMount && currentRouteRef.current !== route.name) {
+      return;
+    }
+   
+    query(path, params).then(({ key, data }) => {
+      if (data.notify) {
+        (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
+      }
+      if (options?.autoClearCache && key !== currentKeyRef.current) {
+        clear(key);
+      }
+    });
+  }, [key, enabled, route.name]);
+
 
   return {
     refetch,
