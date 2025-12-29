@@ -228,6 +228,7 @@ interface Command {
 interface Notify {
     type?: 'success' | 'error' | 'default';
     message: string;
+    params?: Record<string, string>;
 }
 interface ResponseData {
     error?: number;

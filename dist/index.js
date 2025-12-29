@@ -1018,15 +1018,14 @@ function StackNavigatorProvider({
         if (screen === -1 && prev.length > 1) {
           return prev.slice(0, -1);
         } else if (typeof screen === "string") {
-          if (prev[prev.length - 1]?.screen === screen) {
-            return prev;
-          }
           const route2 = { screen, params: options?.params || {} };
           if (type === "replace") {
             return [...prev.slice(0, -1), route2];
-          } else {
-            return [...prev, route2].slice(-10);
           }
+          if (prev[prev.length - 1]?.screen === screen) {
+            return [...prev.slice(0, -1), route2];
+          }
+          return [...prev, route2].slice(-10);
         }
         return prev;
       });
@@ -1601,12 +1600,14 @@ function useMutation(action, { onError, onSuccess } = {}) {
       setIsLoading(true);
       return client.mutate(action, payload).then(({ data }) => {
         if (data.notify) {
-          (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
+          (toast[data.notify.type] || toast)?.(t?.(data.notify.message, data.notify.params) ?? data.notify.message);
         }
         onSuccess?.(data);
         return data;
       }).catch((res) => {
         onError?.(res.data);
+        const message = res.data.message ?? "Unknown error";
+        toast.error(message);
         return {
           ok: false
         };
@@ -1615,7 +1616,7 @@ function useMutation(action, { onError, onSuccess } = {}) {
         setIsLoading(false);
       });
     },
-    [client.mutate, action]
+    [client.mutate, action, t]
   );
   return {
     mutate,
@@ -1629,6 +1630,7 @@ import toast2 from "react-hot-toast";
 function useQuery(path, options) {
   const isUnMountedRef = useRef4(false);
   const { t } = useI18n();
+  const tRef = useRefValue(t);
   const { query, loadingRef } = useClient();
   const { clear } = use7(AppStateContext);
   const route = useRoute();
@@ -1684,7 +1686,7 @@ function useQuery(path, options) {
     }
     query(path, params).then(({ key: key2, data: data2 }) => {
       if (data2.notify) {
-        (toast2[data2.notify.type] || toast2)?.(t?.(data2.notify.message) ?? data2.notify.message);
+        (toast2[data2.notify.type] || toast2)?.(tRef.current?.(data2.notify.message, data2.notify.params) ?? data2.notify.message);
       }
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);

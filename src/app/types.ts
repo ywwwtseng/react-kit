@@ -12,6 +12,7 @@ export interface Command {
 export interface Notify {
   type?: 'success'| 'error' | 'default';
   message: string;
+  params?: Record<string, string>;
 }
 
 export interface ResponseData {

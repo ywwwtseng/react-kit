@@ -108,17 +108,17 @@ export function StackNavigatorProvider({
         if (screen === -1 && prev.length > 1) {
           return prev.slice(0, -1);
         } else if (typeof screen === 'string') {
-          if (prev[prev.length - 1]?.screen === screen) {
-            return prev;
-          }
-
           const route = { screen, params: options?.params || {} };
 
           if (type === 'replace') {
             return [...prev.slice(0, -1), route];
-          } else {
-            return [...prev, route].slice(-10);
           }
+
+          if (prev[prev.length - 1]?.screen === screen) {
+            return [...prev.slice(0, -1), route];
+          }
+
+          return [...prev, route].slice(-10);
         }
 
         return prev;

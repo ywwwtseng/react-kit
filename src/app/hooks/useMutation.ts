@@ -37,7 +37,7 @@ export function useMutation(
         .mutate(action, payload)
         .then(({ data }: { data: ResponseData }) => {
           if (data.notify) {
-            (toast[data.notify.type] || toast)?.(t?.(data.notify.message) ?? data.notify.message);
+            (toast[data.notify.type] || toast)?.(t?.(data.notify.message, data.notify.params) ?? data.notify.message);
           }
 
           onSuccess?.(data);
@@ -46,6 +46,9 @@ export function useMutation(
         })
         .catch((res: { data: ErrorResponse }) => {
           onError?.(res.data);
+          const message = res.data.message ?? 'Unknown error';
+          toast.error(message);
+
           return {
             ok: false,
           };
@@ -55,7 +58,7 @@ export function useMutation(
           setIsLoading(false);
         });
     },
-    [client.mutate, action]
+    [client.mutate, action, t]
   );
 
   return {
