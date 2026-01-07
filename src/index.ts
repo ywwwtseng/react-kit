@@ -1,7 +1,6 @@
 export { default as toast } from 'react-hot-toast';
 export * from './components/Typography';
 export * from './components/AmountInput';
-export * from './components/Dropdown';
 export * from './components/Layout';
 export * from './components/TabBar';
 export * from './components/List';

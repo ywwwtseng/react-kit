@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "@heroui/dropdown": "^2.3.25",
-    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@ywwwtseng/request": "github:ywwwtseng/request",
     "@ywwwtseng/ywjs": "0.5.1",
     "class-variance-authority": "^0.7.1",

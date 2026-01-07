@@ -37,26 +37,6 @@ interface AmountInputProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
 declare function formatAmount(input: string): string;
 declare function AmountInput({ decimal, value, onChange, onInputChange, maxDigits, ...props }: AmountInputProps): react_jsx_runtime.JSX.Element;
 
-interface DropdownProps {
-    items: {
-        key: string;
-        name: string;
-        icon?: React.ReactNode;
-    }[];
-    trigger?: React.ReactNode;
-    container?: Element | DocumentFragment;
-    value?: string;
-    size?: 'sm' | 'md';
-    placeholder?: string;
-    disabled?: boolean;
-    classes?: {
-        trigger?: string;
-        content?: string;
-    };
-    onChange: (key: string) => void;
-}
-declare function Dropdown({ value, trigger, container, items, size, classes, disabled, placeholder, onChange, }: DropdownProps): react_jsx_runtime.JSX.Element;
-
 declare function Root({ className, style, children, }: React.PropsWithChildren<{
     className?: string;
     style?: React.CSSProperties;
@@ -348,4 +328,4 @@ declare namespace Flag {
   export { Flag_EN as EN, Flag_TW as TW };
 }
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Dropdown, type DropdownProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Notify, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Notify, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
