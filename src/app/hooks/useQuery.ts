@@ -1,9 +1,8 @@
 import { use, useEffect, useCallback, useMemo, useRef } from 'react';
-import toast from 'react-hot-toast';
 import { useRoute } from '../../navigation';
 import { useRefValue } from '../../hooks/useRefValue';
-import { useI18n } from './useI18n';
 import { useClient } from './useClient';
+import { useNotify } from './useNotify';
 import {
   useAppStateStore,
   AppStateContext,
@@ -21,8 +20,8 @@ export interface UseQueryOptions {
 
 export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
   const isUnMountedRef = useRef(false);
-  const { t } = useI18n();
-  const tRef = useRefValue(t);
+  const notify = useNotify();
+  const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
   const { clear } = use(AppStateContext) as AppStateContextState;
   const route = useRoute();
@@ -90,7 +89,7 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
    
     query(path, params).then(({ key, data }) => {
       if (data.notify) {
-        (toast[data.notify.type] || toast)?.(tRef.current?.(data.notify.message, data.notify.params) ?? data.notify.message);
+        notifyRef.current(data.notify.type, data.notify.message, data.notify.params);
       }
       if (options?.autoClearCache && key !== currentKeyRef.current) {
         clear(key);

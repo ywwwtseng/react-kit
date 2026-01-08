@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import type { ErrorResponse } from '@ywwwtseng/ywjs';
-import toast from 'react-hot-toast';
 import { useClient } from './useClient';
-import { useI18n } from './useI18n';
+import { useNotify } from './useNotify';
 import { useRefValue } from '../../hooks/useRefValue';
 import type { ResponseData } from '../types';
 
@@ -16,7 +15,7 @@ export function useMutation(
   { onError, onSuccess }: UseMutationOptions = {}
 ) {
   const client = useClient();
-  const { t } = useI18n();
+  const notify = useNotify();
   const [isLoading, setIsLoading] = useState(false);
   const isLoadingRef = useRefValue(isLoading);
 
@@ -37,7 +36,7 @@ export function useMutation(
         .mutate(action, payload)
         .then(({ data }: { data: ResponseData }) => {
           if (data.notify) {
-            (toast[data.notify.type] || toast)?.(t?.(data.notify.message, data.notify.params) ?? data.notify.message);
+            notify(data.notify.type, data.notify.message, data.notify.params);
           }
 
           onSuccess?.(data);
@@ -46,8 +45,8 @@ export function useMutation(
         })
         .catch((res: { data: ErrorResponse }) => {
           onError?.(res.data);
-          const message = res.data.message ?? 'Unknown error';
-          toast.error(message);
+
+          notify('error', res.data.message ?? 'Unknown error');
 
           return {
             ok: false,
@@ -58,7 +57,7 @@ export function useMutation(
           setIsLoading(false);
         });
     },
-    [client.mutate, action, t]
+    [client.mutate, action, notify]
   );
 
   return {

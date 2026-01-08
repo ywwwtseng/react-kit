@@ -9,8 +9,10 @@ export interface Command {
   payload: unknown;
 }
 
+export type NotifyType = 'success' | 'error' | 'default';
+
 export interface Notify {
-  type?: 'success'| 'error' | 'default';
+  type?: NotifyType;
   message: string;
   params?: Record<string, string>;
 }

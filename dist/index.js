@@ -1493,7 +1493,10 @@ function useInfiniteQuery(path, options) {
 }
 
 // src/app/hooks/useMutation.ts
-import { useState as useState7, useCallback as useCallback6 } from "react";
+import { useState as useState7, useCallback as useCallback7 } from "react";
+
+// src/app/hooks/useNotify.ts
+import { useCallback as useCallback6 } from "react";
 import toast from "react-hot-toast";
 
 // src/app/hooks/useI18n.ts
@@ -1507,13 +1510,21 @@ function useI18n() {
   return context;
 }
 
+// src/app/hooks/useNotify.ts
+function useNotify() {
+  const { t } = useI18n();
+  return useCallback6((type, message, params) => {
+    (toast[type] || toast)?.(t?.(message, params) ?? message);
+  }, [t]);
+}
+
 // src/app/hooks/useMutation.ts
 function useMutation(action, { onError, onSuccess } = {}) {
   const client = useClient();
-  const { t } = useI18n();
+  const notify = useNotify();
   const [isLoading, setIsLoading] = useState7(false);
   const isLoadingRef = useRefValue(isLoading);
-  const mutate = useCallback6(
+  const mutate = useCallback7(
     (payload) => {
       if (isLoadingRef.current) {
         return Promise.reject({
@@ -1524,14 +1535,13 @@ function useMutation(action, { onError, onSuccess } = {}) {
       setIsLoading(true);
       return client.mutate(action, payload).then(({ data }) => {
         if (data.notify) {
-          (toast[data.notify.type] || toast)?.(t?.(data.notify.message, data.notify.params) ?? data.notify.message);
+          notify(data.notify.type, data.notify.message, data.notify.params);
         }
         onSuccess?.(data);
         return data;
       }).catch((res) => {
         onError?.(res.data);
-        const message = res.data.message ?? "Unknown error";
-        toast.error(message);
+        notify("error", res.data.message ?? "Unknown error");
         return {
           ok: false
         };
@@ -1540,7 +1550,7 @@ function useMutation(action, { onError, onSuccess } = {}) {
         setIsLoading(false);
       });
     },
-    [client.mutate, action, t]
+    [client.mutate, action, notify]
   );
   return {
     mutate,
@@ -1549,12 +1559,11 @@ function useMutation(action, { onError, onSuccess } = {}) {
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use7, useEffect as useEffect7, useCallback as useCallback7, useMemo as useMemo8, useRef as useRef4 } from "react";
-import toast2 from "react-hot-toast";
+import { use as use7, useEffect as useEffect7, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef4 } from "react";
 function useQuery(path, options) {
   const isUnMountedRef = useRef4(false);
-  const { t } = useI18n();
-  const tRef = useRefValue(t);
+  const notify = useNotify();
+  const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
   const { clear } = use7(AppStateContext);
   const route = useRoute();
@@ -1566,7 +1575,7 @@ function useQuery(path, options) {
   const enabled = options?.enabled ?? true;
   const isLoading = useAppStateStore((store) => store.loading).includes(key);
   const data = useAppStateStore((store) => store.state[key]);
-  const refetch = useCallback7(() => {
+  const refetch = useCallback8(() => {
     if (!enabled) {
       return;
     }
@@ -1610,7 +1619,7 @@ function useQuery(path, options) {
     }
     query(path, params).then(({ key: key2, data: data2 }) => {
       if (data2.notify) {
-        (toast2[data2.notify.type] || toast2)?.(tRef.current?.(data2.notify.message, data2.notify.params) ?? data2.notify.message);
+        notifyRef.current(data2.notify.type, data2.notify.message, data2.notify.params);
       }
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);

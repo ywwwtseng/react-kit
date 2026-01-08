@@ -205,8 +205,9 @@ interface Command {
     target?: string;
     payload: unknown;
 }
+type NotifyType = 'success' | 'error' | 'default';
 interface Notify {
-    type?: 'success' | 'error' | 'default';
+    type?: NotifyType;
     message: string;
     params?: Record<string, string>;
 }
@@ -328,4 +329,4 @@ declare namespace Flag {
   export { Flag_EN as EN, Flag_TW as TW };
 }
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Notify, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
