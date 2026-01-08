@@ -20,7 +20,7 @@
   "dependencies": {
     "@heroui/dropdown": "^2.3.25",
     "@ywwwtseng/request": "github:ywwwtseng/request",
-    "@ywwwtseng/ywjs": "0.5.1",
+    "@ywwwtseng/ywjs": "0.7.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "immer": "^11.1.0",
