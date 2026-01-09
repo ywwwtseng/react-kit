@@ -69,16 +69,31 @@ export function StackNavigatorProvider({
   screens,
   children,
 }: StackNavigatorProviderProps) {
-  const [stacks, setStacks] = useState<Stack[]>([
-    (parseJSON(sessionStorage.getItem('navigator/screen')) as Stack) || {
-      screen: 'Home',
-      params: {},
-    },
-  ]);
+  const [stacks, setStacks] = useState<Stack[]>(() => {
+    if (typeof window === 'undefined') {
+      return [];
+    }
+
+    return [
+      (parseJSON(sessionStorage.getItem('navigator/screen')) as Stack) || {
+        screen: 'Home',
+        params: {},
+      },
+    ]
+  });
 
   const route = useMemo(() => {
     const stack = stacks[stacks.length - 1];
+
+    if (!stack) {
+      return undefined;
+    }
+
     const screen = screens[stack.screen];
+
+    if (!screen) {
+      return undefined;
+    }
 
     return {
       name: stack.screen,
@@ -138,6 +153,10 @@ export function StackNavigatorProvider({
   );
 
   useEffect(() => {
+    if (!route) {
+      return;
+    }
+
     if (route.type === 'drawer') {
       return;
     }

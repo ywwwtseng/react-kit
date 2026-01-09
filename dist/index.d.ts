@@ -53,7 +53,8 @@ declare function HeaderTitle({ style, children, }: React.PropsWithChildren<{
 declare function HeaderRight({ style, children, }: React.PropsWithChildren<{
     style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
-declare function Main({ style, children, }: React.PropsWithChildren<{
+declare function Main({ ref, style, children, }: React.PropsWithChildren<{
+    ref?: React.RefObject<HTMLDivElement>;
     style?: React.CSSProperties;
 }>): react_jsx_runtime.JSX.Element;
 declare const Layout: {
@@ -136,6 +137,19 @@ declare function useDisclosure(): {
     onClose: () => void;
 };
 
+interface DrawerViewProps extends React.PropsWithChildren {
+    title: string;
+    description: string;
+    style?: React.CSSProperties;
+}
+
+interface StackViewProps {
+    drawer?: {
+        style: DrawerViewProps['style'];
+    };
+}
+declare function StackView({ drawer }: StackViewProps): react_jsx_runtime.JSX.Element;
+
 type Stack = {
     screen: string;
     params: Record<string, string | number | boolean | null | undefined>;
@@ -185,19 +199,6 @@ declare const useNavigate: () => (screen: string | number, options?: {
     type?: "push" | "replace";
 }) => void;
 declare const useRoute: () => Route;
-
-interface DrawerScreenProps extends React.PropsWithChildren {
-    title: string;
-    description: string;
-    style?: React.CSSProperties;
-}
-
-interface NavigatorProps {
-    drawer: {
-        style: DrawerScreenProps['style'];
-    };
-}
-declare function Navigator({ drawer }: NavigatorProps): react_jsx_runtime.JSX.Element;
 
 type QueryParams = Record<string, string | number | boolean | null | undefined>;
 interface Command {
@@ -329,4 +330,4 @@ declare namespace Flag {
   export { Flag_EN as EN, Flag_TW as TW };
 }
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, Navigator, type NavigatorProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, Button, type ButtonProps, Canvas, Check, ChevronDown, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Flag, Input, Layout, List, type ListProps, Modal, type ModalProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, formatAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };

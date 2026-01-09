@@ -110,11 +110,13 @@ function HeaderRight({
 }
 
 function Main({
+  ref,
   style,
   children,
-}: React.PropsWithChildren<{ style?: React.CSSProperties }>) {
+}: React.PropsWithChildren<{ ref?: React.RefObject<HTMLDivElement>; style?: React.CSSProperties }>) {
   return (
     <div
+      ref={ref}
       style={{
         height: '100vh',
         overflowY: 'auto',

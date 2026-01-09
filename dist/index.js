@@ -319,12 +319,14 @@ function HeaderRight({
   );
 }
 function Main({
+  ref,
   style,
   children
 }) {
   return /* @__PURE__ */ jsx2(
     "div",
     {
+      ref,
       style: {
         height: "100vh",
         overflowY: "auto",
@@ -883,6 +885,60 @@ function useDisclosure() {
   return { isOpen, onOpenChange, onOpen, onClose };
 }
 
+// src/navigation/StackView.tsx
+import { use as use2, useMemo as useMemo3, useRef as useRef3, useEffect as useEffect6 } from "react";
+
+// src/navigation/DrawerView.tsx
+import { Drawer as Drawer2 } from "vaul";
+import { jsx as jsx15, jsxs as jsxs5 } from "react/jsx-runtime";
+function DrawerView({
+  title,
+  description,
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx15(
+    Drawer2.Root,
+    {
+      handleOnly: true,
+      direction: "right",
+      open: !!children,
+      repositionInputs: false,
+      children: /* @__PURE__ */ jsx15(Drawer2.Portal, { children: /* @__PURE__ */ jsxs5(
+        Drawer2.Content,
+        {
+          style: {
+            height: "100vh",
+            minHeight: "100vh",
+            position: "fixed",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            outline: "none"
+          },
+          children: [
+            /* @__PURE__ */ jsx15(Drawer2.Title, { style: { display: "none" }, children: title }),
+            /* @__PURE__ */ jsx15(Drawer2.Description, { style: { display: "none" }, children: description }),
+            /* @__PURE__ */ jsx15(
+              "div",
+              {
+                style: {
+                  width: "100%",
+                  height: "100%",
+                  overflowY: "auto",
+                  ...style
+                },
+                children
+              }
+            )
+          ]
+        }
+      ) })
+    }
+  );
+}
+
 // src/navigation/StackNavigatorContext.tsx
 import {
   createContext,
@@ -893,7 +949,7 @@ import {
   useEffect as useEffect5
 } from "react";
 import { parseJSON } from "@ywwwtseng/ywjs";
-import { jsx as jsx15 } from "react/jsx-runtime";
+import { jsx as jsx16 } from "react/jsx-runtime";
 var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
   ScreenType2["PAGE"] = "page";
   ScreenType2["DRAWER"] = "drawer";
@@ -911,15 +967,26 @@ function StackNavigatorProvider({
   screens,
   children
 }) {
-  const [stacks, setStacks] = useState5([
-    parseJSON(sessionStorage.getItem("navigator/screen")) || {
-      screen: "Home",
-      params: {}
+  const [stacks, setStacks] = useState5(() => {
+    if (typeof window === "undefined") {
+      return [];
     }
-  ]);
+    return [
+      parseJSON(sessionStorage.getItem("navigator/screen")) || {
+        screen: "Home",
+        params: {}
+      }
+    ];
+  });
   const route = useMemo2(() => {
     const stack = stacks[stacks.length - 1];
+    if (!stack) {
+      return void 0;
+    }
     const screen = screens[stack.screen];
+    if (!screen) {
+      return void 0;
+    }
     return {
       name: stack.screen,
       params: stack.params,
@@ -966,6 +1033,9 @@ function StackNavigatorProvider({
     [route, navigate, screens, stacks]
   );
   useEffect5(() => {
+    if (!route) {
+      return;
+    }
     if (route.type === "drawer") {
       return;
     }
@@ -977,7 +1047,7 @@ function StackNavigatorProvider({
       })
     );
   }, [route]);
-  return /* @__PURE__ */ jsx15(StackNavigatorContext.Provider, { value, children: typeof children === "function" ? children(value) : children });
+  return /* @__PURE__ */ jsx16(StackNavigatorContext.Provider, { value, children: typeof children === "function" ? children(value) : children });
 }
 var useNavigate = () => {
   const context = use(StackNavigatorContext);
@@ -994,105 +1064,61 @@ var useRoute = () => {
   return context.route;
 };
 
-// src/navigation/Navigator.tsx
-import { use as use2, useMemo as useMemo3 } from "react";
-
-// src/components/DrawerScreen.tsx
-import { Drawer as Drawer2 } from "vaul";
-import { jsx as jsx16, jsxs as jsxs5 } from "react/jsx-runtime";
-function DrawerScreen({
-  title,
-  description,
-  style,
-  children
-}) {
-  return /* @__PURE__ */ jsx16(
-    Drawer2.Root,
-    {
-      handleOnly: true,
-      direction: "right",
-      open: !!children,
-      repositionInputs: false,
-      children: /* @__PURE__ */ jsx16(Drawer2.Portal, { children: /* @__PURE__ */ jsxs5(
-        Drawer2.Content,
-        {
-          style: {
-            height: "100vh",
-            minHeight: "100vh",
-            position: "fixed",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            outline: "none"
-          },
-          children: [
-            /* @__PURE__ */ jsx16(Drawer2.Title, { style: { display: "none" }, children: title }),
-            /* @__PURE__ */ jsx16(Drawer2.Description, { style: { display: "none" }, children: description }),
-            /* @__PURE__ */ jsx16(
-              "div",
-              {
-                style: {
-                  width: "100%",
-                  height: "100%",
-                  overflowY: "auto",
-                  ...style
-                },
-                children
-              }
-            )
-          ]
-        }
-      ) })
-    }
-  );
-}
-
-// src/navigation/Navigator.tsx
+// src/navigation/StackView.tsx
 import { Fragment, jsx as jsx17, jsxs as jsxs6 } from "react/jsx-runtime";
-function Navigator({ drawer }) {
+function StackView({ drawer = { style: {} } }) {
+  const ref = useRef3(null);
   const { route, stacks, screens } = use2(StackNavigatorContext);
-  const Screen = useMemo3(() => {
+  const drawerView = useMemo3(() => {
+    if (route.type !== "page" /* PAGE */) {
+      const Screen = route.screen;
+      return /* @__PURE__ */ jsx17(
+        DrawerView,
+        {
+          title: route.title,
+          description: route.title,
+          style: drawer.style,
+          children: /* @__PURE__ */ jsx17(Screen, { params: route.params })
+        }
+      );
+    }
+  }, [route]);
+  const MainView = useMemo3(() => {
     if (route.type !== "page" /* PAGE */) {
       const stack = stacks[stacks.length - 2];
       return stack ? screens[stack.screen].screen : void 0;
     }
     return route.screen;
   }, [route, stacks, screens]);
-  const drawerScreen = useMemo3(() => {
-    if (route.type !== "page" /* PAGE */) {
-      const Screen2 = route.screen;
-      return /* @__PURE__ */ jsx17(
-        DrawerScreen,
-        {
-          title: route.title,
-          description: route.title,
-          style: drawer.style,
-          children: /* @__PURE__ */ jsx17(Screen2, { params: route.params })
-        }
-      );
+  useEffect6(() => {
+    if (ref.current) {
+      ref.current.scrollTop = 0;
     }
   }, [route]);
+  if (!MainView && !drawerView) {
+    return void 0;
+  }
   return /* @__PURE__ */ jsxs6(Fragment, { children: [
-    Screen && /* @__PURE__ */ jsx17(
+    MainView && /* @__PURE__ */ jsx17(
       "div",
       {
+        ref,
         style: {
           height: "100%",
           overflowY: "auto",
-          display: !!drawerScreen ? "none" : "block"
+          display: !!drawerView ? "none" : "block"
         },
-        children: /* @__PURE__ */ jsx17(Screen, { params: route.params })
+        children: /* @__PURE__ */ jsx17(MainView, { params: route.params })
       }
     ),
-    drawerScreen
+    drawerView
   ] });
 }
 
 // src/app/ClientContext.tsx
 import { AppError } from "@ywwwtseng/ywjs";
 import {
-  useRef as useRef3,
+  useRef as useRef4,
   useMemo as useMemo5,
   useCallback as useCallback3,
   createContext as createContext3
@@ -1215,7 +1241,7 @@ function ClientProvider({
   onError,
   children
 }) {
-  const loadingRef = useRef3([]);
+  const loadingRef = useRef4([]);
   const navigate = useNavigate();
   const { update } = useAppStateStore();
   const request = useMemo5(
@@ -1387,7 +1413,7 @@ function AppProvider({
 }
 
 // src/app/hooks/useInfiniteQuery.ts
-import { use as use5, useMemo as useMemo7, useState as useState6, useCallback as useCallback5, useEffect as useEffect6 } from "react";
+import { use as use5, useMemo as useMemo7, useState as useState6, useCallback as useCallback5, useEffect as useEffect7 } from "react";
 
 // src/app/hooks/useClient.ts
 import { use as use4 } from "react";
@@ -1454,7 +1480,7 @@ function useInfiniteQuery(path, options) {
     }
     return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
   }, [pageKeys, state, enabled]);
-  useEffect6(() => {
+  useEffect7(() => {
     if (!enabled) {
       return;
     }
@@ -1559,17 +1585,17 @@ function useMutation(action, { onError, onSuccess } = {}) {
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use7, useEffect as useEffect7, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef4 } from "react";
+import { use as use7, useEffect as useEffect8, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef5 } from "react";
 function useQuery(path, options) {
-  const isUnMountedRef = useRef4(false);
+  const isUnMountedRef = useRef5(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
   const { clear } = use7(AppStateContext);
   const route = useRoute();
-  const currentRouteRef = useRef4(route.name);
+  const currentRouteRef = useRef5(route.name);
   const key = useMemo8(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
-  const currentKeyRef = useRef4(key);
+  const currentKeyRef = useRef5(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
@@ -1588,7 +1614,7 @@ function useQuery(path, options) {
       }
     });
   }, [key, enabled, route.name]);
-  useEffect7(() => {
+  useEffect8(() => {
     currentKeyRef.current = key;
     return () => {
       if (options?.autoClearCache) {
@@ -1596,12 +1622,12 @@ function useQuery(path, options) {
       }
     };
   }, [key]);
-  useEffect7(() => {
+  useEffect8(() => {
     return () => {
       isUnMountedRef.current = true;
     };
   }, []);
-  useEffect7(() => {
+  useEffect8(() => {
     if (isUnMountedRef.current) {
       return;
     }
@@ -1649,11 +1675,11 @@ export {
   Layout,
   List,
   Modal,
-  Navigator,
   ScreenType,
   Spinner,
   StackNavigatorContext,
   StackNavigatorProvider,
+  StackView,
   TabBar,
   Textarea,
   Typography,
