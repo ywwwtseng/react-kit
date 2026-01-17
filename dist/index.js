@@ -635,6 +635,7 @@ function Button({
   width,
   size = "md",
   color = "primary",
+  textColor = "#ffffff",
   rounded,
   isLoading = false,
   children,
@@ -678,17 +679,17 @@ function Button({
       baseStyle.height = iconSize;
       baseStyle.padding = "0";
     }
-    const colorValue = colors[color || "primary"];
+    const colorValue = colors[color] ?? color;
     const hoverColor = isHovered && !disabled ? withOpacity(colorValue, 0.9) : colorValue;
     if (variant === "text") {
       baseStyle.backgroundColor = "transparent";
       baseStyle.color = hoverColor;
     } else if (variant === "contained") {
       baseStyle.backgroundColor = hoverColor;
-      baseStyle.color = "#ffffff";
+      baseStyle.color = textColor;
     } else if (variant === "icon") {
       baseStyle.backgroundColor = hoverColor;
-      baseStyle.color = "#ffffff";
+      baseStyle.color = textColor;
     }
     return baseStyle;
   }, [variant, width, size, color, rounded, isHovered, disabled, style]);
