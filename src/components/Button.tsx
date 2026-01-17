@@ -50,7 +50,8 @@ export type ButtonProps = ComponentProps<'button'> & {
   variant?: 'text' | 'contained' | 'icon';
   width?: 'full';
   size?: 'xs' | 'sm' | 'md';
-  color?: 'primary' | 'secondary' | 'active' | 'destructive';
+  color?: 'primary' | 'secondary' | 'active' | 'destructive' | string;
+  textColor?: string;
   rounded?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   isLoading?: boolean;
 };
@@ -60,6 +61,7 @@ export function Button({
   width,
   size = 'md',
   color = 'primary',
+  textColor = '#ffffff',
   rounded,
   isLoading = false,
   children,
@@ -80,6 +82,7 @@ export function Button({
       border: 'none',
       opacity: disabled ? 0.5 : 1,
       transition: 'all 0.2s ease-in-out',
+      whiteSpace: 'nowrap',
       ...style,
     };
 
@@ -114,7 +117,7 @@ export function Button({
     }
 
     // 颜色和变体
-    const colorValue = colors[color || 'primary'];
+    const colorValue = colors[color] ?? color;
     const hoverColor = isHovered && !disabled ? withOpacity(colorValue, 0.9) : colorValue;
 
     if (variant === 'text') {
@@ -122,10 +125,10 @@ export function Button({
       baseStyle.color = hoverColor;
     } else if (variant === 'contained') {
       baseStyle.backgroundColor = hoverColor;
-      baseStyle.color = '#ffffff';
+      baseStyle.color = textColor;
     } else if (variant === 'icon') {
       baseStyle.backgroundColor = hoverColor;
-      baseStyle.color = '#ffffff';
+      baseStyle.color = textColor;
     }
 
     return baseStyle;

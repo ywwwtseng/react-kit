@@ -100,11 +100,12 @@ type ButtonProps = ComponentProps<'button'> & {
     variant?: 'text' | 'contained' | 'icon';
     width?: 'full';
     size?: 'xs' | 'sm' | 'md';
-    color?: 'primary' | 'secondary' | 'active' | 'destructive';
+    color?: 'primary' | 'secondary' | 'active' | 'destructive' | string;
+    textColor?: string;
     rounded?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
     isLoading?: boolean;
 };
-declare function Button({ variant, width, size, color, rounded, isLoading, children, onClick, style, disabled, ...props }: ButtonProps): react_jsx_runtime.JSX.Element;
+declare function Button({ variant, width, size, color, textColor, rounded, isLoading, children, onClick, style, disabled, ...props }: ButtonProps): react_jsx_runtime.JSX.Element;
 
 declare const inputVariants: (props?: {} & class_variance_authority_types.ClassProp) => string;
 declare function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement> & VariantProps<typeof inputVariants>): react_jsx_runtime.JSX.Element;
