@@ -46,7 +46,9 @@ export function useMutation(
         .catch((res: { data: ErrorResponse }) => {
           onError?.(res.data);
 
-          notify('error', res.data.message ?? 'Unknown error');
+          const params = res.data.info ?? {};
+
+          notify('error', res.data.message ?? 'Unknown error', params as Record<string, string | number>);
 
           return {
             ok: false,

@@ -6,7 +6,7 @@ import type { NotifyType } from '../types';
 export function useNotify() {
   const { t } = useI18n();
 
-  return useCallback((type: NotifyType, message: string, params?: Record<string, string>) => {
+  return useCallback((type: NotifyType, message: string, params?: Record<string, string | number>) => {
     (toast[type] || toast)?.(t?.(message, params) ?? message);
   }, [t]);
 }

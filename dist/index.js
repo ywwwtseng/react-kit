@@ -1569,7 +1569,8 @@ function useMutation(action, { onError, onSuccess } = {}) {
         return data;
       }).catch((res) => {
         onError?.(res.data);
-        notify("error", res.data.message ?? "Unknown error");
+        const params = res.data.info ?? {};
+        notify("error", res.data.message ?? "Unknown error", params);
         return {
           ok: false
         };
