@@ -887,8 +887,21 @@ function useDisclosure() {
   return { isOpen, onOpenChange, onOpen, onClose };
 }
 
+// src/hooks/useDebounce.ts
+import { useState as useState5, useEffect as useEffect5 } from "react";
+function useDebounce(value, delay = 500) {
+  const [debouncedValue, setDebouncedValue] = useState5(value);
+  useEffect5(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 // src/navigation/StackView.tsx
-import { use as use2, useMemo as useMemo3, useRef as useRef3, useEffect as useEffect6 } from "react";
+import { use as use2, useMemo as useMemo3, useRef as useRef3, useEffect as useEffect7 } from "react";
 
 // src/navigation/DrawerView.tsx
 import { Drawer as Drawer2 } from "vaul";
@@ -945,10 +958,10 @@ function DrawerView({
 import {
   createContext,
   use,
-  useState as useState5,
+  useState as useState6,
   useCallback,
   useMemo as useMemo2,
-  useEffect as useEffect5
+  useEffect as useEffect6
 } from "react";
 import { parseJSON } from "@ywwwtseng/ywjs";
 import { jsx as jsx16 } from "react/jsx-runtime";
@@ -969,7 +982,7 @@ function StackNavigatorProvider({
   screens,
   children
 }) {
-  const [stacks, setStacks] = useState5(() => {
+  const [stacks, setStacks] = useState6(() => {
     if (typeof window === "undefined") {
       return [];
     }
@@ -1034,7 +1047,7 @@ function StackNavigatorProvider({
     }),
     [route, navigate, screens, stacks]
   );
-  useEffect5(() => {
+  useEffect6(() => {
     if (!route) {
       return;
     }
@@ -1092,7 +1105,7 @@ function StackView({ drawer = { style: {} } }) {
     }
     return route.screen;
   }, [route, stacks, screens]);
-  useEffect6(() => {
+  useEffect7(() => {
     if (ref.current) {
       ref.current.scrollTop = 0;
     }
@@ -1415,7 +1428,7 @@ function AppProvider({
 }
 
 // src/app/hooks/useInfiniteQuery.ts
-import { use as use5, useMemo as useMemo7, useState as useState6, useCallback as useCallback5, useEffect as useEffect7 } from "react";
+import { use as use5, useMemo as useMemo7, useState as useState7, useCallback as useCallback5, useEffect as useEffect8 } from "react";
 
 // src/app/hooks/useClient.ts
 import { use as use4 } from "react";
@@ -1436,7 +1449,7 @@ function useInfiniteQuery(path, options) {
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const state = useAppStateStore((store) => store.state);
-  const [pageKeys, setPageKeys] = useState6([]);
+  const [pageKeys, setPageKeys] = useState7([]);
   const data = useMemo7(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean);
   }, [pageKeys, state]);
@@ -1482,7 +1495,7 @@ function useInfiniteQuery(path, options) {
     }
     return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
   }, [pageKeys, state, enabled]);
-  useEffect7(() => {
+  useEffect8(() => {
     if (!enabled) {
       return;
     }
@@ -1521,7 +1534,7 @@ function useInfiniteQuery(path, options) {
 }
 
 // src/app/hooks/useMutation.ts
-import { useState as useState7, useCallback as useCallback7 } from "react";
+import { useState as useState8, useCallback as useCallback7 } from "react";
 
 // src/app/hooks/useNotify.ts
 import { useCallback as useCallback6 } from "react";
@@ -1550,7 +1563,7 @@ function useNotify() {
 function useMutation(action, { onError, onSuccess } = {}) {
   const client = useClient();
   const notify = useNotify();
-  const [isLoading, setIsLoading] = useState7(false);
+  const [isLoading, setIsLoading] = useState8(false);
   const isLoadingRef = useRefValue(isLoading);
   const mutate = useCallback7(
     (payload) => {
@@ -1588,7 +1601,7 @@ function useMutation(action, { onError, onSuccess } = {}) {
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use7, useEffect as useEffect8, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef5 } from "react";
+import { use as use7, useEffect as useEffect9, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef5 } from "react";
 function useQuery(path, options) {
   const isUnMountedRef = useRef5(false);
   const notify = useNotify();
@@ -1617,7 +1630,7 @@ function useQuery(path, options) {
       }
     });
   }, [key, enabled, route.name]);
-  useEffect8(() => {
+  useEffect9(() => {
     currentKeyRef.current = key;
     return () => {
       if (options?.autoClearCache) {
@@ -1625,12 +1638,12 @@ function useQuery(path, options) {
       }
     };
   }, [key]);
-  useEffect8(() => {
+  useEffect9(() => {
     return () => {
       isUnMountedRef.current = true;
     };
   }, []);
-  useEffect8(() => {
+  useEffect9(() => {
     if (isUnMountedRef.current) {
       return;
     }
@@ -1695,6 +1708,7 @@ export {
   useAppStateStore,
   useClient,
   useClientOnce,
+  useDebounce,
   useDisclosure,
   useI18n,
   useInfiniteQuery,
