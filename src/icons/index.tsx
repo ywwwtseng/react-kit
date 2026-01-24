@@ -1,4 +1,11 @@
+export * from './Loading';
+export * from './Search';
 export * from './Spinner';
+export * from './ChevronLeft';
+export * from './ChevronRight';
 export * from './ChevronDown';
 export * from './Check';
-export * as Flag from './Flag';
+export * from './WalletConnect';
+export * from './ArrowDown';
+export * from './ArrowUp';
+export * from './ArrowUpDown';
