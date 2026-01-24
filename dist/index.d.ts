@@ -353,5 +353,17 @@ declare function displayAmount(v: string | number, options?: {
 declare function displayAmount(v: string | number | undefined | null, options?: {
     showTinyAmount?: boolean;
 }): string | React.ReactElement | undefined;
+declare function parseTokenId(token_id: string): {
+    symbol: string;
+    decimals: number;
+    network: string;
+    address: string | undefined;
+};
+declare function formatTokenId({ symbol, decimals, network, address }: {
+    symbol: string;
+    decimals: number;
+    network: string;
+    address: string | undefined;
+}): string;
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, getQueryKey, inputVariants, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };

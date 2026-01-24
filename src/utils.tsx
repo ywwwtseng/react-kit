@@ -1,3 +1,4 @@
+import { AppError, ErrorCodes } from '@ywwwtseng/ywjs';
 import BigNumber from 'bignumber.js';
 
 export function formatTinyAmount(
@@ -103,4 +104,25 @@ export function displayAmount(
   // const floored = number.multipliedBy(multiplier).integerValue(BigNumber.ROUND_DOWN).dividedBy(multiplier);
 
   return number.toFixed(digits).replace(/\.?0+$/, '');
+}
+
+export function parseTokenId(token_id: string): {
+  symbol: string;
+  decimals: number;
+  network: string;
+  address: string | undefined;
+} {
+  const [symbol, decimals, network, address] = token_id.split(':');
+
+  if (!symbol || !decimals) {
+    throw new AppError(ErrorCodes.INVALID_PARAMS, 'Invalid token id', {
+      token_id,
+    });
+  }
+
+  return { symbol, decimals: Number(decimals), network, address };
+}
+
+export function formatTokenId({ symbol, decimals, network, address }: { symbol: string; decimals: number; network: string; address: string | undefined }): string {
+  return address ? `${symbol}:${decimals}:${network}:${address}` : `${symbol}:${decimals}:${network}`;
 }

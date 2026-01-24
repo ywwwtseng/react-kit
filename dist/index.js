@@ -1,1 +1,1899 @@
-import{default as is}from"react-hot-toast";import _ from"react";var Ie={size:{12:{fontSize:"8rem",lineHeight:"1"},11:{fontSize:"6rem",lineHeight:"1"},10:{fontSize:"4.5rem",lineHeight:"1"},9:{fontSize:"3.75rem",lineHeight:"1"},8:{fontSize:"2.25rem",lineHeight:"2.5rem"},7:{fontSize:"1.875rem",lineHeight:"2.25rem"},6:{fontSize:"1.5rem",lineHeight:"2rem"},5:{fontSize:"1.25rem",lineHeight:"1.75rem"},4:{fontSize:"1.125rem",lineHeight:"1.75rem"},3:{fontSize:"1rem",lineHeight:"1.5rem"},2:{fontSize:"0.875rem",lineHeight:"1.25rem"},1:{fontSize:"0.75rem",lineHeight:"1rem"}}},W=_.memo(({as:e="p",align:t="left",weight:r=400,size:o="3",className:n,ellipsis:i=!1,lineClamp:s,capitalize:a=!1,whitespacePreWrap:c=!1,noWrap:m=!1,dangerouslySetInnerHTML:u=!1,children:l,...d})=>_.createElement(e,{className:n,style:{textAlign:t,fontWeight:r,...Ie.size[o],...i?{textOverflow:"ellipsis",overflow:"hidden",whiteSpace:"nowrap"}:{},...s?{WebkitLineClamp:s,display:"-webkit-box",WebkitBoxOrient:"vertical",overflow:"hidden"}:{},...a?{textTransform:"capitalize"}:{},...c?{whiteSpace:"pre-wrap"}:{},...m?{whiteSpace:"nowrap"}:{},...d},...u?{dangerouslySetInnerHTML:{__html:l}}:{children:l}}));import{useEffect as F,useState as J}from"react";import{jsx as Ee}from"react/jsx-runtime";function Le(e){return String(e).replace(/(-?)(\d*)\.?(\d*)e([+-]\d+)/,(t,r,o,n,i)=>{i=Number(i);let s=o+n;if(i<0){let a=o.length+i;return r+"0."+"0".repeat(-a)+s}else return r+s+"0".repeat(i-n.length)})}function Me(){let e=navigator.userAgent,t=navigator.maxTouchPoints>0;return/Android|iPhone|iPad|iPod|Windows Phone/i.test(e)||t}function Ne(e){if(!e)return"";let t=e.split("."),r=t[0]||"";if(r===""||/^0+$/.test(r)){let i=r;return t.length>1?`${i}.${t[1]}`:e.endsWith(".")?`${i}.`:i}let o=r.match(/^(0+)/);if(o){let i=o[1],s=r.slice(i.length);if(s){let a=s.replace(/\B(?=(\d{3})+(?!\d))/g,","),c=i+a;return t.length>1?`${c}.${t[1]}`:e.endsWith(".")?`${c}.`:c}}let n=r.replace(/\B(?=(\d{3})+(?!\d))/g,",");return t.length>1?`${n}.${t[1]}`:e.endsWith(".")?`${n}.`:n}function mr({decimal:e=0,value:t,onChange:r,onInputChange:o,maxDigits:n,...i}){let[s,a]=J(t),[c,m]=J(!1);return F(()=>{s==="."&&t===""||(s==="0"&&t===""&&a(""),Number(s)!==Number(t)&&a(s!==""&&t===""?"":t))},[t,s]),F(()=>{o?.(s)},[s,o]),Ee("input",{...i,className:i.className?`input ${i.className}`:"input",type:"text",value:c?s:Ne(s),onChange:u=>{Me()&&m(!0);let l=u.target.value.replace(/,/g,"");if(l===""||l==="."){a(l),r("");return}if(l.startsWith(".")&&l.length>1){let f=s.replace(/,/g,"");f.startsWith("0.")&&f.slice(1)===l||(l="0"+l)}if((l.match(/\./g)||[]).length>1||!/^\.?\d*\.?\d*$/.test(l)||typeof n=="number"&&l.replace(".","").length>n)return;if(e===0){l==="0"?(a(""),r("")):(a(l.replace(".","")),r(l.replace(".","")));return}let d=l.split(".")[1];d&&d.length>e||Number(l)>=0&&(a(l),r(Le(Number(l))))}})}import{jsx as P}from"react/jsx-runtime";function De({className:e,style:t,children:r}){return P("div",{className:e,style:{display:"flex",flexDirection:"column",width:"100vw",height:"100vh",overflow:"hidden",...t},children:r})}function He({style:e,children:t}){return P("div",{style:{width:"100vw",left:0,top:0,padding:"8px 16px",position:"fixed",display:"flex",alignItems:"center",justifyContent:"space-between",gap:"8px",zIndex:1,pointerEvents:"auto",...e},children:t})}function Oe({style:e,children:t}){return P("div",{style:{display:"flex",alignItems:"center",justifyContent:"flex-start",gap:"8px",flex:1,...e},children:t})}function We({style:e,children:t}){return P("div",{style:{display:"flex",alignItems:"center",justifyContent:"center",gap:"8px",flex:1,...e},children:t})}function Ge({style:e,children:t}){return P("div",{style:{display:"flex",alignItems:"center",justifyContent:"flex-end",gap:"8px",flex:1,...e},children:t})}function ze({ref:e,style:t,children:r}){return P("div",{ref:e,style:{height:"100vh",overflowY:"auto",...t},children:r})}var hr={Root:De,Header:He,HeaderLeft:Oe,HeaderRight:Ge,HeaderTitle:We,Main:ze};import{jsx as Be}from"react/jsx-runtime";function Y({items:e,children:t,...r}){return Be("div",{...r,children:e.map(o=>t(o))})}import{jsx as $e}from"react/jsx-runtime";function vr({style:e,items:t,renderItem:r}){return $e(Y,{style:{width:"100vw",left:0,bottom:0,padding:"4px 16px 0px",position:"fixed",display:"flex",alignItems:"start",justifyContent:"space-between",...e},items:t,children:o=>r(o)})}import Qe from"clsx";import{Drawer as C}from"vaul";import{jsx as b,jsxs as G}from"react/jsx-runtime";function X({type:e="default",handle:t=!0,trigger:r,title:o,children:n,classes:i,...s}){let a=e==="default"?C.Root:C.NestedRoot;return G(a,{...s,children:[r&&b(C.Trigger,{asChild:!0,children:r}),G(C.Portal,{children:[b(C.Overlay,{style:{position:"fixed",inset:"0",zIndex:9999}}),b(C.Content,{style:{position:"fixed",zIndex:9999,bottom:0,left:0,right:0,margin:"0 4px 28px"},children:G("div",{className:Qe(i?.content,"bg-modal"),style:{paddingTop:16,borderRadius:10,display:"flex",alignItems:"center",flexDirection:"column",width:"100%",height:"100%",gap:16},children:[b(C.Title,{className:"hidden",children:o}),b(C.Description,{className:"hidden",children:o}),t&&b(C.Handle,{}),n]})})]})]})}import{useState as Je,useMemo as Ye}from"react";import{jsx as j,jsxs as Ue}from"react/jsx-runtime";function Vr(e){return Ue("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24","aria-hidden":"true",className:"animate-spin text-white/50 fill-white/80",viewBox:"0 0 100 101",color:"currentColor",fill:"none",...e,children:[j("path",{d:"M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z",fill:"currentColor"}),j("path",{d:"M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",fill:"currentFill"})]})}import{jsx as ee,jsxs as qe}from"react/jsx-runtime";function Mr(e){return qe("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",...e,children:[ee("path",{d:"m21 21-4.34-4.34"}),ee("circle",{cx:"11",cy:"11",r:"8"})]})}import{jsx as S,jsxs as Ke}from"react/jsx-runtime";function te(e){return S("svg",{fill:"currentColor",viewBox:"0 0 24 24",xmlns:"http://www.w3.org/2000/svg",...e,children:Ke("g",{children:[S("rect",{x:"11",y:"1",width:"2",height:"5",opacity:".14"}),S("rect",{x:"11",y:"1",width:"2",height:"5",transform:"rotate(30 12 12)",opacity:".29"}),S("rect",{x:"11",y:"1",width:"2",height:"5",transform:"rotate(60 12 12)",opacity:".43"}),S("rect",{x:"11",y:"1",width:"2",height:"5",transform:"rotate(90 12 12)",opacity:".57"}),S("rect",{x:"11",y:"1",width:"2",height:"5",transform:"rotate(120 12 12)",opacity:".71"}),S("rect",{x:"11",y:"1",width:"2",height:"5",transform:"rotate(150 12 12)",opacity:".86"}),S("rect",{x:"11",y:"1",width:"2",height:"5",transform:"rotate(180 12 12)"}),S("animateTransform",{attributeName:"transform",type:"rotate",calcMode:"discrete",dur:"0.75s",values:"0 12 12;30 12 12;60 12 12;90 12 12;120 12 12;150 12 12;180 12 12;210 12 12;240 12 12;270 12 12;300 12 12;330 12 12;360 12 12",repeatCount:"indefinite"})]})})}import{jsx as re}from"react/jsx-runtime";function Or(e){return re("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",...e,children:re("path",{d:"m15 18-6-6 6-6"})})}import{jsx as ne}from"react/jsx-runtime";function zr(e){return ne("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",...e,children:ne("path",{d:"m9 18 6-6-6-6"})})}import{jsx as oe}from"react/jsx-runtime";function Qr(e){return oe("svg",{xmlns:"http://www.w3.org/2000/svg",viewBox:"0 0 24 24",width:"24",height:"24",fill:"none",stroke:"currentColor",strokeWidth:"1.5","aria-hidden":"true",...e,children:oe("path",{d:"m6 9 6 6 6-6"})})}import{jsx as ie}from"react/jsx-runtime";function Kr(e){return ie("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5","aria-hidden":"true",...e,children:ie("path",{d:"M20 6 9 17l-5-5"})})}import{jsx as M}from"react/jsx-runtime";function Fr(e){return M("svg",{viewBox:"0 0 300 185",version:"1.1",xmlns:"http://www.w3.org/2000/svg",xmlnsXlink:"http://www.w3.org/1999/xlink",...e,children:M("g",{stroke:"none",strokeWidth:"1",fill:"none",fillRule:"evenodd",children:M("g",{id:"walletconnect-logo-alt",fill:"currentColor",fillRule:"nonzero",children:M("path",{d:"M61.4385429,36.2562612 C110.349767,-11.6319051 189.65053,-11.6319051 238.561752,36.2562612 L244.448297,42.0196786 C246.893858,44.4140867 246.893858,48.2961898 244.448297,50.690599 L224.311602,70.406102 C223.088821,71.6033071 221.106302,71.6033071 219.883521,70.406102 L211.782937,62.4749541 C177.661245,29.0669724 122.339051,29.0669724 88.2173582,62.4749541 L79.542302,70.9685592 C78.3195204,72.1657633 76.337001,72.1657633 75.1142214,70.9685592 L54.9775265,51.2530561 C52.5319653,48.8586469 52.5319653,44.9765439 54.9775265,42.5821357 L61.4385429,36.2562612 Z M280.206339,77.0300061 L298.128036,94.5769031 C300.573585,96.9713 300.573599,100.85338 298.128067,103.247793 L217.317896,182.368927 C214.872352,184.763353 210.907314,184.76338 208.461736,182.368989 C208.461726,182.368979 208.461714,182.368967 208.461704,182.368957 L151.107561,126.214385 C150.496171,125.615783 149.504911,125.615783 148.893521,126.214385 C148.893517,126.214389 148.893514,126.214393 148.89351,126.214396 L91.5405888,182.368927 C89.095052,184.763359 85.1300133,184.763399 82.6844276,182.369014 C82.6844133,182.369 82.684398,182.368986 82.6843827,182.36897 L1.87196327,103.246785 C-0.573596939,100.852377 -0.573596939,96.9702735 1.87196327,94.5758653 L19.7936929,77.028998 C22.2392531,74.6345898 26.2042918,74.6345898 28.6498531,77.028998 L86.0048306,133.184355 C86.6162214,133.782957 87.6074796,133.782957 88.2188704,133.184355 C88.2188796,133.184346 88.2188878,133.184338 88.2188969,133.184331 L145.571,77.028998 C148.016505,74.6345347 151.981544,74.6344449 154.427161,77.028798 C154.427195,77.0288316 154.427229,77.0288653 154.427262,77.028899 L211.782164,133.184331 C212.393554,133.782932 213.384814,133.782932 213.996204,133.184331 L271.350179,77.0300061 C273.79574,74.6355969 277.760778,74.6355969 280.206339,77.0300061 Z",id:"WalletConnect"})})})})}import{jsx as se,jsxs as Ze}from"react/jsx-runtime";function Xr(e){return Ze("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",...e,children:[se("path",{d:"M12 5v14"}),se("path",{d:"m19 12-7 7-7-7"})]})}import{jsx as ae,jsxs as _e}from"react/jsx-runtime";function tn(e){return _e("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",...e,children:[ae("path",{d:"m5 12 7-7 7 7"}),ae("path",{d:"M12 19V5"})]})}import{jsx as N,jsxs as Fe}from"react/jsx-runtime";function on(e){return Fe("svg",{xmlns:"http://www.w3.org/2000/svg",width:"24",height:"24",viewBox:"0 0 24 24",fill:"none",stroke:"currentColor",strokeWidth:"1.5",strokeLinecap:"round",strokeLinejoin:"round","aria-hidden":"true",...e,children:[N("path",{d:"m21 16-4 4-4-4"}),N("path",{d:"M17 20V4"}),N("path",{d:"m3 8 4-4 4 4"}),N("path",{d:"M7 4v16"})]})}import{jsx as ce}from"react/jsx-runtime";var Xe={primary:"#3b82f6",secondary:"rgba(66,66,66,0.8)",active:"#10b981",destructive:"#ef4444"},pe={xs:{fontSize:"0.75rem",minHeight:"32px",padding:"0.25rem 0.5rem"},sm:{fontSize:"0.875rem",minHeight:"40px",padding:"0.5rem 0.75rem"},md:{fontSize:"1.125rem",minHeight:"48px",padding:"0.75rem 1rem"}},ue={sm:"0.125rem",md:"0.375rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},je=(e,t=.9)=>{if(e.startsWith("rgb")){let s=e.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);if(s){let c=(s[4]?parseFloat(s[4]):1)*t;return`rgba(${s[1]}, ${s[2]}, ${s[3]}, ${c})`}}let r=e.replace("#",""),o=parseInt(r.substring(0,2),16),n=parseInt(r.substring(2,4),16),i=parseInt(r.substring(4,6),16);return`rgba(${o}, ${n}, ${i}, ${t})`};function z({variant:e="text",width:t,size:r="md",color:o="primary",textColor:n="#ffffff",rounded:i,isLoading:s=!1,children:a,onClick:c,style:m,disabled:u,...l}){let[d,f]=Je(!1),y=Ye(()=>{let p={display:"flex",alignItems:"center",justifyContent:"center",cursor:u?"not-allowed":"pointer",outline:"none",border:"none",opacity:u?.5:1,transition:"all 0.2s ease-in-out",whiteSpace:"nowrap",...m};if(t==="full"&&(p.width="100%"),r){let g=pe[r];p.fontSize=g.fontSize,p.minHeight=g.minHeight,e!=="icon"&&(p.padding=g.padding)}if(i?p.borderRadius=ue[i]:e==="icon"&&(p.borderRadius=ue.full),e==="icon"&&r){let g=pe[r].minHeight;p.width=g,p.height=g,p.padding="0"}let h=Xe[o]??o,x=d&&!u?je(h,.9):h;return e==="text"?(p.backgroundColor="transparent",p.color=x):(e==="contained"||e==="icon")&&(p.backgroundColor=x,p.color=n),p},[e,t,r,o,i,d,u,m]);return ce("button",{style:y,onClick:p=>{s||u||c?.(p)},onMouseEnter:()=>f(!0),onMouseLeave:()=>f(!1),disabled:u||s,...l,children:s?ce(te,{width:24,height:24}):a})}import{cva as et}from"class-variance-authority";import tt from"clsx";import{jsx as nt}from"react/jsx-runtime";var rt=et("focus:outline-none outline-none placeholder:text-placeholder",{variants:{},defaultVariants:{},compoundVariants:[]});function An({className:e,...t}){return nt("input",{className:tt(rt({className:e})),...t})}import{cva as ot}from"class-variance-authority";import it from"clsx";import{jsx as at}from"react/jsx-runtime";var st=ot("focus:outline-none outline-none resize-none placeholder:text-placeholder",{variants:{},defaultVariants:{},compoundVariants:[]});function Nn({className:e,...t}){return at("textarea",{className:it(st({className:e})),...t})}import{useEffect as pt,useRef as ut}from"react";import{jsx as ct}from"react/jsx-runtime";function On({image:e,size:t=40,...r}){let o=ut(null);return pt(()=>{if(e){let n=o.current;if(n){n.width=t,n.height=t;let i=n.getContext("2d");i&&i.drawImage(e,0,0,t,t)}}},[e,t]),ct("canvas",{ref:o,...r,width:t,height:t})}import{jsx as k,jsxs as le}from"react/jsx-runtime";function qn({title:e,description:t,onOpenChange:r,cancel:o,confirm:n,...i}){return le(X,{title:e,onOpenChange:r,...i,children:[k(W,{size:"2",children:e}),k("div",{className:"px-4 pb-4",children:k(W,{size:"1",children:t})}),le("div",{style:{display:"flex",width:"100%",gap:24,padding:"16px 24px"},children:[k(z,{width:"full",rounded:"full",variant:"contained",color:"secondary",size:"sm",onClick:()=>{r(!1)},children:"Cancel",...o}),k(z,{width:"full",rounded:"full",variant:"contained",size:"sm",color:"destructive",...n,onClick:s=>{r(!1),n.onClick?.(s)}})]})]})}import fe from"react";function E(e){let t=fe.useRef(e);return fe.useEffect(()=>{t.current=e},[e]),t}import{useEffect as lt,useRef as ft}from"react";function Yn(e){let t=ft(!0);lt(()=>{if(!t.current)return;t.current=!1;let r=e();return()=>{r&&r()}},[])}import{useEffect as mt,useState as dt}from"react";function eo(){let[e,t]=dt(!1);return mt(()=>{t(!0)},[]),e}import{useState as gt}from"react";function no(){let[e,t]=gt(!1);return{isOpen:e,onOpenChange:i=>{t(i)},onOpen:()=>{t(!0)},onClose:()=>{t(!1)}}}import{useState as ht,useEffect as yt}from"react";function so(e,t=500){let[r,o]=ht(e);return yt(()=>{let n=setTimeout(()=>{o(e)},t);return()=>clearTimeout(n)},[e,t]),r}import{use as Rt,useMemo as xe,useRef as kt,useEffect as Tt}from"react";import{Drawer as T}from"vaul";import{jsx as A,jsxs as xt}from"react/jsx-runtime";function me({title:e,description:t,style:r,children:o}){return A(T.Root,{handleOnly:!0,direction:"right",open:!!o,repositionInputs:!1,children:A(T.Portal,{children:xt(T.Content,{style:{height:"100vh",minHeight:"100vh",position:"fixed",top:0,bottom:0,left:0,right:0,outline:"none"},children:[A(T.Title,{style:{display:"none"},children:e}),A(T.Description,{style:{display:"none"},children:t}),A("div",{style:{width:"100%",height:"100%",overflowY:"auto",...r},children:o})]})})})}import{createContext as wt,use as ge,useState as Ct,useCallback as St,useMemo as de,useEffect as vt}from"react";import{parseJSON as Pt}from"@ywwwtseng/ywjs";import{jsx as bt}from"react/jsx-runtime";var he=(o=>(o.PAGE="page",o.DRAWER="drawer",o.SINGLE="single",o))(he||{}),V=wt({route:void 0,screens:{},stacks:[],navigate:(e,t)=>{}});function mo({screens:e,children:t}){let[r,o]=Ct(()=>typeof window>"u"?[]:[Pt(sessionStorage.getItem("navigator/screen"))||{screen:"Home",params:{}}]),n=de(()=>{let a=r[r.length-1];if(!a)return;let c=e[a.screen];if(c)return{name:a.screen,params:a.params,type:c.type,title:c.title,screen:c.screen,back:c.back}},[r,e]),i=St((a,c)=>{if(typeof a=="string"&&!Object.keys(e).includes(a)){console.warn(`Screen ${a} not found`);return}let m=c?.type||"push";o(u=>{if(a===-1&&u.length>1)return u.slice(0,-1);if(typeof a=="string"){let l={screen:a,params:c?.params||{}};return m==="replace"?[...u.slice(0,-1),l]:u[u.length-1]?.screen===a?[...u.slice(0,-1),l]:[...u,l].slice(-10)}return u})},[e]),s=de(()=>({route:n,navigate:i,screens:e,stacks:r}),[n,i,e,r]);return vt(()=>{n&&n.type!=="drawer"&&sessionStorage.setItem("navigator/screen",JSON.stringify({screen:n.name,params:n.params}))},[n]),bt(V.Provider,{value:s,children:typeof t=="function"?t(s):t})}var ye=()=>{let e=ge(V);if(!e)throw new Error("useNavigate must be used within a StackNavigator");return e.navigate},D=()=>{let e=ge(V);if(!e)throw new Error("useRoute must be used within a StackNavigator");return e.route};import{Fragment as At,jsx as H,jsxs as Vt}from"react/jsx-runtime";function vo({drawer:e={style:{}}}){let t=kt(null),{route:r,stacks:o,screens:n}=Rt(V),i=xe(()=>{if(r.type!=="page"){let a=r.screen;return H(me,{title:r.title,description:r.title,style:e.style,children:H(a,{params:r.params})})}},[r]),s=xe(()=>{if(r.type!=="page"){let a=o[o.length-2];return a?n[a.screen].screen:void 0}return r.screen},[r,o,n]);if(Tt(()=>{t.current&&(t.current.scrollTop=0)},[r]),!(!s&&!i))return Vt(At,{children:[s&&H("div",{ref:t,style:{height:"100%",overflowY:"auto",display:i?"none":"block"},children:H(s,{params:r.params})}),i]})}import{AppError as Ce}from"@ywwwtseng/ywjs";import{useRef as Ot,useMemo as Se,useCallback as ve,createContext as Wt}from"react";import{Request as Gt}from"@ywwwtseng/request";import{createContext as It,useCallback as Lt,useMemo as Mt}from"react";import{create as Nt}from"zustand";import{produce as Et}from"immer";import{merge as Dt}from"@ywwwtseng/ywjs";import{jsx as Ht}from"react/jsx-runtime";var I=It(void 0),w=Nt(e=>({state:{},loading:[],update:t=>{e(r=>Et(r,o=>{for(let n of t){if(n.type==="update"&&typeof n.payload=="function")return n.payload(o);if(n.type==="update"&&n.target)o.state[n.target]=n.payload;else if(n.type==="merge"&&n.target)o.state[n.target]=Dt(o.state[n.target],n.payload);else if(n.type==="replace"){let i=n.payload,s=n.target||"id";if(typeof i=="object"&&i&&s in i)for(let a of Object.keys(o.state)){let c=o.state[a];if(!Array.isArray(c))continue;let m=c.findIndex(u=>{if(u[s]!==i[s])return!1;let l=Object.keys(u),d=Object.keys(i);return l.length!==d.length?!1:l.every(f=>d.includes(f))});m!==-1&&(c[m]=i)}}else if(n.type==="unshift"&&n.target){let i=o.state[n.target];Array.isArray(i)&&i.unshift(n.payload)}else if(n.type==="push"&&n.target){let i=o.state[n.target];Array.isArray(i)&&i.push(n.payload)}else if(n.type==="delete"&&n.target){let i=n.payload,s=n.target||"id";for(let a of Object.keys(o.state)){let c=o.state[a];if(!Array.isArray(c))continue;let m=c.findIndex(u=>u[s]===i);m!==-1&&c.splice(m,1)}}}}))}}));function we({children:e}){let{update:t}=w(),r=Lt(n=>{t([{type:"update",target:"state",payload:i=>{delete i.state[n]}}])},[t]),o=Mt(()=>({update:t,clear:r}),[t,r]);return Ht(I.Provider,{value:o,children:e})}function v(e,t){return t&&Object.keys(t).length>0?JSON.stringify({path:e,params:t}):e}import{jsx as zt}from"react/jsx-runtime";var B=Wt(void 0);function Pe({url:e,transformRequest:t,onError:r,children:o}){let n=Ot([]),i=ye(),{update:s}=w(),a=Se(()=>new Gt({transformRequest:t}),[t]),c=ve(async(l,d,f)=>{let y=v(l,d);n.current.push(y),s([{type:"update",target:"loading",payload:p=>{p.loading.push(y)}}]);try{let p=await a.post(e,{type:"query",path:l,params:d??{}});if(p.commands&&s(p.commands),p.error)throw new Ce(p.error,p.message??"Unknown error");return p.navigate&&i(p.navigate.screen,{type:"replace",params:p.navigate.params}),p.notify&&f?.onNotify?.(p.notify),{key:y,data:p}}catch(p){throw r?.(p),p}finally{n.current=n.current.filter(p=>p!==y),s([{type:"update",target:"loading",payload:p=>{p.loading=p.loading.filter(h=>h!==y)}}])}},[a]),m=ve(async(l,d)=>{try{let f;if(d instanceof FormData?(d.append("mutation:type","mutate"),d.append("mutation:action",l),f=await a.post(e,d)):f=await a.post(e,{type:"mutate",action:l,payload:d}),f.error)throw new Ce(f.error,f.message??"Unknown error");return f.commands&&s(f.commands),f.navigate&&i(f.navigate.screen,{type:"replace",params:f.navigate.params}),{data:f}}catch(f){throw r?.(f),f}},[a]),u=Se(()=>({query:c,mutate:m,loadingRef:n}),[c,m,n]);return zt(B.Provider,{value:u,children:o})}import{Toaster as _t}from"react-hot-toast";import{useCallback as $t,useMemo as $,createContext as Qt,use as _o}from"react";import{get as Ut,getLocale as qt,translate as Kt}from"@ywwwtseng/ywjs";import{get as Bt}from"@ywwwtseng/ywjs";function be(e){return w(t=>Bt(t.state,e))}import{jsx as Zt}from"react/jsx-runtime";var Q=Qt(void 0);function Re({locales:e,path:t=["me","language_code"],callback:r="en",children:o}){let n=be(t[0]),i=$(()=>n&&Ut(n,t.slice(1))||r,[n,t,r]),s=$(()=>e?qt(e,i,e[r]):null,[i,r,e]),a=$t((m,u)=>s?Kt(s,m,u):m,[s]),c=$(()=>({language_code:i,t:a}),[s,a]);return Zt(Q.Provider,{value:c,children:o})}import{jsx as U,jsxs as Ft}from"react/jsx-runtime";function si({url:e,transformRequest:t,onError:r,i18nProps:o={},toasterProps:n={},children:i}){return Ft(we,{children:[U(Pe,{url:e,transformRequest:t,onError:r,children:U(Re,{...o,children:i})}),U(_t,{...n})]})}import{use as Yt,useMemo as q,useState as Xt,useCallback as jt,useEffect as er}from"react";import{use as Jt}from"react";function R(){let e=Jt(B);if(!e)throw new Error("useClient must be used within a ClientProvider");return e}var tr=e=>Array.isArray(e)?e?.[e.length-1]?.created_at??null:null;function yi(e,t){let r=D(),o=t?.refetchOnMount??!1,n=t?.enabled??!0,i=w(p=>p.state),[s,a]=Xt([]),c=q(()=>s.map(p=>i[p]).filter(Boolean),[s,i]),{update:m}=Yt(I),{query:u,loadingRef:l}=R(),d=q(()=>{let p=c[c.length-1];if(Array.isArray(p)){let h=t.params?.limit;if(typeof h=="number")return p.length===h;if(p.length===0)return!1}return!0},[c]),f=jt(()=>{if(!d)return;let p=t?.params??{};if(!n)return;let h=tr(c?c[c.length-1]:void 0);h&&(p.cursor=h);let x=v(e,p);l.current.includes(x)||(a(g=>[...g,x]),u(e,p))},[e,JSON.stringify(t),d,n,c]),y=q(()=>n&&s.length>0?i[s[s.length-1]]===void 0:!1,[s,i,n]);return er(()=>{if(!n)return;let p=t?.params??{},h=v(e,p);if(!l.current.includes(h)&&!(i[h]!==void 0&&o===!1))return a(x=>[...x,h]),u(e,p),()=>{o&&(m([{type:"update",payload:x=>{s.forEach(g=>{delete x.state[g]})}}]),a([]))}},[e,JSON.stringify(t),n,r.name]),{data:c.length>0?c.flat():void 0,isLoading:y,hasNextPage:d,fetchNextPage:f}}import{useState as or,useCallback as ir}from"react";import{useCallback as nr}from"react";import Te from"react-hot-toast";import{use as rr}from"react";function ke(){let e=rr(Q);if(!e)throw console.trace("useI18n must be used within a I18nProvider"),new Error("useI18n must be used within a I18nProvider");return e}function O(){let{t:e}=ke();return nr((t,r,o)=>{(Te[t]||Te)?.(e?.(r,o)??r)},[e])}function Ii(e,{onError:t,onSuccess:r}={}){let o=R(),n=O(),[i,s]=or(!1),a=E(i);return{mutate:ir(m=>a.current?Promise.reject({message:"Already loading"}):(a.current=!0,s(!0),o.mutate(e,m).then(({data:u})=>(u.notify&&n(u.notify.type,u.notify.message,u.notify.params),r?.(u),u)).catch(u=>{t?.(u.data);let l=u.data.info??{};return n("error",u.data.message??"Unknown error",l),{ok:!1}}).finally(()=>{a.current=!1,s(!1)})),[o.mutate,e,n]),isLoading:i}}import{use as sr,useEffect as K,useCallback as ar,useMemo as pr,useRef as Z}from"react";function Gi(e,t){let r=Z(!1),o=O(),n=E(o),{query:i,loadingRef:s}=R(),{clear:a}=sr(I),c=D(),m=Z(c.name),u=pr(()=>v(e,t?.params??{}),[e,JSON.stringify(t?.params??{})]),l=Z(u),d=t?.params??{},f=t?.refetchOnMount??!1,y=t?.enabled??!0,p=w(g=>g.loading).includes(u),h=w(g=>g.state[u]),x=ar(()=>{y&&(s.current.includes(u)||i(e,d).then(({key:g})=>{t?.autoClearCache&&g!==l.current&&a(g)}))},[u,y,c.name]);return K(()=>(l.current=u,()=>{t?.autoClearCache&&a(u)}),[u]),K(()=>()=>{r.current=!0},[]),K(()=>{r.current||y&&(s.current.includes(u)||h!==void 0&&f===!1||f&&m.current!==c.name||i(e,d).then(({key:g,data:L})=>{L.notify&&n.current(L.notify.type,L.notify.message,L.notify.params),t?.autoClearCache&&g!==l.current&&a(g)}))},[u,y,c.name]),{refetch:x,isLoading:p,data:h}}import Ve from"bignumber.js";import{jsxs as Ae}from"react/jsx-runtime";function ur(e,t=2){let r=typeof e=="number"?new Ve(e).toFixed():e;if(!r.startsWith("0."))return r;let o=r.slice(2),n=o.match(/^0+/);if(!n)return r;let i=n[0].length,s=o.slice(i);if(!s)return r;let a=s.slice(0,t);return a=a.replace(/0+$/,""),{zeroCount:i,significant:a}}function es(e,{showTinyAmount:t=!0}={showTinyAmount:!0}){if(e==null)return;if(e==="0"||e===0)return"0";let r=0,o=new Ve(e);if(o.gt(1e4)?r=1:o.gt(1e3)||o.gt(100)||o.gt(10)||o.eq(1)?r=2:o.gt(1)?r=3:o.eq(0)?r=2:o.gt(.1)?r=3:o.gt(.01)?r=4:r=8,t&&o.lt(1e-5)){let n=ur(e);if(typeof n=="object"){let{zeroCount:i,significant:s}=n;return Ae("span",{children:["0.0",Ae("sub",{children:[i," "]}),s]})}}return o.toFixed(r).replace(/\.?0+$/,"")}export{mr as AmountInput,si as AppProvider,I as AppStateContext,we as AppStateProvider,Xr as ArrowDown,tn as ArrowUp,on as ArrowUpDown,z as Button,On as Canvas,Kr as Check,Qr as ChevronDown,Or as ChevronLeft,zr as ChevronRight,B as ClientContext,Pe as ClientProvider,qn as Confirm,An as Input,hr as Layout,Y as List,Vr as Loading,X as Modal,he as ScreenType,Mr as Search,te as Spinner,V as StackNavigatorContext,mo as StackNavigatorProvider,vo as StackView,vr as TabBar,Nn as Textarea,W as Typography,Fr as WalletConnect,es as displayAmount,Ne as formatAmount,ur as formatTinyAmount,v as getQueryKey,rt as inputVariants,st as textareaVariants,is as toast,be as useAppState,w as useAppStateStore,R as useClient,Yn as useClientOnce,so as useDebounce,no as useDisclosure,ke as useI18n,yi as useInfiniteQuery,eo as useIsMounted,Ii as useMutation,ye as useNavigate,Gi as useQuery,E as useRefValue,D as useRoute};
+// src/index.ts
+import { default as default2 } from "react-hot-toast";
+
+// src/components/Typography.tsx
+import React from "react";
+var config = {
+  size: {
+    "12": { fontSize: "8rem", lineHeight: "1" },
+    "11": { fontSize: "6rem", lineHeight: "1" },
+    "10": { fontSize: "4.5rem", lineHeight: "1" },
+    "9": { fontSize: "3.75rem", lineHeight: "1" },
+    "8": { fontSize: "2.25rem", lineHeight: "2.5rem" },
+    "7": { fontSize: "1.875rem", lineHeight: "2.25rem" },
+    "6": { fontSize: "1.5rem", lineHeight: "2rem" },
+    "5": { fontSize: "1.25rem", lineHeight: "1.75rem" },
+    "4": { fontSize: "1.125rem", lineHeight: "1.75rem" },
+    "3": { fontSize: "1rem", lineHeight: "1.5rem" },
+    "2": { fontSize: "0.875rem", lineHeight: "1.25rem" },
+    "1": { fontSize: "0.75rem", lineHeight: "1rem" }
+  }
+};
+var Typography = React.memo(
+  ({
+    as = "p",
+    align = "left",
+    weight = 400,
+    size = "3",
+    className,
+    ellipsis = false,
+    lineClamp,
+    capitalize = false,
+    whitespacePreWrap = false,
+    noWrap = false,
+    dangerouslySetInnerHTML = false,
+    children,
+    ...props
+  }) => {
+    return React.createElement(as, {
+      className,
+      style: {
+        textAlign: align,
+        fontWeight: weight,
+        ...config.size[size],
+        ...ellipsis ? {
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          whiteSpace: "nowrap"
+        } : {},
+        ...lineClamp ? {
+          WebkitLineClamp: lineClamp,
+          display: "-webkit-box",
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden"
+        } : {},
+        ...capitalize ? { textTransform: "capitalize" } : {},
+        ...whitespacePreWrap ? { whiteSpace: "pre-wrap" } : {},
+        ...noWrap ? { whiteSpace: "nowrap" } : {},
+        ...props
+      },
+      ...dangerouslySetInnerHTML ? {
+        dangerouslySetInnerHTML: {
+          __html: children
+        }
+      } : { children }
+    });
+  }
+);
+
+// src/components/AmountInput.tsx
+import { useEffect, useState } from "react";
+import { jsx } from "react/jsx-runtime";
+function toPlainString(num) {
+  return String(num).replace(
+    /(-?)(\d*)\.?(\d*)e([+-]\d+)/,
+    (_, sign, int, frac, exp) => {
+      exp = Number(exp);
+      const digits = int + frac;
+      if (exp < 0) {
+        const pos = int.length + exp;
+        return sign + "0." + "0".repeat(-pos) + digits;
+      } else {
+        return sign + digits + "0".repeat(exp - frac.length);
+      }
+    }
+  );
+}
+function isMobile() {
+  const ua = navigator.userAgent;
+  const isTouch = navigator.maxTouchPoints > 0;
+  const isMobileUA = /Android|iPhone|iPad|iPod|Windows Phone/i.test(ua);
+  return isMobileUA || isTouch;
+}
+function formatAmount(input) {
+  if (!input) return "";
+  const parts = input.split(".");
+  const rawIntegerPart = parts[0] || "";
+  if (rawIntegerPart === "" || /^0+$/.test(rawIntegerPart)) {
+    const integerPart2 = rawIntegerPart;
+    if (parts.length > 1) {
+      return `${integerPart2}.${parts[1]}`;
+    } else if (input.endsWith(".")) {
+      return `${integerPart2}.`;
+    }
+    return integerPart2;
+  }
+  const leadingZerosMatch = rawIntegerPart.match(/^(0+)/);
+  if (leadingZerosMatch) {
+    const leadingZeros = leadingZerosMatch[1];
+    const significantPart = rawIntegerPart.slice(leadingZeros.length);
+    if (significantPart) {
+      const formattedSignificant = significantPart.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+      );
+      const integerPart2 = leadingZeros + formattedSignificant;
+      if (parts.length > 1) {
+        return `${integerPart2}.${parts[1]}`;
+      } else if (input.endsWith(".")) {
+        return `${integerPart2}.`;
+      }
+      return integerPart2;
+    }
+  }
+  const integerPart = rawIntegerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (parts.length > 1) {
+    return `${integerPart}.${parts[1]}`;
+  } else if (input.endsWith(".")) {
+    return `${integerPart}.`;
+  }
+  return integerPart;
+}
+function AmountInput({
+  decimal = 0,
+  value,
+  onChange,
+  onInputChange,
+  maxDigits,
+  ...props
+}) {
+  const [inputValue, setInputValue] = useState(value);
+  const [isComposing, setIsComposing] = useState(false);
+  useEffect(() => {
+    if (inputValue === "." && value === "") {
+      return;
+    }
+    if (inputValue === "0" && value === "") {
+      setInputValue("");
+    }
+    if (Number(inputValue) === Number(value)) return;
+    if (inputValue !== "" && value === "") {
+      setInputValue("");
+    } else {
+      setInputValue(value);
+    }
+  }, [value, inputValue]);
+  useEffect(() => {
+    onInputChange?.(inputValue);
+  }, [inputValue, onInputChange]);
+  return /* @__PURE__ */ jsx(
+    "input",
+    {
+      ...props,
+      className: props.className ? `input ${props.className}` : "input",
+      type: "text",
+      value: isComposing ? inputValue : formatAmount(inputValue),
+      onChange: (e) => {
+        if (isMobile()) {
+          setIsComposing(true);
+        }
+        let value2 = e.target.value.replace(/,/g, "");
+        if (value2 === "" || value2 === ".") {
+          setInputValue(value2);
+          onChange("");
+          return;
+        }
+        if (value2.startsWith(".") && value2.length > 1) {
+          const previousValue = inputValue.replace(/,/g, "");
+          if (previousValue.startsWith("0.") && previousValue.slice(1) === value2) {
+          } else {
+            value2 = "0" + value2;
+          }
+        }
+        if ((value2.match(/\./g) || []).length > 1) return;
+        if (!/^\.?\d*\.?\d*$/.test(value2)) return;
+        if (typeof maxDigits === "number") {
+          const totalDigits = value2.replace(".", "");
+          if (totalDigits.length > maxDigits) return;
+        }
+        if (decimal === 0) {
+          if (value2 === "0") {
+            setInputValue("");
+            onChange("");
+          } else {
+            setInputValue(value2.replace(".", ""));
+            onChange(value2.replace(".", ""));
+          }
+          return;
+        }
+        const decimalPart = value2.split(".")[1];
+        if (decimalPart && decimalPart.length > decimal) return;
+        if (Number(value2) >= 0) {
+          setInputValue(value2);
+          onChange(toPlainString(Number(value2)));
+        }
+      }
+    }
+  );
+}
+
+// src/components/Layout.tsx
+import { jsx as jsx2 } from "react/jsx-runtime";
+function Root({
+  className,
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      className,
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        ...style
+      },
+      children
+    }
+  );
+}
+function Header({
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      style: {
+        width: "100vw",
+        left: 0,
+        top: 0,
+        padding: "8px 16px",
+        position: "fixed",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: "8px",
+        zIndex: 1,
+        pointerEvents: "auto",
+        ...style
+      },
+      children
+    }
+  );
+}
+function HeaderLeft({
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-start",
+        gap: "8px",
+        flex: 1,
+        ...style
+      },
+      children
+    }
+  );
+}
+function HeaderTitle({
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        flex: 1,
+        ...style
+      },
+      children
+    }
+  );
+}
+function HeaderRight({
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+        gap: "8px",
+        flex: 1,
+        ...style
+      },
+      children
+    }
+  );
+}
+function Main({
+  ref,
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx2(
+    "div",
+    {
+      ref,
+      style: {
+        height: "100vh",
+        overflowY: "auto",
+        ...style
+      },
+      children
+    }
+  );
+}
+var Layout = {
+  Root,
+  Header,
+  HeaderLeft,
+  HeaderRight,
+  HeaderTitle,
+  Main
+};
+
+// src/components/List.tsx
+import { jsx as jsx3 } from "react/jsx-runtime";
+function List({ items, children, ...props }) {
+  return /* @__PURE__ */ jsx3("div", { ...props, children: items.map((item) => children(item)) });
+}
+
+// src/components/TabBar.tsx
+import { jsx as jsx4 } from "react/jsx-runtime";
+function TabBar({ style, items, renderItem }) {
+  return /* @__PURE__ */ jsx4(
+    List,
+    {
+      style: {
+        width: "100vw",
+        left: 0,
+        bottom: 0,
+        padding: "4px 16px 0px",
+        position: "fixed",
+        display: "flex",
+        alignItems: "start",
+        justifyContent: "space-between",
+        ...style
+      },
+      items,
+      children: (item) => renderItem(item)
+    }
+  );
+}
+
+// src/components/Modal.tsx
+import clsx from "clsx";
+import { Drawer } from "vaul";
+import { jsx as jsx5, jsxs } from "react/jsx-runtime";
+function Modal({
+  type = "default",
+  handle = true,
+  trigger,
+  title,
+  children,
+  classes,
+  ...props
+}) {
+  const Root2 = type === "default" ? Drawer.Root : Drawer.NestedRoot;
+  return /* @__PURE__ */ jsxs(Root2, { ...props, children: [
+    trigger && /* @__PURE__ */ jsx5(Drawer.Trigger, { asChild: true, children: trigger }),
+    /* @__PURE__ */ jsxs(Drawer.Portal, { children: [
+      /* @__PURE__ */ jsx5(
+        Drawer.Overlay,
+        {
+          style: {
+            position: "fixed",
+            inset: "0",
+            zIndex: 9999
+          }
+        }
+      ),
+      /* @__PURE__ */ jsx5(
+        Drawer.Content,
+        {
+          style: {
+            position: "fixed",
+            zIndex: 9999,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            margin: "0 4px 28px"
+          },
+          children: /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: clsx(classes?.content, "bg-modal"),
+              style: {
+                paddingTop: 16,
+                borderRadius: 10,
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                width: "100%",
+                height: "100%",
+                gap: 16
+              },
+              children: [
+                /* @__PURE__ */ jsx5(Drawer.Title, { className: "hidden", children: title }),
+                /* @__PURE__ */ jsx5(Drawer.Description, { className: "hidden", children: title }),
+                handle && /* @__PURE__ */ jsx5(Drawer.Handle, {}),
+                children
+              ]
+            }
+          )
+        }
+      )
+    ] })
+  ] });
+}
+
+// src/components/Button.tsx
+import { useState as useState2, useMemo } from "react";
+
+// src/icons/Loading.tsx
+import { jsx as jsx6, jsxs as jsxs2 } from "react/jsx-runtime";
+function Loading(props) {
+  return /* @__PURE__ */ jsxs2(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      "aria-hidden": "true",
+      className: "animate-spin text-white/50 fill-white/80",
+      viewBox: "0 0 100 101",
+      color: "currentColor",
+      fill: "none",
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx6(
+          "path",
+          {
+            d: "M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z",
+            fill: "currentColor"
+          }
+        ),
+        /* @__PURE__ */ jsx6(
+          "path",
+          {
+            d: "M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z",
+            fill: "currentFill"
+          }
+        )
+      ]
+    }
+  );
+}
+
+// src/icons/Search.tsx
+import { jsx as jsx7, jsxs as jsxs3 } from "react/jsx-runtime";
+function Search(props) {
+  return /* @__PURE__ */ jsxs3(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx7("path", { d: "m21 21-4.34-4.34" }),
+        /* @__PURE__ */ jsx7("circle", { cx: "11", cy: "11", r: "8" })
+      ]
+    }
+  );
+}
+
+// src/icons/Spinner.tsx
+import { jsx as jsx8, jsxs as jsxs4 } from "react/jsx-runtime";
+function Spinner(props) {
+  return /* @__PURE__ */ jsx8("svg", { fill: "currentColor", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg", ...props, children: /* @__PURE__ */ jsxs4("g", { children: [
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", opacity: ".14" }),
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", transform: "rotate(30 12 12)", opacity: ".29" }),
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", transform: "rotate(60 12 12)", opacity: ".43" }),
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", transform: "rotate(90 12 12)", opacity: ".57" }),
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", transform: "rotate(120 12 12)", opacity: ".71" }),
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", transform: "rotate(150 12 12)", opacity: ".86" }),
+    /* @__PURE__ */ jsx8("rect", { x: "11", y: "1", width: "2", height: "5", transform: "rotate(180 12 12)" }),
+    /* @__PURE__ */ jsx8("animateTransform", { attributeName: "transform", type: "rotate", calcMode: "discrete", dur: "0.75s", values: "0 12 12;30 12 12;60 12 12;90 12 12;120 12 12;150 12 12;180 12 12;210 12 12;240 12 12;270 12 12;300 12 12;330 12 12;360 12 12", repeatCount: "indefinite" })
+  ] }) });
+}
+
+// src/icons/ChevronLeft.tsx
+import { jsx as jsx9 } from "react/jsx-runtime";
+function ChevronLeft(props) {
+  return /* @__PURE__ */ jsx9(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: /* @__PURE__ */ jsx9("path", { d: "m15 18-6-6 6-6" })
+    }
+  );
+}
+
+// src/icons/ChevronRight.tsx
+import { jsx as jsx10 } from "react/jsx-runtime";
+function ChevronRight(props) {
+  return /* @__PURE__ */ jsx10(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: /* @__PURE__ */ jsx10("path", { d: "m9 18 6-6-6-6" })
+    }
+  );
+}
+
+// src/icons/ChevronDown.tsx
+import { jsx as jsx11 } from "react/jsx-runtime";
+function ChevronDown(props) {
+  return /* @__PURE__ */ jsx11(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 24 24",
+      width: "24",
+      height: "24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      "aria-hidden": "true",
+      ...props,
+      children: /* @__PURE__ */ jsx11("path", { d: "m6 9 6 6 6-6" })
+    }
+  );
+}
+
+// src/icons/Check.tsx
+import { jsx as jsx12 } from "react/jsx-runtime";
+function Check(props) {
+  return /* @__PURE__ */ jsx12(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      "aria-hidden": "true",
+      ...props,
+      children: /* @__PURE__ */ jsx12("path", { d: "M20 6 9 17l-5-5" })
+    }
+  );
+}
+
+// src/icons/WalletConnect.tsx
+import { jsx as jsx13 } from "react/jsx-runtime";
+function WalletConnect(props) {
+  return /* @__PURE__ */ jsx13("svg", { viewBox: "0 0 300 185", version: "1.1", xmlns: "http://www.w3.org/2000/svg", xmlnsXlink: "http://www.w3.org/1999/xlink", ...props, children: /* @__PURE__ */ jsx13("g", { stroke: "none", strokeWidth: "1", fill: "none", fillRule: "evenodd", children: /* @__PURE__ */ jsx13("g", { id: "walletconnect-logo-alt", fill: "currentColor", fillRule: "nonzero", children: /* @__PURE__ */ jsx13("path", { d: "M61.4385429,36.2562612 C110.349767,-11.6319051 189.65053,-11.6319051 238.561752,36.2562612 L244.448297,42.0196786 C246.893858,44.4140867 246.893858,48.2961898 244.448297,50.690599 L224.311602,70.406102 C223.088821,71.6033071 221.106302,71.6033071 219.883521,70.406102 L211.782937,62.4749541 C177.661245,29.0669724 122.339051,29.0669724 88.2173582,62.4749541 L79.542302,70.9685592 C78.3195204,72.1657633 76.337001,72.1657633 75.1142214,70.9685592 L54.9775265,51.2530561 C52.5319653,48.8586469 52.5319653,44.9765439 54.9775265,42.5821357 L61.4385429,36.2562612 Z M280.206339,77.0300061 L298.128036,94.5769031 C300.573585,96.9713 300.573599,100.85338 298.128067,103.247793 L217.317896,182.368927 C214.872352,184.763353 210.907314,184.76338 208.461736,182.368989 C208.461726,182.368979 208.461714,182.368967 208.461704,182.368957 L151.107561,126.214385 C150.496171,125.615783 149.504911,125.615783 148.893521,126.214385 C148.893517,126.214389 148.893514,126.214393 148.89351,126.214396 L91.5405888,182.368927 C89.095052,184.763359 85.1300133,184.763399 82.6844276,182.369014 C82.6844133,182.369 82.684398,182.368986 82.6843827,182.36897 L1.87196327,103.246785 C-0.573596939,100.852377 -0.573596939,96.9702735 1.87196327,94.5758653 L19.7936929,77.028998 C22.2392531,74.6345898 26.2042918,74.6345898 28.6498531,77.028998 L86.0048306,133.184355 C86.6162214,133.782957 87.6074796,133.782957 88.2188704,133.184355 C88.2188796,133.184346 88.2188878,133.184338 88.2188969,133.184331 L145.571,77.028998 C148.016505,74.6345347 151.981544,74.6344449 154.427161,77.028798 C154.427195,77.0288316 154.427229,77.0288653 154.427262,77.028899 L211.782164,133.184331 C212.393554,133.782932 213.384814,133.782932 213.996204,133.184331 L271.350179,77.0300061 C273.79574,74.6355969 277.760778,74.6355969 280.206339,77.0300061 Z", id: "WalletConnect" }) }) }) });
+}
+
+// src/icons/ArrowDown.tsx
+import { jsx as jsx14, jsxs as jsxs5 } from "react/jsx-runtime";
+function ArrowDown(props) {
+  return /* @__PURE__ */ jsxs5(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx14("path", { d: "M12 5v14" }),
+        /* @__PURE__ */ jsx14("path", { d: "m19 12-7 7-7-7" })
+      ]
+    }
+  );
+}
+
+// src/icons/ArrowUp.tsx
+import { jsx as jsx15, jsxs as jsxs6 } from "react/jsx-runtime";
+function ArrowUp(props) {
+  return /* @__PURE__ */ jsxs6(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx15("path", { d: "m5 12 7-7 7 7" }),
+        /* @__PURE__ */ jsx15("path", { d: "M12 19V5" })
+      ]
+    }
+  );
+}
+
+// src/icons/ArrowUpDown.tsx
+import { jsx as jsx16, jsxs as jsxs7 } from "react/jsx-runtime";
+function ArrowUpDown(props) {
+  return /* @__PURE__ */ jsxs7(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      "aria-hidden": "true",
+      ...props,
+      children: [
+        /* @__PURE__ */ jsx16("path", { d: "m21 16-4 4-4-4" }),
+        /* @__PURE__ */ jsx16("path", { d: "M17 20V4" }),
+        /* @__PURE__ */ jsx16("path", { d: "m3 8 4-4 4 4" }),
+        /* @__PURE__ */ jsx16("path", { d: "M7 4v16" })
+      ]
+    }
+  );
+}
+
+// src/components/Button.tsx
+import { jsx as jsx17 } from "react/jsx-runtime";
+var colors = {
+  primary: "#3b82f6",
+  // blue-500
+  secondary: "rgba(66,66,66,0.8)",
+  // gray-800 with 80% opacity
+  active: "#10b981",
+  // emerald-500
+  destructive: "#ef4444"
+  // red-500
+};
+var sizes = {
+  xs: { fontSize: "0.75rem", minHeight: "32px", padding: "0.25rem 0.5rem" },
+  sm: { fontSize: "0.875rem", minHeight: "40px", padding: "0.5rem 0.75rem" },
+  md: { fontSize: "1.125rem", minHeight: "48px", padding: "0.75rem 1rem" }
+};
+var borderRadius = {
+  sm: "0.125rem",
+  md: "0.375rem",
+  lg: "0.5rem",
+  xl: "0.75rem",
+  full: "9999px"
+};
+var withOpacity = (color, opacity = 0.9) => {
+  if (color.startsWith("rgb")) {
+    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?/);
+    if (match) {
+      const originalOpacity = match[4] ? parseFloat(match[4]) : 1;
+      const newOpacity = originalOpacity * opacity;
+      return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${newOpacity})`;
+    }
+  }
+  const hex = color.replace("#", "");
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+function Button({
+  variant = "text",
+  width,
+  size = "md",
+  color = "primary",
+  textColor = "#ffffff",
+  rounded,
+  isLoading = false,
+  children,
+  onClick,
+  style,
+  disabled,
+  ...props
+}) {
+  const [isHovered, setIsHovered] = useState2(false);
+  const buttonStyle = useMemo(() => {
+    const baseStyle = {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: disabled ? "not-allowed" : "pointer",
+      outline: "none",
+      border: "none",
+      opacity: disabled ? 0.5 : 1,
+      transition: "all 0.2s ease-in-out",
+      whiteSpace: "nowrap",
+      ...style
+    };
+    if (width === "full") {
+      baseStyle.width = "100%";
+    }
+    if (size) {
+      const sizeConfig = sizes[size];
+      baseStyle.fontSize = sizeConfig.fontSize;
+      baseStyle.minHeight = sizeConfig.minHeight;
+      if (variant !== "icon") {
+        baseStyle.padding = sizeConfig.padding;
+      }
+    }
+    if (rounded) {
+      baseStyle.borderRadius = borderRadius[rounded];
+    } else if (variant === "icon") {
+      baseStyle.borderRadius = borderRadius.full;
+    }
+    if (variant === "icon" && size) {
+      const iconSize = sizes[size].minHeight;
+      baseStyle.width = iconSize;
+      baseStyle.height = iconSize;
+      baseStyle.padding = "0";
+    }
+    const colorValue = colors[color] ?? color;
+    const hoverColor = isHovered && !disabled ? withOpacity(colorValue, 0.9) : colorValue;
+    if (variant === "text") {
+      baseStyle.backgroundColor = "transparent";
+      baseStyle.color = hoverColor;
+    } else if (variant === "contained") {
+      baseStyle.backgroundColor = hoverColor;
+      baseStyle.color = textColor;
+    } else if (variant === "icon") {
+      baseStyle.backgroundColor = hoverColor;
+      baseStyle.color = textColor;
+    }
+    return baseStyle;
+  }, [variant, width, size, color, rounded, isHovered, disabled, style]);
+  return /* @__PURE__ */ jsx17(
+    "button",
+    {
+      style: buttonStyle,
+      onClick: (event) => {
+        if (isLoading || disabled) return;
+        onClick?.(event);
+      },
+      onMouseEnter: () => setIsHovered(true),
+      onMouseLeave: () => setIsHovered(false),
+      disabled: disabled || isLoading,
+      ...props,
+      children: isLoading ? /* @__PURE__ */ jsx17(Spinner, { width: 24, height: 24 }) : children
+    }
+  );
+}
+
+// src/components/Input.tsx
+import { cva } from "class-variance-authority";
+import clsx2 from "clsx";
+import { jsx as jsx18 } from "react/jsx-runtime";
+var inputVariants = cva(
+  "focus:outline-none outline-none placeholder:text-placeholder",
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: []
+  }
+);
+function Input({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx18("input", { className: clsx2(inputVariants({ className })), ...props });
+}
+
+// src/components/Textarea.tsx
+import { cva as cva2 } from "class-variance-authority";
+import clsx3 from "clsx";
+import { jsx as jsx19 } from "react/jsx-runtime";
+var textareaVariants = cva2(
+  "focus:outline-none outline-none resize-none placeholder:text-placeholder",
+  {
+    variants: {},
+    defaultVariants: {},
+    compoundVariants: []
+  }
+);
+function Textarea({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx19("textarea", { className: clsx3(textareaVariants({ className })), ...props });
+}
+
+// src/components/Canvas.tsx
+import { useEffect as useEffect2, useRef } from "react";
+import { jsx as jsx20 } from "react/jsx-runtime";
+function Canvas({
+  image,
+  size = 40,
+  ...props
+}) {
+  const canvasRef = useRef(null);
+  useEffect2(() => {
+    if (image) {
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.drawImage(image, 0, 0, size, size);
+        }
+      }
+    }
+  }, [image, size]);
+  return /* @__PURE__ */ jsx20("canvas", { ref: canvasRef, ...props, width: size, height: size });
+}
+
+// src/components/Confirm.tsx
+import { jsx as jsx21, jsxs as jsxs8 } from "react/jsx-runtime";
+function Confirm({
+  title,
+  description,
+  onOpenChange,
+  cancel,
+  confirm,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxs8(Modal, { title, onOpenChange, ...props, children: [
+    /* @__PURE__ */ jsx21(Typography, { size: "2", children: title }),
+    /* @__PURE__ */ jsx21("div", { className: "px-4 pb-4", children: /* @__PURE__ */ jsx21(Typography, { size: "1", children: description }) }),
+    /* @__PURE__ */ jsxs8(
+      "div",
+      {
+        style: {
+          display: "flex",
+          width: "100%",
+          gap: 24,
+          padding: "16px 24px"
+        },
+        children: [
+          /* @__PURE__ */ jsx21(
+            Button,
+            {
+              width: "full",
+              rounded: "full",
+              variant: "contained",
+              color: "secondary",
+              size: "sm",
+              onClick: () => {
+                onOpenChange(false);
+              },
+              children: "Cancel",
+              ...cancel
+            }
+          ),
+          /* @__PURE__ */ jsx21(
+            Button,
+            {
+              width: "full",
+              rounded: "full",
+              variant: "contained",
+              size: "sm",
+              color: "destructive",
+              ...confirm,
+              onClick: (event) => {
+                onOpenChange(false);
+                confirm.onClick?.(event);
+              }
+            }
+          )
+        ]
+      }
+    )
+  ] });
+}
+
+// src/hooks/useRefValue.ts
+import React2 from "react";
+function useRefValue(value) {
+  const ref = React2.useRef(value);
+  React2.useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref;
+}
+
+// src/hooks/useClientOnce.ts
+import { useEffect as useEffect3, useRef as useRef2 } from "react";
+function useClientOnce(setup) {
+  const canCall = useRef2(true);
+  useEffect3(() => {
+    if (!canCall.current) {
+      return;
+    }
+    canCall.current = false;
+    const destroy = setup();
+    return () => {
+      if (destroy) {
+        destroy();
+      }
+    };
+  }, []);
+}
+
+// src/hooks/useIsMounted.ts
+import { useEffect as useEffect4, useState as useState3 } from "react";
+function useIsMounted() {
+  const [isMounted, setIsMounted] = useState3(false);
+  useEffect4(() => {
+    setIsMounted(true);
+  }, []);
+  return isMounted;
+}
+
+// src/hooks/useDisclosure.ts
+import { useState as useState4 } from "react";
+function useDisclosure() {
+  const [isOpen, setIsOpen] = useState4(false);
+  const onOpenChange = (open) => {
+    setIsOpen(open);
+  };
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
+  return { isOpen, onOpenChange, onOpen, onClose };
+}
+
+// src/hooks/useDebounce.ts
+import { useState as useState5, useEffect as useEffect5 } from "react";
+function useDebounce(value, delay = 500) {
+  const [debouncedValue, setDebouncedValue] = useState5(value);
+  useEffect5(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
+// src/navigation/StackView.tsx
+import { use as use2, useMemo as useMemo3, useRef as useRef3, useEffect as useEffect7 } from "react";
+
+// src/navigation/DrawerView.tsx
+import { Drawer as Drawer2 } from "vaul";
+import { jsx as jsx22, jsxs as jsxs9 } from "react/jsx-runtime";
+function DrawerView({
+  title,
+  description,
+  style,
+  children
+}) {
+  return /* @__PURE__ */ jsx22(
+    Drawer2.Root,
+    {
+      handleOnly: true,
+      direction: "right",
+      open: !!children,
+      repositionInputs: false,
+      children: /* @__PURE__ */ jsx22(Drawer2.Portal, { children: /* @__PURE__ */ jsxs9(
+        Drawer2.Content,
+        {
+          style: {
+            height: "100vh",
+            minHeight: "100vh",
+            position: "fixed",
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            outline: "none"
+          },
+          children: [
+            /* @__PURE__ */ jsx22(Drawer2.Title, { style: { display: "none" }, children: title }),
+            /* @__PURE__ */ jsx22(Drawer2.Description, { style: { display: "none" }, children: description }),
+            /* @__PURE__ */ jsx22(
+              "div",
+              {
+                style: {
+                  width: "100%",
+                  height: "100%",
+                  overflowY: "auto",
+                  ...style
+                },
+                children
+              }
+            )
+          ]
+        }
+      ) })
+    }
+  );
+}
+
+// src/navigation/StackNavigatorContext.tsx
+import {
+  createContext,
+  use,
+  useState as useState6,
+  useCallback,
+  useMemo as useMemo2,
+  useEffect as useEffect6
+} from "react";
+import { parseJSON } from "@ywwwtseng/ywjs";
+import { jsx as jsx23 } from "react/jsx-runtime";
+var ScreenType = /* @__PURE__ */ ((ScreenType2) => {
+  ScreenType2["PAGE"] = "page";
+  ScreenType2["DRAWER"] = "drawer";
+  ScreenType2["SINGLE"] = "single";
+  return ScreenType2;
+})(ScreenType || {});
+var StackNavigatorContext = createContext({
+  route: void 0,
+  screens: {},
+  stacks: [],
+  navigate: (screen, options) => {
+  }
+});
+function StackNavigatorProvider({
+  screens,
+  children
+}) {
+  const [stacks, setStacks] = useState6(() => {
+    if (typeof window === "undefined") {
+      return [];
+    }
+    return [
+      parseJSON(sessionStorage.getItem("navigator/screen")) || {
+        screen: "Home",
+        params: {}
+      }
+    ];
+  });
+  const route = useMemo2(() => {
+    const stack = stacks[stacks.length - 1];
+    if (!stack) {
+      return void 0;
+    }
+    const screen = screens[stack.screen];
+    if (!screen) {
+      return void 0;
+    }
+    return {
+      name: stack.screen,
+      params: stack.params,
+      type: screen.type,
+      title: screen.title,
+      screen: screen.screen,
+      back: screen.back
+    };
+  }, [stacks, screens]);
+  const navigate = useCallback(
+    (screen, options) => {
+      if (typeof screen === "string") {
+        if (!Object.keys(screens).includes(screen)) {
+          console.warn(`Screen ${screen} not found`);
+          return;
+        }
+      }
+      const type = options?.type || "push";
+      setStacks((prev) => {
+        if (screen === -1 && prev.length > 1) {
+          return prev.slice(0, -1);
+        } else if (typeof screen === "string") {
+          const route2 = { screen, params: options?.params || {} };
+          if (type === "replace") {
+            return [...prev.slice(0, -1), route2];
+          }
+          if (prev[prev.length - 1]?.screen === screen) {
+            return [...prev.slice(0, -1), route2];
+          }
+          return [...prev, route2].slice(-10);
+        }
+        return prev;
+      });
+    },
+    [screens]
+  );
+  const value = useMemo2(
+    () => ({
+      route,
+      navigate,
+      screens,
+      stacks
+    }),
+    [route, navigate, screens, stacks]
+  );
+  useEffect6(() => {
+    if (!route) {
+      return;
+    }
+    if (route.type === "drawer") {
+      return;
+    }
+    sessionStorage.setItem(
+      "navigator/screen",
+      JSON.stringify({
+        screen: route.name,
+        params: route.params
+      })
+    );
+  }, [route]);
+  return /* @__PURE__ */ jsx23(StackNavigatorContext.Provider, { value, children: typeof children === "function" ? children(value) : children });
+}
+var useNavigate = () => {
+  const context = use(StackNavigatorContext);
+  if (!context) {
+    throw new Error("useNavigate must be used within a StackNavigator");
+  }
+  return context.navigate;
+};
+var useRoute = () => {
+  const context = use(StackNavigatorContext);
+  if (!context) {
+    throw new Error("useRoute must be used within a StackNavigator");
+  }
+  return context.route;
+};
+
+// src/navigation/StackView.tsx
+import { Fragment, jsx as jsx24, jsxs as jsxs10 } from "react/jsx-runtime";
+function StackView({ drawer = { style: {} } }) {
+  const ref = useRef3(null);
+  const { route, stacks, screens } = use2(StackNavigatorContext);
+  const drawerView = useMemo3(() => {
+    if (route.type !== "page" /* PAGE */) {
+      const Screen = route.screen;
+      return /* @__PURE__ */ jsx24(
+        DrawerView,
+        {
+          title: route.title,
+          description: route.title,
+          style: drawer.style,
+          children: /* @__PURE__ */ jsx24(Screen, { params: route.params })
+        }
+      );
+    }
+  }, [route]);
+  const MainView = useMemo3(() => {
+    if (route.type !== "page" /* PAGE */) {
+      const stack = stacks[stacks.length - 2];
+      return stack ? screens[stack.screen].screen : void 0;
+    }
+    return route.screen;
+  }, [route, stacks, screens]);
+  useEffect7(() => {
+    if (ref.current) {
+      ref.current.scrollTop = 0;
+    }
+  }, [route]);
+  if (!MainView && !drawerView) {
+    return void 0;
+  }
+  return /* @__PURE__ */ jsxs10(Fragment, { children: [
+    MainView && /* @__PURE__ */ jsx24(
+      "div",
+      {
+        ref,
+        style: {
+          height: "100%",
+          overflowY: "auto",
+          display: !!drawerView ? "none" : "block"
+        },
+        children: /* @__PURE__ */ jsx24(MainView, { params: route.params })
+      }
+    ),
+    drawerView
+  ] });
+}
+
+// src/app/ClientContext.tsx
+import { AppError } from "@ywwwtseng/ywjs";
+import {
+  useRef as useRef4,
+  useMemo as useMemo5,
+  useCallback as useCallback3,
+  createContext as createContext3
+} from "react";
+import { Request } from "@ywwwtseng/request";
+
+// src/app/AppStateContext.tsx
+import {
+  createContext as createContext2,
+  useCallback as useCallback2,
+  useMemo as useMemo4
+} from "react";
+import { create } from "zustand";
+import { produce } from "immer";
+import { merge } from "@ywwwtseng/ywjs";
+import { jsx as jsx25 } from "react/jsx-runtime";
+var AppStateContext = createContext2(
+  void 0
+);
+var useAppStateStore = create((set) => ({
+  state: {},
+  loading: [],
+  update: (commands) => {
+    set((store) => {
+      return produce(store, (draft) => {
+        for (const command of commands) {
+          if (command.type === "update" && typeof command.payload === "function") {
+            return command.payload(draft);
+          } else {
+            if (command.type === "update" && command.target) {
+              draft.state[command.target] = command.payload;
+            } else if (command.type === "merge" && command.target) {
+              draft.state[command.target] = merge(
+                draft.state[command.target],
+                command.payload
+              );
+            } else if (command.type === "replace") {
+              const payload = command.payload;
+              const target = command.target || "id";
+              if (typeof payload === "object" && payload && target in payload) {
+                for (const key of Object.keys(draft.state)) {
+                  const state = draft.state[key];
+                  if (!Array.isArray(state)) continue;
+                  const index = state.findIndex((item) => {
+                    if (item[target] !== payload[target]) return false;
+                    const itemKeys = Object.keys(item);
+                    const payloadKeys = Object.keys(payload);
+                    if (itemKeys.length !== payloadKeys.length) return false;
+                    return itemKeys.every((key2) => payloadKeys.includes(key2));
+                  });
+                  if (index !== -1) {
+                    state[index] = payload;
+                  }
+                }
+              }
+            } else if (command.type === "unshift" && command.target) {
+              const state = draft.state[command.target];
+              if (Array.isArray(state)) {
+                state.unshift(command.payload);
+              }
+            } else if (command.type === "push" && command.target) {
+              const state = draft.state[command.target];
+              if (Array.isArray(state)) {
+                state.push(command.payload);
+              }
+            } else if (command.type === "delete" && command.target) {
+              const payload = command.payload;
+              const target = command.target || "id";
+              for (const key of Object.keys(draft.state)) {
+                const state = draft.state[key];
+                if (!Array.isArray(state)) continue;
+                const index = state.findIndex(
+                  (item) => item[target] === payload
+                );
+                if (index !== -1) {
+                  state.splice(index, 1);
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+  }
+}));
+function AppStateProvider({ children }) {
+  const { update } = useAppStateStore();
+  const clear = useCallback2((key) => {
+    update([
+      {
+        type: "update",
+        target: "state",
+        payload: (draft) => {
+          delete draft.state[key];
+        }
+      }
+    ]);
+  }, [update]);
+  const value = useMemo4(
+    () => ({
+      update,
+      clear
+    }),
+    [update, clear]
+  );
+  return /* @__PURE__ */ jsx25(AppStateContext.Provider, { value, children });
+}
+
+// src/app/utils.ts
+function getQueryKey(path, params) {
+  return params && Object.keys(params).length > 0 ? JSON.stringify({ path, params }) : path;
+}
+
+// src/app/ClientContext.tsx
+import { jsx as jsx26 } from "react/jsx-runtime";
+var ClientContext = createContext3(void 0);
+function ClientProvider({
+  url,
+  transformRequest,
+  onError,
+  children
+}) {
+  const loadingRef = useRef4([]);
+  const navigate = useNavigate();
+  const { update } = useAppStateStore();
+  const request = useMemo5(
+    () => new Request({
+      transformRequest
+    }),
+    [transformRequest]
+  );
+  const query = useCallback3(
+    async (path, params, options) => {
+      const key = getQueryKey(path, params);
+      loadingRef.current.push(key);
+      update([
+        {
+          type: "update",
+          target: "loading",
+          payload: (draft) => {
+            draft.loading.push(key);
+          }
+        }
+      ]);
+      try {
+        const data = await request.post(url, { type: "query", path, params: params ?? {} });
+        if (data.commands) {
+          update(data.commands);
+        }
+        if (data.error) {
+          throw new AppError(data.error, data.message ?? "Unknown error");
+        }
+        if (data.navigate) {
+          navigate(data.navigate.screen, {
+            type: "replace",
+            params: data.navigate.params
+          });
+        }
+        if (data.notify) {
+          options?.onNotify?.(data.notify);
+        }
+        return { key, data };
+      } catch (error) {
+        onError?.(error);
+        throw error;
+      } finally {
+        loadingRef.current = loadingRef.current.filter((k) => k !== key);
+        update([
+          {
+            type: "update",
+            target: "loading",
+            payload: (draft) => {
+              draft.loading = draft.loading.filter((k) => k !== key);
+            }
+          }
+        ]);
+      }
+    },
+    [request]
+  );
+  const mutate = useCallback3(
+    async (action, payload) => {
+      try {
+        let data;
+        if (payload instanceof FormData) {
+          payload.append("mutation:type", "mutate");
+          payload.append("mutation:action", action);
+          data = await request.post(url, payload);
+        } else {
+          data = await request.post(url, { type: "mutate", action, payload });
+        }
+        if (data.error) {
+          throw new AppError(data.error, data.message ?? "Unknown error");
+        }
+        if (data.commands) {
+          update(data.commands);
+        }
+        if (data.navigate) {
+          navigate(data.navigate.screen, {
+            type: "replace",
+            params: data.navigate.params
+          });
+        }
+        return { data };
+      } catch (error) {
+        onError?.(error);
+        throw error;
+      }
+    },
+    [request]
+  );
+  const value = useMemo5(
+    () => ({
+      query,
+      mutate,
+      loadingRef
+    }),
+    [query, mutate, loadingRef]
+  );
+  return /* @__PURE__ */ jsx26(ClientContext.Provider, { value, children });
+}
+
+// src/app/AppContext.tsx
+import { Toaster } from "react-hot-toast";
+
+// src/app/I18nContext.tsx
+import {
+  useCallback as useCallback4,
+  useMemo as useMemo6,
+  createContext as createContext4,
+  use as use3
+} from "react";
+import { get as get2, getLocale, translate } from "@ywwwtseng/ywjs";
+
+// src/app/hooks/useAppState.ts
+import { get } from "@ywwwtseng/ywjs";
+function useAppState(path) {
+  return useAppStateStore((store) => get(store.state, path));
+}
+
+// src/app/I18nContext.tsx
+import { jsx as jsx27 } from "react/jsx-runtime";
+var I18nContext = createContext4(
+  void 0
+);
+function I18nProvider({
+  locales,
+  path = ["me", "language_code"],
+  callback = "en",
+  children
+}) {
+  const state = useAppState(path[0]);
+  const language_code = useMemo6(() => {
+    if (!state) return callback;
+    return get2(state, path.slice(1)) || callback;
+  }, [state, path, callback]);
+  const locale = useMemo6(() => {
+    if (!locales) return null;
+    return getLocale(locales, language_code, locales[callback]);
+  }, [language_code, callback, locales]);
+  const t = useCallback4(
+    (key, params) => {
+      if (!locale) return key;
+      return translate(locale, key, params);
+    },
+    [locale]
+  );
+  const value = useMemo6(
+    () => ({
+      language_code,
+      t
+    }),
+    [locale, t]
+  );
+  return /* @__PURE__ */ jsx27(I18nContext.Provider, { value, children });
+}
+
+// src/app/AppContext.tsx
+import { jsx as jsx28, jsxs as jsxs11 } from "react/jsx-runtime";
+function AppProvider({
+  url,
+  transformRequest,
+  onError,
+  i18nProps = {},
+  toasterProps = {},
+  children
+}) {
+  return /* @__PURE__ */ jsxs11(AppStateProvider, { children: [
+    /* @__PURE__ */ jsx28(ClientProvider, { url, transformRequest, onError, children: /* @__PURE__ */ jsx28(I18nProvider, { ...i18nProps, children }) }),
+    /* @__PURE__ */ jsx28(Toaster, { ...toasterProps })
+  ] });
+}
+
+// src/app/hooks/useInfiniteQuery.ts
+import { use as use5, useMemo as useMemo7, useState as useState7, useCallback as useCallback5, useEffect as useEffect8 } from "react";
+
+// src/app/hooks/useClient.ts
+import { use as use4 } from "react";
+function useClient() {
+  const context = use4(ClientContext);
+  if (!context) {
+    throw new Error("useClient must be used within a ClientProvider");
+  }
+  return context;
+}
+
+// src/app/hooks/useInfiniteQuery.ts
+var getNextPageParam = (lastPage) => {
+  return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
+};
+function useInfiniteQuery(path, options) {
+  const route = useRoute();
+  const refetchOnMount = options?.refetchOnMount ?? false;
+  const enabled = options?.enabled ?? true;
+  const state = useAppStateStore((store) => store.state);
+  const [pageKeys, setPageKeys] = useState7([]);
+  const data = useMemo7(() => {
+    return pageKeys.map((key) => state[key]).filter(Boolean);
+  }, [pageKeys, state]);
+  const { update } = use5(AppStateContext);
+  const { query, loadingRef } = useClient();
+  const hasNextPage = useMemo7(() => {
+    const page = data[data.length - 1];
+    if (Array.isArray(page)) {
+      const limit = options.params?.limit;
+      if (typeof limit === "number") {
+        return page.length === limit;
+      }
+      if (page.length === 0) {
+        return false;
+      }
+    }
+    return true;
+  }, [data]);
+  const fetchNextPage = useCallback5(() => {
+    if (!hasNextPage) {
+      return;
+    }
+    const params = options?.params ?? {};
+    if (!enabled) {
+      return;
+    }
+    const cursor = getNextPageParam(
+      data ? data[data.length - 1] : void 0
+    );
+    if (cursor) {
+      params.cursor = cursor;
+    }
+    const queryKey = getQueryKey(path, params);
+    if (loadingRef.current.includes(queryKey)) {
+      return;
+    }
+    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
+    query(path, params);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data]);
+  const isLoading = useMemo7(() => {
+    if (!enabled) {
+      return false;
+    }
+    return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
+  }, [pageKeys, state, enabled]);
+  useEffect8(() => {
+    if (!enabled) {
+      return;
+    }
+    const params = options?.params ?? {};
+    const queryKey = getQueryKey(path, params);
+    if (loadingRef.current.includes(queryKey)) {
+      return;
+    }
+    if (state[queryKey] !== void 0 && refetchOnMount === false) {
+      return;
+    }
+    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
+    query(path, params);
+    return () => {
+      if (refetchOnMount) {
+        update([
+          {
+            type: "update",
+            payload: (draft) => {
+              pageKeys.forEach((page) => {
+                delete draft.state[page];
+              });
+            }
+          }
+        ]);
+        setPageKeys([]);
+      }
+    };
+  }, [path, JSON.stringify(options), enabled, route.name]);
+  return {
+    data: data.length > 0 ? data.flat() : void 0,
+    isLoading,
+    hasNextPage,
+    fetchNextPage
+  };
+}
+
+// src/app/hooks/useMutation.ts
+import { useState as useState8, useCallback as useCallback7 } from "react";
+
+// src/app/hooks/useNotify.ts
+import { useCallback as useCallback6 } from "react";
+import toast from "react-hot-toast";
+
+// src/app/hooks/useI18n.ts
+import { use as use6 } from "react";
+function useI18n() {
+  const context = use6(I18nContext);
+  if (!context) {
+    console.trace("useI18n must be used within a I18nProvider");
+    throw new Error("useI18n must be used within a I18nProvider");
+  }
+  return context;
+}
+
+// src/app/hooks/useNotify.ts
+function useNotify() {
+  const { t } = useI18n();
+  return useCallback6((type, message, params) => {
+    (toast[type] || toast)?.(t?.(message, params) ?? message);
+  }, [t]);
+}
+
+// src/app/hooks/useMutation.ts
+function useMutation(action, { onError, onSuccess } = {}) {
+  const client = useClient();
+  const notify = useNotify();
+  const [isLoading, setIsLoading] = useState8(false);
+  const isLoadingRef = useRefValue(isLoading);
+  const mutate = useCallback7(
+    (payload) => {
+      if (isLoadingRef.current) {
+        return Promise.reject({
+          message: "Already loading"
+        });
+      }
+      isLoadingRef.current = true;
+      setIsLoading(true);
+      return client.mutate(action, payload).then(({ data }) => {
+        if (data.notify) {
+          notify(data.notify.type, data.notify.message, data.notify.params);
+        }
+        onSuccess?.(data);
+        return data;
+      }).catch((res) => {
+        onError?.(res.data);
+        const params = res.data.info ?? {};
+        notify("error", res.data.message ?? "Unknown error", params);
+        return {
+          ok: false
+        };
+      }).finally(() => {
+        isLoadingRef.current = false;
+        setIsLoading(false);
+      });
+    },
+    [client.mutate, action, notify]
+  );
+  return {
+    mutate,
+    isLoading
+  };
+}
+
+// src/app/hooks/useQuery.ts
+import { use as use7, useEffect as useEffect9, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef5 } from "react";
+function useQuery(path, options) {
+  const isUnMountedRef = useRef5(false);
+  const notify = useNotify();
+  const notifyRef = useRefValue(notify);
+  const { query, loadingRef } = useClient();
+  const { clear } = use7(AppStateContext);
+  const route = useRoute();
+  const currentRouteRef = useRef5(route.name);
+  const key = useMemo8(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
+  const currentKeyRef = useRef5(key);
+  const params = options?.params ?? {};
+  const refetchOnMount = options?.refetchOnMount ?? false;
+  const enabled = options?.enabled ?? true;
+  const isLoading = useAppStateStore((store) => store.loading).includes(key);
+  const data = useAppStateStore((store) => store.state[key]);
+  const refetch = useCallback8(() => {
+    if (!enabled) {
+      return;
+    }
+    if (loadingRef.current.includes(key)) {
+      return;
+    }
+    query(path, params).then(({ key: key2 }) => {
+      if (options?.autoClearCache && key2 !== currentKeyRef.current) {
+        clear(key2);
+      }
+    });
+  }, [key, enabled, route.name]);
+  useEffect9(() => {
+    currentKeyRef.current = key;
+    return () => {
+      if (options?.autoClearCache) {
+        clear(key);
+      }
+    };
+  }, [key]);
+  useEffect9(() => {
+    return () => {
+      isUnMountedRef.current = true;
+    };
+  }, []);
+  useEffect9(() => {
+    if (isUnMountedRef.current) {
+      return;
+    }
+    if (!enabled) {
+      return;
+    }
+    if (loadingRef.current.includes(key)) {
+      return;
+    }
+    if (data !== void 0 && refetchOnMount === false) {
+      return;
+    }
+    if (refetchOnMount && currentRouteRef.current !== route.name) {
+      return;
+    }
+    query(path, params).then(({ key: key2, data: data2 }) => {
+      if (data2.notify) {
+        notifyRef.current(data2.notify.type, data2.notify.message, data2.notify.params);
+      }
+      if (options?.autoClearCache && key2 !== currentKeyRef.current) {
+        clear(key2);
+      }
+    });
+  }, [key, enabled, route.name]);
+  return {
+    refetch,
+    isLoading,
+    data
+  };
+}
+
+// src/utils.tsx
+import { AppError as AppError2, ErrorCodes } from "@ywwwtseng/ywjs";
+import BigNumber from "bignumber.js";
+import { jsxs as jsxs12 } from "react/jsx-runtime";
+function formatTinyAmount(value, significantDigits = 2) {
+  const str = typeof value === "number" ? new BigNumber(value).toFixed() : value;
+  if (!str.startsWith("0.")) return str;
+  const decimals = str.slice(2);
+  const zeroMatch = decimals.match(/^0+/);
+  if (!zeroMatch) return str;
+  const zeroCount = zeroMatch[0].length;
+  const rest = decimals.slice(zeroCount);
+  if (!rest) return str;
+  let significant = rest.slice(0, significantDigits);
+  significant = significant.replace(/0+$/, "");
+  return {
+    zeroCount,
+    significant
+  };
+}
+function displayAmount(v, { showTinyAmount = true } = { showTinyAmount: true }) {
+  if (v === void 0 || v === null) {
+    return void 0;
+  }
+  if (v === "0" || v === 0) {
+    return "0";
+  }
+  let digits = 0;
+  const number = new BigNumber(v);
+  if (number.gt(1e4)) {
+    digits = 1;
+  } else if (number.gt(1e3)) {
+    digits = 2;
+  } else if (number.gt(100)) {
+    digits = 2;
+  } else if (number.gt(10)) {
+    digits = 2;
+  } else if (number.eq(1)) {
+    digits = 2;
+  } else if (number.gt(1)) {
+    digits = 3;
+  } else if (number.eq(0)) {
+    digits = 2;
+  } else if (number.gt(0.1)) {
+    digits = 3;
+  } else if (number.gt(0.01)) {
+    digits = 4;
+  } else {
+    digits = 8;
+  }
+  if (showTinyAmount && number.lt(1e-5)) {
+    const result = formatTinyAmount(v);
+    if (typeof result === "object") {
+      const { zeroCount, significant } = result;
+      return /* @__PURE__ */ jsxs12("span", { children: [
+        "0.0",
+        /* @__PURE__ */ jsxs12("sub", { children: [
+          zeroCount,
+          " "
+        ] }),
+        significant
+      ] });
+    }
+  }
+  return number.toFixed(digits).replace(/\.?0+$/, "");
+}
+function parseTokenId(token_id) {
+  const [symbol, decimals, network, address] = token_id.split(":");
+  if (!symbol || !decimals) {
+    throw new AppError2(ErrorCodes.INVALID_PARAMS, "Invalid token id", {
+      token_id
+    });
+  }
+  return { symbol, decimals: Number(decimals), network, address };
+}
+function formatTokenId({ symbol, decimals, network, address }) {
+  return address ? `${symbol}:${decimals}:${network}:${address}` : `${symbol}:${decimals}:${network}`;
+}
+export {
+  AmountInput,
+  AppProvider,
+  AppStateContext,
+  AppStateProvider,
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  Button,
+  Canvas,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ClientContext,
+  ClientProvider,
+  Confirm,
+  Input,
+  Layout,
+  List,
+  Loading,
+  Modal,
+  ScreenType,
+  Search,
+  Spinner,
+  StackNavigatorContext,
+  StackNavigatorProvider,
+  StackView,
+  TabBar,
+  Textarea,
+  Typography,
+  WalletConnect,
+  displayAmount,
+  formatAmount,
+  formatTinyAmount,
+  formatTokenId,
+  getQueryKey,
+  inputVariants,
+  parseTokenId,
+  textareaVariants,
+  default2 as toast,
+  useAppState,
+  useAppStateStore,
+  useClient,
+  useClientOnce,
+  useDebounce,
+  useDisclosure,
+  useI18n,
+  useInfiniteQuery,
+  useIsMounted,
+  useMutation,
+  useNavigate,
+  useQuery,
+  useRefValue,
+  useRoute
+};
