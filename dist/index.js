@@ -449,7 +449,7 @@ function Loading(props) {
       "aria-hidden": "true",
       className: "animate-spin text-white/50 fill-white/80",
       viewBox: "0 0 100 101",
-      color: "currentColor",
+      style: { color: "currentColor" },
       fill: "none",
       ...props,
       children: [
