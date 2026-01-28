@@ -290,10 +290,11 @@ declare function useInfiniteQuery<T = unknown>(path: string, options: UseQueryOp
 };
 
 interface UseMutationOptions {
+    ignoreNotify?: boolean | ((error: ErrorResponse) => boolean);
     onError?: (error: ErrorResponse) => void;
     onSuccess?: (data: ResponseData) => void;
 }
-declare function useMutation(action: string, { onError, onSuccess }?: UseMutationOptions): {
+declare function useMutation(action: string, { ignoreNotify, onError, onSuccess }?: UseMutationOptions): {
     mutate: <T = unknown>(payload?: T) => Promise<ResponseData>;
     isLoading: boolean;
 };

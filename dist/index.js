@@ -1648,7 +1648,7 @@ function useNotify() {
 }
 
 // src/app/hooks/useMutation.ts
-function useMutation(action, { onError, onSuccess } = {}) {
+function useMutation(action, { ignoreNotify, onError, onSuccess } = {}) {
   const client = useClient();
   const notify = useNotify();
   const [isLoading, setIsLoading] = useState8(false);
@@ -1671,7 +1671,9 @@ function useMutation(action, { onError, onSuccess } = {}) {
       }).catch((res) => {
         onError?.(res.data);
         const params = res.data.info ?? {};
-        notify("error", res.data.message ?? "Unknown error", params);
+        if (typeof ignoreNotify === "function" ? !ignoreNotify(res.data) : !ignoreNotify) {
+          notify("error", res.data.message ?? "Unknown error", params);
+        }
         return {
           ok: false
         };

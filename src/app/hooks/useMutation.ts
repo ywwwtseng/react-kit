@@ -6,13 +6,14 @@ import { useRefValue } from '../../hooks/useRefValue';
 import type { ResponseData } from '../types';
 
 export interface UseMutationOptions {
+  ignoreNotify?: boolean | ((error: ErrorResponse) => boolean);
   onError?: (error: ErrorResponse) => void;
   onSuccess?: (data: ResponseData) => void;
 }
 
 export function useMutation(
   action: string,
-  { onError, onSuccess }: UseMutationOptions = {}
+  { ignoreNotify, onError, onSuccess }: UseMutationOptions = {}
 ) {
   const client = useClient();
   const notify = useNotify();
@@ -48,7 +49,9 @@ export function useMutation(
 
           const params = res.data.info ?? {};
 
-          notify('error', res.data.message ?? 'Unknown error', params as Record<string, string | number>);
+          if (typeof ignoreNotify === 'function' ? !ignoreNotify(res.data) : !ignoreNotify) {
+            notify('error', res.data.message ?? 'Unknown error', params as Record<string, string | number>);
+          }
 
           return {
             ok: false,
