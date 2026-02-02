@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { Drawer, type DialogProps } from 'vaul';
 
 export type ModalProps = DialogProps & {
@@ -10,6 +9,9 @@ export type ModalProps = DialogProps & {
   classes?: {
     content?: string;
   };
+  styles?: {
+    content?: React.CSSProperties;
+  }
 };
 
 export function Modal({
@@ -19,6 +21,7 @@ export function Modal({
   title,
   children,
   classes,
+  styles,
   ...props
 }: ModalProps) {
   const Root = type === 'default' ? Drawer.Root : Drawer.NestedRoot;
@@ -44,7 +47,7 @@ export function Modal({
           }}
         >
           <div
-            className={clsx(classes?.content, 'bg-modal')}
+            className={classes?.content}
             style={{
               paddingTop: 16,
               borderRadius: 10,
@@ -54,6 +57,8 @@ export function Modal({
               width: '100%',
               height: '100%',
               gap: 16,
+              backgroundColor: 'var(--modal)',
+              ...styles?.content,
             }}
           >
             <Drawer.Title className="hidden">{title}</Drawer.Title>

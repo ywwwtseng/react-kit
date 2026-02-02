@@ -369,7 +369,6 @@ function TabBar({ style, items, renderItem }) {
 }
 
 // src/components/Modal.tsx
-import clsx from "clsx";
 import { Drawer } from "vaul";
 import { jsx as jsx5, jsxs } from "react/jsx-runtime";
 function Modal({
@@ -379,6 +378,7 @@ function Modal({
   title,
   children,
   classes,
+  styles,
   ...props
 }) {
   const Root2 = type === "default" ? Drawer.Root : Drawer.NestedRoot;
@@ -409,7 +409,7 @@ function Modal({
           children: /* @__PURE__ */ jsxs(
             "div",
             {
-              className: clsx(classes?.content, "bg-modal"),
+              className: classes?.content,
               style: {
                 paddingTop: 16,
                 borderRadius: 10,
@@ -418,7 +418,9 @@ function Modal({
                 flexDirection: "column",
                 width: "100%",
                 height: "100%",
-                gap: 16
+                gap: 16,
+                backgroundColor: "var(--modal)",
+                ...styles?.content
               },
               children: [
                 /* @__PURE__ */ jsx5(Drawer.Title, { className: "hidden", children: title }),
@@ -801,7 +803,7 @@ function Button({
 
 // src/components/Input.tsx
 import { cva } from "class-variance-authority";
-import clsx2 from "clsx";
+import clsx from "clsx";
 import { jsx as jsx18 } from "react/jsx-runtime";
 var inputVariants = cva(
   "focus:outline-none outline-none placeholder:text-placeholder",
@@ -815,12 +817,12 @@ function Input({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx18("input", { className: clsx2(inputVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx18("input", { className: clsx(inputVariants({ className })), ...props });
 }
 
 // src/components/Textarea.tsx
 import { cva as cva2 } from "class-variance-authority";
-import clsx3 from "clsx";
+import clsx2 from "clsx";
 import { jsx as jsx19 } from "react/jsx-runtime";
 var textareaVariants = cva2(
   "focus:outline-none outline-none resize-none placeholder:text-placeholder",
@@ -834,7 +836,7 @@ function Textarea({
   className,
   ...props
 }) {
-  return /* @__PURE__ */ jsx19("textarea", { className: clsx3(textareaVariants({ className })), ...props });
+  return /* @__PURE__ */ jsx19("textarea", { className: clsx2(textareaVariants({ className })), ...props });
 }
 
 // src/components/Canvas.tsx

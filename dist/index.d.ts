@@ -93,8 +93,11 @@ type ModalProps = DialogProps & {
     classes?: {
         content?: string;
     };
+    styles?: {
+        content?: React.CSSProperties;
+    };
 };
-declare function Modal({ type, handle, trigger, title, children, classes, ...props }: ModalProps): react_jsx_runtime.JSX.Element;
+declare function Modal({ type, handle, trigger, title, children, classes, styles, ...props }: ModalProps): react_jsx_runtime.JSX.Element;
 
 type ButtonProps = ComponentProps<'button'> & {
     variant?: 'text' | 'contained' | 'icon';
