@@ -1,5 +1,6 @@
 export * from './providers/ClientProvider';
 export * from './providers/AppStateProvider';
+export * from './providers/AppUIProvider';
 export * from './providers/AppProvider';
 
 export * from './hooks/useInfiniteQuery';

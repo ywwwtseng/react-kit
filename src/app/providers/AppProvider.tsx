@@ -1,7 +1,8 @@
 import React from 'react';
 import { Toaster, ToasterProps } from 'react-hot-toast';
-import { ClientProvider, ClientProviderProps } from './ClientProvider';
+import { AppUIProvider } from './AppUIProvider';
 import { AppStateProvider } from './AppStateProvider';
+import { ClientProvider, ClientProviderProps } from './ClientProvider';
 import { I18nProvider, I18nProviderProps } from './I18nProvider';
 
 export interface AppProviderProps
@@ -20,13 +21,15 @@ export function AppProvider({
   children,
 }: AppProviderProps) {
   return (
-    <AppStateProvider>
-      <ClientProvider url={url} transformRequest={transformRequest} onError={onError}>
-        <I18nProvider {...i18nProps}>
-          {children}
-        </I18nProvider>
-      </ClientProvider>
-      <Toaster {...toasterProps} />
-    </AppStateProvider>
+    <AppUIProvider>
+      <AppStateProvider>
+        <ClientProvider url={url} transformRequest={transformRequest} onError={onError}>
+          <I18nProvider {...i18nProps}>
+            {children}
+          </I18nProvider>
+        </ClientProvider>
+        <Toaster {...toasterProps} />
+      </AppStateProvider>
+    </AppUIProvider>
   );
 }

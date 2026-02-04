@@ -262,6 +262,14 @@ type AppState = {
 declare const useAppStateStore: zustand.UseBoundStore<zustand.StoreApi<AppState>>;
 declare function AppStateProvider({ children }: PropsWithChildren): react_jsx_runtime.JSX.Element;
 
+interface AppUIContextState {
+    loadingUI: number;
+    showLoadingUI: (show: boolean) => void;
+}
+declare const AppUIContext: React$1.Context<AppUIContextState>;
+declare function AppUIProvider({ children }: PropsWithChildren): react_jsx_runtime.JSX.Element;
+declare function useAppUI(): AppUIContextState;
+
 interface I18nContextState {
     t: (key: string, params?: Record<string, string | number>) => string;
     language_code: string;
@@ -294,10 +302,11 @@ declare function useInfiniteQuery<T = unknown>(path: string, options: UseQueryOp
 
 interface UseMutationOptions {
     ignoreNotify?: boolean | ((error: ErrorResponse) => boolean);
+    showLoading?: boolean;
     onError?: (error: ErrorResponse) => void;
     onSuccess?: (data: ResponseData) => void;
 }
-declare function useMutation(action: string, { ignoreNotify, onError, onSuccess }?: UseMutationOptions): {
+declare function useMutation(action: string, { ignoreNotify, showLoading, onError, onSuccess }?: UseMutationOptions): {
     mutate: <T = unknown>(payload?: T) => Promise<ResponseData>;
     isLoading: boolean;
 };
@@ -307,6 +316,7 @@ interface UseQueryOptions {
     refetchOnMount?: boolean;
     autoClearCache?: boolean;
     enabled?: boolean;
+    showLoading?: boolean;
 }
 declare function useQuery<T = unknown>(path: string, options?: UseQueryOptions): {
     refetch: () => void;
@@ -370,4 +380,4 @@ declare function formatTokenId({ symbol, decimals, network, address }: {
     address: string | undefined;
 }): string;
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };

@@ -1446,15 +1446,66 @@ function ClientProvider({
   return /* @__PURE__ */ jsx26(ClientContext.Provider, { value, children });
 }
 
+// src/app/providers/AppUIProvider.tsx
+import {
+  createContext as createContext4,
+  useCallback as useCallback4,
+  use as use3,
+  useMemo as useMemo6,
+  useState as useState7
+} from "react";
+import { jsx as jsx27, jsxs as jsxs11 } from "react/jsx-runtime";
+var AppUIContext = createContext4(
+  void 0
+);
+function AppUIProvider({ children }) {
+  const [loadingUI, setLoadingUI] = useState7(0);
+  const showLoadingUI = useCallback4((show) => {
+    if (show) {
+      setLoadingUI((prev) => prev + 1);
+    } else {
+      setLoadingUI((prev) => prev - 1);
+    }
+  }, []);
+  const value = useMemo6(
+    () => ({
+      loadingUI,
+      showLoadingUI
+    }),
+    [loadingUI, showLoadingUI]
+  );
+  return /* @__PURE__ */ jsxs11(AppUIContext.Provider, { value, children: [
+    children,
+    loadingUI > 0 && /* @__PURE__ */ jsx27("div", { style: {
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 2147483647
+    }, children: /* @__PURE__ */ jsx27(Spinner, { width: 24, height: 24 }) })
+  ] });
+}
+function useAppUI() {
+  const context = use3(AppUIContext);
+  if (!context) {
+    throw new Error("useAppUI must be used within an AppUIProvider");
+  }
+  return context;
+}
+
 // src/app/providers/AppProvider.tsx
 import { Toaster } from "react-hot-toast";
 
 // src/app/providers/I18nProvider.tsx
 import {
-  useCallback as useCallback4,
-  useMemo as useMemo6,
-  createContext as createContext4,
-  use as use3
+  useCallback as useCallback5,
+  useMemo as useMemo7,
+  createContext as createContext5,
+  use as use4
 } from "react";
 import { get as get2, getLocale, translate } from "@ywwwtseng/ywjs";
 
@@ -1465,8 +1516,8 @@ function useAppState(path) {
 }
 
 // src/app/providers/I18nProvider.tsx
-import { jsx as jsx27 } from "react/jsx-runtime";
-var I18nContext = createContext4(
+import { jsx as jsx28 } from "react/jsx-runtime";
+var I18nContext = createContext5(
   void 0
 );
 function I18nProvider({
@@ -1476,33 +1527,33 @@ function I18nProvider({
   children
 }) {
   const state = useAppState(path[0]);
-  const language_code = useMemo6(() => {
+  const language_code = useMemo7(() => {
     if (!state) return callback;
     return get2(state, path.slice(1)) || callback;
   }, [state, path, callback]);
-  const locale = useMemo6(() => {
+  const locale = useMemo7(() => {
     if (!locales) return null;
     return getLocale(locales, language_code, locales[callback]);
   }, [language_code, callback, locales]);
-  const t = useCallback4(
+  const t = useCallback5(
     (key, params) => {
       if (!locale) return key;
       return translate(locale, key, params);
     },
     [locale]
   );
-  const value = useMemo6(
+  const value = useMemo7(
     () => ({
       language_code,
       t
     }),
     [locale, t]
   );
-  return /* @__PURE__ */ jsx27(I18nContext.Provider, { value, children });
+  return /* @__PURE__ */ jsx28(I18nContext.Provider, { value, children });
 }
 
 // src/app/providers/AppProvider.tsx
-import { jsx as jsx28, jsxs as jsxs11 } from "react/jsx-runtime";
+import { jsx as jsx29, jsxs as jsxs12 } from "react/jsx-runtime";
 function AppProvider({
   url,
   transformRequest,
@@ -1511,19 +1562,19 @@ function AppProvider({
   toasterProps = {},
   children
 }) {
-  return /* @__PURE__ */ jsxs11(AppStateProvider, { children: [
-    /* @__PURE__ */ jsx28(ClientProvider, { url, transformRequest, onError, children: /* @__PURE__ */ jsx28(I18nProvider, { ...i18nProps, children }) }),
-    /* @__PURE__ */ jsx28(Toaster, { ...toasterProps })
-  ] });
+  return /* @__PURE__ */ jsx29(AppUIProvider, { children: /* @__PURE__ */ jsxs12(AppStateProvider, { children: [
+    /* @__PURE__ */ jsx29(ClientProvider, { url, transformRequest, onError, children: /* @__PURE__ */ jsx29(I18nProvider, { ...i18nProps, children }) }),
+    /* @__PURE__ */ jsx29(Toaster, { ...toasterProps })
+  ] }) });
 }
 
 // src/app/hooks/useInfiniteQuery.ts
-import { use as use5, useMemo as useMemo7, useState as useState7, useCallback as useCallback5, useEffect as useEffect8 } from "react";
+import { use as use6, useMemo as useMemo8, useState as useState8, useCallback as useCallback6, useEffect as useEffect8 } from "react";
 
 // src/app/hooks/useClient.ts
-import { use as use4 } from "react";
+import { use as use5 } from "react";
 function useClient() {
-  const context = use4(ClientContext);
+  const context = use5(ClientContext);
   if (!context) {
     throw new Error("useClient must be used within a ClientProvider");
   }
@@ -1539,13 +1590,13 @@ function useInfiniteQuery(path, options) {
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const state = useAppStateStore((store) => store.state);
-  const [pageKeys, setPageKeys] = useState7([]);
-  const data = useMemo7(() => {
+  const [pageKeys, setPageKeys] = useState8([]);
+  const data = useMemo8(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean);
   }, [pageKeys, state]);
-  const { update } = use5(AppStateContext);
+  const { update } = use6(AppStateContext);
   const { query, loadingRef } = useClient();
-  const hasNextPage = useMemo7(() => {
+  const hasNextPage = useMemo8(() => {
     const page = data[data.length - 1];
     if (Array.isArray(page)) {
       const limit = options.params?.limit;
@@ -1558,7 +1609,7 @@ function useInfiniteQuery(path, options) {
     }
     return true;
   }, [data]);
-  const fetchNextPage = useCallback5(() => {
+  const fetchNextPage = useCallback6(() => {
     if (!hasNextPage) {
       return;
     }
@@ -1579,7 +1630,7 @@ function useInfiniteQuery(path, options) {
     setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
     query(path, params);
   }, [path, JSON.stringify(options), hasNextPage, enabled, data]);
-  const isLoading = useMemo7(() => {
+  const isLoading = useMemo8(() => {
     if (!enabled) {
       return false;
     }
@@ -1624,16 +1675,16 @@ function useInfiniteQuery(path, options) {
 }
 
 // src/app/hooks/useMutation.ts
-import { useState as useState8, useCallback as useCallback7 } from "react";
+import { useState as useState9, useCallback as useCallback8 } from "react";
 
 // src/app/hooks/useNotify.ts
-import { useCallback as useCallback6 } from "react";
+import { useCallback as useCallback7 } from "react";
 import toast from "react-hot-toast";
 
 // src/app/hooks/useI18n.ts
-import { use as use6 } from "react";
+import { use as use7 } from "react";
 function useI18n() {
-  const context = use6(I18nContext);
+  const context = use7(I18nContext);
   if (!context) {
     console.trace("useI18n must be used within a I18nProvider");
     throw new Error("useI18n must be used within a I18nProvider");
@@ -1644,18 +1695,19 @@ function useI18n() {
 // src/app/hooks/useNotify.ts
 function useNotify() {
   const { t } = useI18n();
-  return useCallback6((type, message, params) => {
+  return useCallback7((type, message, params) => {
     (toast[type] || toast)?.(t?.(message, params) ?? message);
   }, [t]);
 }
 
 // src/app/hooks/useMutation.ts
-function useMutation(action, { ignoreNotify, onError, onSuccess } = {}) {
+function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuccess } = {}) {
+  const { showLoadingUI } = useAppUI();
   const client = useClient();
   const notify = useNotify();
-  const [isLoading, setIsLoading] = useState8(false);
+  const [isLoading, setIsLoading] = useState9(false);
   const isLoadingRef = useRefValue(isLoading);
-  const mutate = useCallback7(
+  const mutate = useCallback8(
     (payload) => {
       if (isLoadingRef.current) {
         return Promise.reject({
@@ -1664,6 +1716,9 @@ function useMutation(action, { ignoreNotify, onError, onSuccess } = {}) {
       }
       isLoadingRef.current = true;
       setIsLoading(true);
+      if (showLoading) {
+        showLoadingUI(true);
+      }
       return client.mutate(action, payload).then(({ data }) => {
         if (data.notify) {
           notify(data.notify.type, data.notify.message, data.notify.params);
@@ -1682,9 +1737,12 @@ function useMutation(action, { ignoreNotify, onError, onSuccess } = {}) {
       }).finally(() => {
         isLoadingRef.current = false;
         setIsLoading(false);
+        if (showLoading) {
+          showLoadingUI(false);
+        }
       });
     },
-    [client.mutate, action, notify]
+    [client.mutate, action, notify, showLoading]
   );
   return {
     mutate,
@@ -1693,32 +1751,42 @@ function useMutation(action, { ignoreNotify, onError, onSuccess } = {}) {
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use7, useEffect as useEffect9, useCallback as useCallback8, useMemo as useMemo8, useRef as useRef5 } from "react";
+import { use as use8, useEffect as useEffect9, useCallback as useCallback9, useMemo as useMemo9, useRef as useRef5 } from "react";
 function useQuery(path, options) {
+  const { showLoadingUI } = useAppUI();
   const isUnMountedRef = useRef5(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
-  const { clear } = use7(AppStateContext);
+  const { clear } = use8(AppStateContext);
   const route = useRoute();
   const currentRouteRef = useRef5(route.name);
-  const key = useMemo8(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
+  const key = useMemo9(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
   const currentKeyRef = useRef5(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const isLoading = useAppStateStore((store) => store.loading).includes(key);
   const data = useAppStateStore((store) => store.state[key]);
-  const refetch = useCallback8(() => {
+  const refetch = useCallback9(() => {
     if (!enabled) {
       return;
     }
     if (loadingRef.current.includes(key)) {
       return;
     }
-    query(path, params).then(({ key: key2 }) => {
+    if (options?.showLoading) {
+      showLoadingUI(true);
+    }
+    query(path, params).then(({ key: key2, data: data2 }) => {
+      if (data2.notify) {
+        notifyRef.current(data2.notify.type, data2.notify.message, data2.notify.params);
+      }
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);
+      }
+      if (options?.showLoading) {
+        showLoadingUI(false);
       }
     });
   }, [key, enabled, route.name]);
@@ -1751,12 +1819,18 @@ function useQuery(path, options) {
     if (refetchOnMount && currentRouteRef.current !== route.name) {
       return;
     }
+    if (options?.showLoading) {
+      showLoadingUI(true);
+    }
     query(path, params).then(({ key: key2, data: data2 }) => {
       if (data2.notify) {
         notifyRef.current(data2.notify.type, data2.notify.message, data2.notify.params);
       }
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);
+      }
+      if (options?.showLoading) {
+        showLoadingUI(false);
       }
     });
   }, [key, enabled, route.name]);
@@ -1770,7 +1844,7 @@ function useQuery(path, options) {
 // src/utils.tsx
 import { AppError as AppError2, ErrorCodes } from "@ywwwtseng/ywjs";
 import BigNumber from "bignumber.js";
-import { jsxs as jsxs12 } from "react/jsx-runtime";
+import { jsxs as jsxs13 } from "react/jsx-runtime";
 function formatTinyAmount(value, significantDigits = 2) {
   const str = typeof value === "number" ? new BigNumber(value).toFixed() : value;
   if (!str.startsWith("0.")) return str;
@@ -1821,9 +1895,9 @@ function displayAmount(v, { showTinyAmount = true } = { showTinyAmount: true }) 
     const result = formatTinyAmount(v);
     if (typeof result === "object") {
       const { zeroCount, significant } = result;
-      return /* @__PURE__ */ jsxs12("span", { children: [
+      return /* @__PURE__ */ jsxs13("span", { children: [
         "0.0",
-        /* @__PURE__ */ jsxs12("sub", { children: [
+        /* @__PURE__ */ jsxs13("sub", { children: [
           zeroCount,
           " "
         ] }),
@@ -1850,6 +1924,8 @@ export {
   AppProvider,
   AppStateContext,
   AppStateProvider,
+  AppUIContext,
+  AppUIProvider,
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
@@ -1888,6 +1964,7 @@ export {
   default2 as toast,
   useAppState,
   useAppStateStore,
+  useAppUI,
   useClient,
   useClientOnce,
   useDebounce,

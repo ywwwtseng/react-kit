@@ -2,19 +2,22 @@ import { useState, useCallback } from 'react';
 import type { ErrorResponse } from '@ywwwtseng/ywjs';
 import { useClient } from './useClient';
 import { useNotify } from './useNotify';
+import { useAppUI } from '../providers/AppUIProvider';
 import { useRefValue } from '../../hooks/useRefValue';
 import type { ResponseData } from '../types';
 
 export interface UseMutationOptions {
   ignoreNotify?: boolean | ((error: ErrorResponse) => boolean);
+  showLoading?: boolean;
   onError?: (error: ErrorResponse) => void;
   onSuccess?: (data: ResponseData) => void;
 }
 
 export function useMutation(
   action: string,
-  { ignoreNotify, onError, onSuccess }: UseMutationOptions = {}
+  { ignoreNotify, showLoading = false, onError, onSuccess }: UseMutationOptions = {}
 ) {
+  const { showLoadingUI } = useAppUI();
   const client = useClient();
   const notify = useNotify();
   const [isLoading, setIsLoading] = useState(false);
@@ -32,6 +35,10 @@ export function useMutation(
 
       isLoadingRef.current = true;
       setIsLoading(true);
+
+      if (showLoading) {
+        showLoadingUI(true);
+      }
 
       return client
         .mutate(action, payload)
@@ -60,9 +67,13 @@ export function useMutation(
         .finally(() => {
           isLoadingRef.current = false;
           setIsLoading(false);
+
+          if (showLoading) {
+            showLoadingUI(false);
+          }
         });
     },
-    [client.mutate, action, notify]
+    [client.mutate, action, notify, showLoading]
   );
 
   return {

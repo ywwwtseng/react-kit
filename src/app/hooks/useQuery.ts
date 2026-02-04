@@ -1,4 +1,5 @@
 import { use, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useAppUI } from '../providers/AppUIProvider';
 import { useRoute } from '../../navigation';
 import { useRefValue } from '../../hooks/useRefValue';
 import { useClient } from './useClient';
@@ -16,9 +17,11 @@ export interface UseQueryOptions {
   refetchOnMount?: boolean;
   autoClearCache?: boolean;
   enabled?: boolean;
+  showLoading?: boolean;
 }
 
 export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
+  const { showLoadingUI } = useAppUI();
   const isUnMountedRef = useRef(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
@@ -42,10 +45,21 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
     if (loadingRef.current.includes(key)) {
       return;
     }
-   
-    query(path, params).then(({ key }) => {
+    if (options?.showLoading) {
+      showLoadingUI(true);
+    }
+
+    query(path, params).then(({ key, data }) => {
+      if (data.notify) {
+        notifyRef.current(data.notify.type, data.notify.message, data.notify.params);
+      }
+
       if (options?.autoClearCache && key !== currentKeyRef.current) {
         clear(key);
+      }
+
+      if (options?.showLoading) {
+        showLoadingUI(false);
       }
     });
   }, [key, enabled, route.name]);
@@ -86,6 +100,10 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
     if (refetchOnMount && currentRouteRef.current !== route.name) {
       return;
     }
+
+    if (options?.showLoading) {
+      showLoadingUI(true);
+    }
    
     query(path, params).then(({ key, data }) => {
       if (data.notify) {
@@ -93,6 +111,10 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
       }
       if (options?.autoClearCache && key !== currentKeyRef.current) {
         clear(key);
+      }
+
+      if (options?.showLoading) {
+        showLoadingUI(false);
       }
     });
   }, [key, enabled, route.name]);
