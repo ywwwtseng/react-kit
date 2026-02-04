@@ -8,10 +8,10 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { Request } from '@ywwwtseng/request';
-import { useNavigate } from '../navigation';
-import { useAppStateStore, type AppState } from './AppStateContext';
-import type { QueryParams, ResponseData, Notify } from './types';
-import { getQueryKey } from './utils';
+import { useNavigate } from '../../navigation';
+import { useAppStateStore, type AppState } from './AppStateProvider';
+import type { QueryParams, ResponseData, Notify } from '../types';
+import { getQueryKey } from '../utils';
 
 export interface ClientContextState {
   loadingRef: RefObject<string[]>;

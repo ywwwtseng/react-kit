@@ -5,7 +5,7 @@ import {
   AppStateContext,
   type AppState,
   type AppStateContextState,
-} from '../AppStateContext';
+} from '../providers/AppStateProvider';
 import { useClient } from './useClient';
 import { getQueryKey } from '../utils';
 import { type QueryParams } from '../types';

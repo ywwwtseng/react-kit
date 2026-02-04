@@ -1,5 +1,5 @@
 import { use } from 'react';
-import { ClientContext, type ClientContextState } from '../ClientContext';
+import { ClientContext, type ClientContextState } from '../providers/ClientProvider';
 
 export function useClient(): ClientContextState {
   const context = use(ClientContext);

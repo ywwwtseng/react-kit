@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { get, getLocale, translate, type Locales } from '@ywwwtseng/ywjs';
-import { useAppState } from './hooks/useAppState';
+import { useAppState } from '../hooks/useAppState';
 
 export interface I18nContextState {
   t: (key: string, params?: Record<string, string | number>) => string;

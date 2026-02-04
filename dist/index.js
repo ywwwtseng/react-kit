@@ -1220,7 +1220,7 @@ function StackView({ drawer = { style: {} } }) {
   ] });
 }
 
-// src/app/ClientContext.tsx
+// src/app/providers/ClientProvider.tsx
 import { AppError } from "@ywwwtseng/ywjs";
 import {
   useRef as useRef4,
@@ -1230,7 +1230,7 @@ import {
 } from "react";
 import { Request } from "@ywwwtseng/request";
 
-// src/app/AppStateContext.tsx
+// src/app/providers/AppStateProvider.tsx
 import {
   createContext as createContext2,
   useCallback as useCallback2,
@@ -1337,7 +1337,7 @@ function getQueryKey(path, params) {
   return params && Object.keys(params).length > 0 ? JSON.stringify({ path, params }) : path;
 }
 
-// src/app/ClientContext.tsx
+// src/app/providers/ClientProvider.tsx
 import { jsx as jsx26 } from "react/jsx-runtime";
 var ClientContext = createContext3(void 0);
 function ClientProvider({
@@ -1446,10 +1446,10 @@ function ClientProvider({
   return /* @__PURE__ */ jsx26(ClientContext.Provider, { value, children });
 }
 
-// src/app/AppContext.tsx
+// src/app/providers/AppProvider.tsx
 import { Toaster } from "react-hot-toast";
 
-// src/app/I18nContext.tsx
+// src/app/providers/I18nProvider.tsx
 import {
   useCallback as useCallback4,
   useMemo as useMemo6,
@@ -1464,7 +1464,7 @@ function useAppState(path) {
   return useAppStateStore((store) => get(store.state, path));
 }
 
-// src/app/I18nContext.tsx
+// src/app/providers/I18nProvider.tsx
 import { jsx as jsx27 } from "react/jsx-runtime";
 var I18nContext = createContext4(
   void 0
@@ -1501,7 +1501,7 @@ function I18nProvider({
   return /* @__PURE__ */ jsx27(I18nContext.Provider, { value, children });
 }
 
-// src/app/AppContext.tsx
+// src/app/providers/AppProvider.tsx
 import { jsx as jsx28, jsxs as jsxs11 } from "react/jsx-runtime";
 function AppProvider({
   url,

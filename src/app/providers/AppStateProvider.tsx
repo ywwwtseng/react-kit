@@ -7,7 +7,7 @@ import {
 import { create } from 'zustand';
 import { produce } from 'immer';
 import { merge } from '@ywwwtseng/ywjs';
-import type { Command } from './types';
+import type { Command } from '../types';
 
 export interface AppStateContextState {
   update: (commands: Command[]) => void;

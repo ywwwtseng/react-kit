@@ -1,5 +1,5 @@
 import { use } from 'react';
-import { I18nContext, type I18nContextState } from '../I18nContext';
+import { I18nContext, type I18nContextState } from '../providers/I18nProvider';
 
 export function useI18n(): I18nContextState {
   const context = use(I18nContext);

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Toaster, ToasterProps } from 'react-hot-toast';
-import { ClientProvider, ClientProviderProps } from './ClientContext';
-import { AppStateProvider } from './AppStateContext';
-import { I18nProvider, I18nProviderProps } from './I18nContext';
+import { ClientProvider, ClientProviderProps } from './ClientProvider';
+import { AppStateProvider } from './AppStateProvider';
+import { I18nProvider, I18nProviderProps } from './I18nProvider';
 
 export interface AppProviderProps
   extends React.PropsWithChildren,

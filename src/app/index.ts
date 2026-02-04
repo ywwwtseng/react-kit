@@ -1,6 +1,6 @@
-export * from './ClientContext';
-export * from './AppStateContext';
-export * from './AppContext';
+export * from './providers/ClientProvider';
+export * from './providers/AppStateProvider';
+export * from './providers/AppProvider';
 
 export * from './hooks/useInfiniteQuery';
 export * from './hooks/useMutation';
