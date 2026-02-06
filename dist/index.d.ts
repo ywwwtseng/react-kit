@@ -1,7 +1,7 @@
 import { ToasterProps } from 'react-hot-toast';
 export { default as toast } from 'react-hot-toast';
 import * as React$1 from 'react';
-import React__default, { ComponentProps, ElementType, RefObject, PropsWithChildren } from 'react';
+import React__default, { ComponentProps, ElementType, RefObject, PropsWithChildren, ReactNode } from 'react';
 import * as react_jsx_runtime from 'react/jsx-runtime';
 import { DialogProps } from 'vaul';
 import * as class_variance_authority_types from 'class-variance-authority/types';
@@ -280,11 +280,16 @@ interface I18nProviderProps extends PropsWithChildren {
     callback?: string;
 }
 
-interface AppProviderProps extends React__default.PropsWithChildren, Omit<ClientProviderProps, 'children'> {
+type Plugin = {
+    provider: (props: PropsWithChildren<any>) => ReactNode;
+    options?: any;
+};
+interface AppProviderProps extends React.PropsWithChildren, Omit<ClientProviderProps, 'children'> {
     toasterProps?: Omit<ToasterProps, 'children'>;
     i18nProps?: Omit<I18nProviderProps, 'children'>;
+    plugins?: Plugin[];
 }
-declare function AppProvider({ url, transformRequest, onError, i18nProps, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
+declare function AppProvider({ url, transformRequest, onError, plugins, i18nProps, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
 
 interface UseQueryOptions$1 {
     params: QueryParams & {
@@ -380,4 +385,4 @@ declare function formatTokenId({ symbol, decimals, network, address }: {
     address: string | undefined;
 }): string;
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };

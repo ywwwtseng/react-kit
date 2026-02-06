@@ -1554,16 +1554,20 @@ function I18nProvider({
 
 // src/app/providers/AppProvider.tsx
 import { jsx as jsx29, jsxs as jsxs12 } from "react/jsx-runtime";
+function PluginsWrapper({ plugins, children }) {
+  return plugins.reduce((acc, plugin) => plugin.provider({ children: acc, ...plugin.options }), children);
+}
 function AppProvider({
   url,
   transformRequest,
   onError,
+  plugins = [],
   i18nProps = {},
   toasterProps = {},
   children
 }) {
   return /* @__PURE__ */ jsx29(AppUIProvider, { children: /* @__PURE__ */ jsxs12(AppStateProvider, { children: [
-    /* @__PURE__ */ jsx29(ClientProvider, { url, transformRequest, onError, children: /* @__PURE__ */ jsx29(I18nProvider, { ...i18nProps, children }) }),
+    /* @__PURE__ */ jsx29(ClientProvider, { url, transformRequest, onError, children: /* @__PURE__ */ jsx29(I18nProvider, { ...i18nProps, children: /* @__PURE__ */ jsx29(PluginsWrapper, { plugins, children }) }) }),
     /* @__PURE__ */ jsx29(Toaster, { ...toasterProps })
   ] }) });
 }
