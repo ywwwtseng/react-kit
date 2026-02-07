@@ -1826,9 +1826,7 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
         if (typeof ignoreNotify === "function" ? !ignoreNotify(res.data) : !ignoreNotify) {
           notify("error", res.data.message ?? "Unknown error", params);
         }
-        return {
-          ok: false
-        };
+        throw res.data;
       }).finally(() => {
         isLoadingRef.current = false;
         setIsLoading(false);

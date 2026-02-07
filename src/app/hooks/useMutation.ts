@@ -60,9 +60,7 @@ export function useMutation(
             notify('error', res.data.message ?? 'Unknown error', params as Record<string, string | number>);
           }
 
-          return {
-            ok: false,
-          };
+          throw res.data;
         })
         .finally(() => {
           isLoadingRef.current = false;
