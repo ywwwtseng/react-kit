@@ -151,6 +151,17 @@ interface UseIntervalOptions {
 }
 declare function useInterval(callback: () => void, { delay, enabled, timeout, onTimeout }: UseIntervalOptions): void;
 
+/**
+ * 持久化冷卻倒數：成功後 N 秒內不能操作，重新整理後仍會繼續倒數
+ * @param storageKey 儲存鍵（會加上前綴，避免衝突）
+ * @param durationSeconds 冷卻秒數
+ */
+declare function usePersistedCooldown(storageKey: string, durationSeconds: number): {
+    isCoolingDown: boolean;
+    remainingSeconds: number;
+    startCooldown: () => void;
+};
+
 interface DrawerViewProps extends React.PropsWithChildren {
     title: string;
     description: string;
@@ -393,4 +404,4 @@ declare function formatTokenId({ symbol, decimals, network, address }: {
     address: string | undefined;
 }): string;
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useInterval, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useInterval, useIsMounted, useMutation, useNavigate, usePersistedCooldown, useQuery, useRefValue, useRoute };

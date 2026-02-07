@@ -1028,8 +1028,61 @@ function useInterval(callback, { delay, enabled = true, timeout = Infinity, onTi
   }, [delay, enabled]);
 }
 
+// src/hooks/usePersistedCooldown.ts
+import { useState as useState6, useEffect as useEffect7, useCallback } from "react";
+var STORAGE_PREFIX = "cooldown:";
+function usePersistedCooldown(storageKey, durationSeconds) {
+  const key = `${STORAGE_PREFIX}${storageKey}`;
+  const getEndTime = useCallback(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = localStorage.getItem(key);
+      if (!raw) return null;
+      const end = parseInt(raw, 10);
+      return Number.isFinite(end) ? end : null;
+    } catch {
+      return null;
+    }
+  }, [key]);
+  const [endTime, setEndTime] = useState6(() => getEndTime());
+  const [now, setNow] = useState6(() => Date.now());
+  useEffect7(() => {
+    setEndTime(getEndTime());
+  }, [getEndTime]);
+  useEffect7(() => {
+    const interval = setInterval(() => setNow(Date.now()), 1e3);
+    return () => clearInterval(interval);
+  }, []);
+  const effectiveEnd = endTime != null && endTime > now ? endTime : null;
+  const remainingSeconds = effectiveEnd != null ? Math.max(0, Math.ceil((effectiveEnd - now) / 1e3)) : 0;
+  const isCoolingDown = remainingSeconds > 0;
+  useEffect7(() => {
+    if (endTime != null && now >= endTime) {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+      }
+      setEndTime(null);
+    }
+  }, [endTime, now, key]);
+  const startCooldown = useCallback(() => {
+    const end = Date.now() + durationSeconds * 1e3;
+    try {
+      localStorage.setItem(key, String(end));
+    } catch {
+    }
+    setEndTime(end);
+    setNow(Date.now());
+  }, [durationSeconds, key]);
+  return {
+    isCoolingDown,
+    remainingSeconds,
+    startCooldown
+  };
+}
+
 // src/navigation/StackView.tsx
-import { use as use2, useMemo as useMemo3, useRef as useRef4, useEffect as useEffect8 } from "react";
+import { use as use2, useMemo as useMemo3, useRef as useRef4, useEffect as useEffect9 } from "react";
 
 // src/navigation/DrawerView.tsx
 import { Drawer as Drawer2 } from "vaul";
@@ -1086,10 +1139,10 @@ function DrawerView({
 import {
   createContext,
   use,
-  useState as useState6,
-  useCallback,
+  useState as useState7,
+  useCallback as useCallback2,
   useMemo as useMemo2,
-  useEffect as useEffect7
+  useEffect as useEffect8
 } from "react";
 import { parseJSON } from "@ywwwtseng/ywjs";
 import { jsx as jsx23 } from "react/jsx-runtime";
@@ -1110,7 +1163,7 @@ function StackNavigatorProvider({
   screens,
   children
 }) {
-  const [stacks, setStacks] = useState6(() => {
+  const [stacks, setStacks] = useState7(() => {
     if (typeof window === "undefined") {
       return [];
     }
@@ -1139,7 +1192,7 @@ function StackNavigatorProvider({
       back: screen.back
     };
   }, [stacks, screens]);
-  const navigate = useCallback(
+  const navigate = useCallback2(
     (screen, options) => {
       if (typeof screen === "string") {
         if (!Object.keys(screens).includes(screen)) {
@@ -1175,7 +1228,7 @@ function StackNavigatorProvider({
     }),
     [route, navigate, screens, stacks]
   );
-  useEffect7(() => {
+  useEffect8(() => {
     if (!route) {
       return;
     }
@@ -1233,7 +1286,7 @@ function StackView({ drawer = { style: {} } }) {
     }
     return route.screen;
   }, [route, stacks, screens]);
-  useEffect8(() => {
+  useEffect9(() => {
     if (ref.current) {
       ref.current.scrollTop = 0;
     }
@@ -1263,7 +1316,7 @@ import { AppError } from "@ywwwtseng/ywjs";
 import {
   useRef as useRef5,
   useMemo as useMemo5,
-  useCallback as useCallback3,
+  useCallback as useCallback4,
   createContext as createContext3
 } from "react";
 import { Request } from "@ywwwtseng/request";
@@ -1271,7 +1324,7 @@ import { Request } from "@ywwwtseng/request";
 // src/app/providers/AppStateProvider.tsx
 import {
   createContext as createContext2,
-  useCallback as useCallback2,
+  useCallback as useCallback3,
   useMemo as useMemo4
 } from "react";
 import { create } from "zustand";
@@ -1349,7 +1402,7 @@ var useAppStateStore = create((set) => ({
 }));
 function AppStateProvider({ children }) {
   const { update } = useAppStateStore();
-  const clear = useCallback2((key) => {
+  const clear = useCallback3((key) => {
     update([
       {
         type: "update",
@@ -1393,7 +1446,7 @@ function ClientProvider({
     }),
     [transformRequest]
   );
-  const query = useCallback3(
+  const query = useCallback4(
     async (path, params, options) => {
       const key = getQueryKey(path, params);
       loadingRef.current.push(key);
@@ -1442,7 +1495,7 @@ function ClientProvider({
     },
     [request]
   );
-  const mutate = useCallback3(
+  const mutate = useCallback4(
     async (action, payload) => {
       try {
         let data;
@@ -1487,18 +1540,18 @@ function ClientProvider({
 // src/app/providers/AppUIProvider.tsx
 import {
   createContext as createContext4,
-  useCallback as useCallback4,
+  useCallback as useCallback5,
   use as use3,
   useMemo as useMemo6,
-  useState as useState7
+  useState as useState8
 } from "react";
 import { jsx as jsx27, jsxs as jsxs11 } from "react/jsx-runtime";
 var AppUIContext = createContext4(
   void 0
 );
 function AppUIProvider({ children }) {
-  const [loadingUI, setLoadingUI] = useState7(0);
-  const showLoadingUI = useCallback4((show) => {
+  const [loadingUI, setLoadingUI] = useState8(0);
+  const showLoadingUI = useCallback5((show) => {
     if (show) {
       setLoadingUI((prev) => prev + 1);
     } else {
@@ -1540,7 +1593,7 @@ import { Toaster } from "react-hot-toast";
 
 // src/app/providers/I18nProvider.tsx
 import {
-  useCallback as useCallback5,
+  useCallback as useCallback6,
   useMemo as useMemo7,
   createContext as createContext5,
   use as use4
@@ -1573,7 +1626,7 @@ function I18nProvider({
     if (!locales) return null;
     return getLocale(locales, language_code, locales[callback]);
   }, [language_code, callback, locales]);
-  const t = useCallback5(
+  const t = useCallback6(
     (key, params) => {
       if (!locale) return key;
       return translate(locale, key, params);
@@ -1611,7 +1664,7 @@ function AppProvider({
 }
 
 // src/app/hooks/useInfiniteQuery.ts
-import { use as use6, useMemo as useMemo8, useState as useState8, useCallback as useCallback6, useEffect as useEffect9 } from "react";
+import { use as use6, useMemo as useMemo8, useState as useState9, useCallback as useCallback7, useEffect as useEffect10 } from "react";
 
 // src/app/hooks/useClient.ts
 import { use as use5 } from "react";
@@ -1632,7 +1685,7 @@ function useInfiniteQuery(path, options) {
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const state = useAppStateStore((store) => store.state);
-  const [pageKeys, setPageKeys] = useState8([]);
+  const [pageKeys, setPageKeys] = useState9([]);
   const data = useMemo8(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean);
   }, [pageKeys, state]);
@@ -1651,7 +1704,7 @@ function useInfiniteQuery(path, options) {
     }
     return true;
   }, [data]);
-  const fetchNextPage = useCallback6(() => {
+  const fetchNextPage = useCallback7(() => {
     if (!hasNextPage) {
       return;
     }
@@ -1678,7 +1731,7 @@ function useInfiniteQuery(path, options) {
     }
     return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
   }, [pageKeys, state, enabled]);
-  useEffect9(() => {
+  useEffect10(() => {
     if (!enabled) {
       return;
     }
@@ -1717,10 +1770,10 @@ function useInfiniteQuery(path, options) {
 }
 
 // src/app/hooks/useMutation.ts
-import { useState as useState9, useCallback as useCallback8 } from "react";
+import { useState as useState10, useCallback as useCallback9 } from "react";
 
 // src/app/hooks/useNotify.ts
-import { useCallback as useCallback7 } from "react";
+import { useCallback as useCallback8 } from "react";
 import toast from "react-hot-toast";
 
 // src/app/hooks/useI18n.ts
@@ -1737,7 +1790,7 @@ function useI18n() {
 // src/app/hooks/useNotify.ts
 function useNotify() {
   const { t } = useI18n();
-  return useCallback7((type, message, params) => {
+  return useCallback8((type, message, params) => {
     (toast[type] || toast)?.(t?.(message, params) ?? message);
   }, [t]);
 }
@@ -1747,9 +1800,9 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
   const { showLoadingUI } = useAppUI();
   const client = useClient();
   const notify = useNotify();
-  const [isLoading, setIsLoading] = useState9(false);
+  const [isLoading, setIsLoading] = useState10(false);
   const isLoadingRef = useRefValue(isLoading);
-  const mutate = useCallback8(
+  const mutate = useCallback9(
     (payload) => {
       if (isLoadingRef.current) {
         return Promise.reject({
@@ -1793,7 +1846,7 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use8, useEffect as useEffect10, useCallback as useCallback9, useMemo as useMemo9, useRef as useRef6 } from "react";
+import { use as use8, useEffect as useEffect11, useCallback as useCallback10, useMemo as useMemo9, useRef as useRef6 } from "react";
 function useQuery(path, options) {
   const { showLoadingUI } = useAppUI();
   const isUnMountedRef = useRef6(false);
@@ -1810,7 +1863,7 @@ function useQuery(path, options) {
   const enabled = options?.enabled ?? true;
   const isLoading = useAppStateStore((store) => store.loading).includes(key);
   const data = useAppStateStore((store) => store.state[key]);
-  const refetch = useCallback9(() => {
+  const refetch = useCallback10(() => {
     if (!enabled) {
       return;
     }
@@ -1832,7 +1885,7 @@ function useQuery(path, options) {
       }
     });
   }, [key, enabled, route.name]);
-  useEffect10(() => {
+  useEffect11(() => {
     currentKeyRef.current = key;
     return () => {
       if (options?.autoClearCache) {
@@ -1840,12 +1893,12 @@ function useQuery(path, options) {
       }
     };
   }, [key]);
-  useEffect10(() => {
+  useEffect11(() => {
     return () => {
       isUnMountedRef.current = true;
     };
   }, []);
-  useEffect10(() => {
+  useEffect11(() => {
     if (isUnMountedRef.current) {
       return;
     }
@@ -2018,6 +2071,7 @@ export {
   useIsMounted,
   useMutation,
   useNavigate,
+  usePersistedCooldown,
   useQuery,
   useRefValue,
   useRoute
