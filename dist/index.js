@@ -990,8 +990,46 @@ function useDebounce(value, delay = 500) {
   return debouncedValue;
 }
 
+// src/hooks/useInterval.ts
+import { useRef as useRef3, useEffect as useEffect6 } from "react";
+function useInterval(callback, { delay, enabled = true, timeout = Infinity, onTimeout }) {
+  const callbackRef = useRefValue(callback);
+  const timeoutRef = useRef3(null);
+  const pollStartedAt = useRef3(null);
+  useEffect6(() => {
+    if (!enabled) {
+      return;
+    }
+    timeoutRef.current = setInterval(() => {
+      if (!pollStartedAt.current) {
+        pollStartedAt.current = Date.now();
+      }
+      const elapsed = Date.now() - pollStartedAt.current;
+      if (elapsed > timeout) {
+        if (timeoutRef.current) {
+          if (onTimeout) {
+            onTimeout();
+          }
+          clearInterval(timeoutRef.current);
+          timeoutRef.current = null;
+          pollStartedAt.current = null;
+        }
+      } else {
+        callbackRef.current?.();
+      }
+    }, delay);
+    return () => {
+      if (timeoutRef.current) {
+        clearInterval(timeoutRef.current);
+        timeoutRef.current = null;
+        pollStartedAt.current = null;
+      }
+    };
+  }, [delay, enabled]);
+}
+
 // src/navigation/StackView.tsx
-import { use as use2, useMemo as useMemo3, useRef as useRef3, useEffect as useEffect7 } from "react";
+import { use as use2, useMemo as useMemo3, useRef as useRef4, useEffect as useEffect8 } from "react";
 
 // src/navigation/DrawerView.tsx
 import { Drawer as Drawer2 } from "vaul";
@@ -1051,7 +1089,7 @@ import {
   useState as useState6,
   useCallback,
   useMemo as useMemo2,
-  useEffect as useEffect6
+  useEffect as useEffect7
 } from "react";
 import { parseJSON } from "@ywwwtseng/ywjs";
 import { jsx as jsx23 } from "react/jsx-runtime";
@@ -1137,7 +1175,7 @@ function StackNavigatorProvider({
     }),
     [route, navigate, screens, stacks]
   );
-  useEffect6(() => {
+  useEffect7(() => {
     if (!route) {
       return;
     }
@@ -1172,7 +1210,7 @@ var useRoute = () => {
 // src/navigation/StackView.tsx
 import { Fragment, jsx as jsx24, jsxs as jsxs10 } from "react/jsx-runtime";
 function StackView({ drawer = { style: {} } }) {
-  const ref = useRef3(null);
+  const ref = useRef4(null);
   const { route, stacks, screens } = use2(StackNavigatorContext);
   const drawerView = useMemo3(() => {
     if (route.type !== "page" /* PAGE */) {
@@ -1195,7 +1233,7 @@ function StackView({ drawer = { style: {} } }) {
     }
     return route.screen;
   }, [route, stacks, screens]);
-  useEffect7(() => {
+  useEffect8(() => {
     if (ref.current) {
       ref.current.scrollTop = 0;
     }
@@ -1223,7 +1261,7 @@ function StackView({ drawer = { style: {} } }) {
 // src/app/providers/ClientProvider.tsx
 import { AppError } from "@ywwwtseng/ywjs";
 import {
-  useRef as useRef4,
+  useRef as useRef5,
   useMemo as useMemo5,
   useCallback as useCallback3,
   createContext as createContext3
@@ -1346,7 +1384,7 @@ function ClientProvider({
   onError,
   children
 }) {
-  const loadingRef = useRef4([]);
+  const loadingRef = useRef5([]);
   const navigate = useNavigate();
   const { update } = useAppStateStore();
   const request = useMemo5(
@@ -1573,7 +1611,7 @@ function AppProvider({
 }
 
 // src/app/hooks/useInfiniteQuery.ts
-import { use as use6, useMemo as useMemo8, useState as useState8, useCallback as useCallback6, useEffect as useEffect8 } from "react";
+import { use as use6, useMemo as useMemo8, useState as useState8, useCallback as useCallback6, useEffect as useEffect9 } from "react";
 
 // src/app/hooks/useClient.ts
 import { use as use5 } from "react";
@@ -1640,7 +1678,7 @@ function useInfiniteQuery(path, options) {
     }
     return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
   }, [pageKeys, state, enabled]);
-  useEffect8(() => {
+  useEffect9(() => {
     if (!enabled) {
       return;
     }
@@ -1755,18 +1793,18 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use8, useEffect as useEffect9, useCallback as useCallback9, useMemo as useMemo9, useRef as useRef5 } from "react";
+import { use as use8, useEffect as useEffect10, useCallback as useCallback9, useMemo as useMemo9, useRef as useRef6 } from "react";
 function useQuery(path, options) {
   const { showLoadingUI } = useAppUI();
-  const isUnMountedRef = useRef5(false);
+  const isUnMountedRef = useRef6(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
   const { clear } = use8(AppStateContext);
   const route = useRoute();
-  const currentRouteRef = useRef5(route.name);
+  const currentRouteRef = useRef6(route.name);
   const key = useMemo9(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
-  const currentKeyRef = useRef5(key);
+  const currentKeyRef = useRef6(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
@@ -1794,7 +1832,7 @@ function useQuery(path, options) {
       }
     });
   }, [key, enabled, route.name]);
-  useEffect9(() => {
+  useEffect10(() => {
     currentKeyRef.current = key;
     return () => {
       if (options?.autoClearCache) {
@@ -1802,16 +1840,17 @@ function useQuery(path, options) {
       }
     };
   }, [key]);
-  useEffect9(() => {
+  useEffect10(() => {
     return () => {
       isUnMountedRef.current = true;
     };
   }, []);
-  useEffect9(() => {
+  useEffect10(() => {
     if (isUnMountedRef.current) {
       return;
     }
     if (!enabled) {
+      clear(key);
       return;
     }
     if (loadingRef.current.includes(key)) {
@@ -1975,6 +2014,7 @@ export {
   useDisclosure,
   useI18n,
   useInfiniteQuery,
+  useInterval,
   useIsMounted,
   useMutation,
   useNavigate,

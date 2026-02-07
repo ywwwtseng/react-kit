@@ -143,6 +143,14 @@ declare function useDisclosure(): {
 
 declare function useDebounce<T>(value: T, delay?: number): T;
 
+interface UseIntervalOptions {
+    delay: number;
+    enabled?: boolean;
+    timeout?: number;
+    onTimeout?: () => void;
+}
+declare function useInterval(callback: () => void, { delay, enabled, timeout, onTimeout }: UseIntervalOptions): void;
+
 interface DrawerViewProps extends React.PropsWithChildren {
     title: string;
     description: string;
@@ -385,4 +393,4 @@ declare function formatTokenId({ symbol, decimals, network, address }: {
     address: string | undefined;
 }): string;
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useInterval, useIsMounted, useMutation, useNavigate, useQuery, useRefValue, useRoute };

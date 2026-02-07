@@ -16,6 +16,7 @@ export * from './hooks/useClientOnce';
 export * from './hooks/useIsMounted';
 export * from './hooks/useDisclosure';
 export * from './hooks/useDebounce';
+export * from './hooks/useInterval';
 
 export * from './navigation';
 export * from './app';

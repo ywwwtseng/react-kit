@@ -86,6 +86,7 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
     }
 
     if (!enabled) {
+      clear(key);
       return;
     }
 
