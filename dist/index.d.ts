@@ -310,14 +310,15 @@ interface AppProviderProps extends React.PropsWithChildren, Omit<ClientProviderP
 }
 declare function AppProvider({ url, transformRequest, onError, plugins, i18nProps, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
 
-interface UseQueryOptions$1 {
+interface UseInfiniteQueryOptions {
     params: QueryParams & {
         limit: number;
     };
     refetchOnMount?: boolean;
     enabled?: boolean;
+    type?: 'cursor' | 'offset';
 }
-declare function useInfiniteQuery<T = unknown>(path: string, options: UseQueryOptions$1): {
+declare function useInfiniteQuery<T = unknown>(path: string, options: UseInfiniteQueryOptions): {
     data: T | undefined;
     isLoading: boolean;
     hasNextPage: boolean;

@@ -1,4 +1,4 @@
-import { use, useMemo, useState, useCallback, useEffect } from 'react';
+import { use, useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { useRoute } from '../../navigation';
 import {
   useAppStateStore,
@@ -16,17 +16,18 @@ const getNextPageParam = <T>(lastPage: T | undefined): string | null => {
     : null;
 };
 
-interface UseQueryOptions {
+interface UseInfiniteQueryOptions {
   params: QueryParams & {
     limit: number;
   };
   refetchOnMount?: boolean;
   enabled?: boolean;
+  type?: 'cursor' | 'offset';
 }
 
 export function useInfiniteQuery<T = unknown>(
   path: string,
-  options: UseQueryOptions
+  options: UseInfiniteQueryOptions
 ): {
   data: T | undefined;
   isLoading: boolean;
@@ -74,24 +75,34 @@ export function useInfiniteQuery<T = unknown>(
       return;
     }
 
-    const cursor = getNextPageParam<T>(
-      data ? data[data.length - 1] : undefined
-    );
-
-    if (cursor) {
-      params.cursor = cursor;
+    
+    if (options?.type === 'offset') {
+      params.offset = pageKeys.length * options.params.limit;
+    } else {
+      if (options?.type === 'cursor') {
+        const cursor = getNextPageParam<T>(
+          data ? data[data.length - 1] : undefined
+        );
+    
+        if (cursor) {
+          params.cursor = cursor;
+        }
+      }
     }
+
+   
+
 
     const queryKey = getQueryKey(path, params);
 
-    if (loadingRef.current.includes(queryKey)) {
+    if (loadingRef.current.some((key) => [...pageKeys, queryKey].includes(key))) {
       return;
     }
 
-    setPageKeys((pageKeys) => [...pageKeys, queryKey]);
+    setPageKeys([...pageKeys, queryKey]);
 
     query(path, params);
-  }, [path, JSON.stringify(options), hasNextPage, enabled, data]);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys]);
 
   const isLoading = useMemo(() => {
     if (!enabled) {
@@ -108,7 +119,12 @@ export function useInfiniteQuery<T = unknown>(
       return;
     }
 
-    const params = options?.params ?? {};
+    const params: QueryParams = options?.params ?? {};
+
+    if (options?.type === 'offset') {
+      params.offset = 0;
+    }
+
     const queryKey = getQueryKey(path, params);
 
     if (loadingRef.current.includes(queryKey)) {

@@ -1712,19 +1712,25 @@ function useInfiniteQuery(path, options) {
     if (!enabled) {
       return;
     }
-    const cursor = getNextPageParam(
-      data ? data[data.length - 1] : void 0
-    );
-    if (cursor) {
-      params.cursor = cursor;
+    if (options?.type === "offset") {
+      params.offset = pageKeys.length * options.params.limit;
+    } else {
+      if (options?.type === "cursor") {
+        const cursor = getNextPageParam(
+          data ? data[data.length - 1] : void 0
+        );
+        if (cursor) {
+          params.cursor = cursor;
+        }
+      }
     }
     const queryKey = getQueryKey(path, params);
-    if (loadingRef.current.includes(queryKey)) {
+    if (loadingRef.current.some((key) => [...pageKeys, queryKey].includes(key))) {
       return;
     }
-    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
+    setPageKeys([...pageKeys, queryKey]);
     query(path, params);
-  }, [path, JSON.stringify(options), hasNextPage, enabled, data]);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys]);
   const isLoading = useMemo8(() => {
     if (!enabled) {
       return false;
@@ -1736,6 +1742,9 @@ function useInfiniteQuery(path, options) {
       return;
     }
     const params = options?.params ?? {};
+    if (options?.type === "offset") {
+      params.offset = 0;
+    }
     const queryKey = getQueryKey(path, params);
     if (loadingRef.current.includes(queryKey)) {
       return;
@@ -1844,18 +1853,18 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use8, useEffect as useEffect11, useCallback as useCallback10, useMemo as useMemo9, useRef as useRef6 } from "react";
+import { use as use8, useEffect as useEffect11, useCallback as useCallback10, useMemo as useMemo9, useRef as useRef7 } from "react";
 function useQuery(path, options) {
   const { showLoadingUI } = useAppUI();
-  const isUnMountedRef = useRef6(false);
+  const isUnMountedRef = useRef7(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
   const { clear } = use8(AppStateContext);
   const route = useRoute();
-  const currentRouteRef = useRef6(route.name);
+  const currentRouteRef = useRef7(route.name);
   const key = useMemo9(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
-  const currentKeyRef = useRef6(key);
+  const currentKeyRef = useRef7(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
