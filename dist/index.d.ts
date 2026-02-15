@@ -310,21 +310,6 @@ interface AppProviderProps extends React.PropsWithChildren, Omit<ClientProviderP
 }
 declare function AppProvider({ url, transformRequest, onError, plugins, i18nProps, toasterProps, children, }: AppProviderProps): react_jsx_runtime.JSX.Element;
 
-interface UseInfiniteQueryOptions {
-    params: QueryParams & {
-        limit: number;
-    };
-    refetchOnMount?: boolean;
-    enabled?: boolean;
-    type?: 'cursor' | 'offset';
-}
-declare function useInfiniteQuery<T = unknown>(path: string, options: UseInfiniteQueryOptions): {
-    data: T | undefined;
-    isLoading: boolean;
-    hasNextPage: boolean;
-    fetchNextPage: () => void;
-};
-
 interface UseMutationOptions {
     ignoreNotify?: boolean | ((error: ErrorResponse) => boolean);
     showLoading?: boolean;
@@ -349,7 +334,22 @@ declare function useQuery<T = unknown>(path: string, options?: UseQueryOptions):
     data: T | undefined;
 };
 
-declare function useAppState<T = unknown>(path: string | string[]): T | undefined;
+declare function useQueryState<T = unknown>(path?: string | string[]): T | undefined;
+
+interface UseInfiniteQueryOptions {
+    params: QueryParams & {
+        limit: number;
+    };
+    refetchOnMount?: boolean;
+    enabled?: boolean;
+    type?: 'cursor' | 'offset';
+}
+declare function useInfiniteQuery<T = unknown>(path: string, options: UseInfiniteQueryOptions): {
+    data: T | undefined;
+    isLoading: boolean;
+    hasNextPage: boolean;
+    fetchNextPage: () => void;
+};
 
 declare function useClient(): ClientContextState;
 
@@ -405,4 +405,4 @@ declare function formatTokenId({ symbol, decimals, network, address }: {
     address: string | undefined;
 }): string;
 
-export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppState, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useInterval, useIsMounted, useMutation, useNavigate, usePersistedCooldown, useQuery, useRefValue, useRoute };
+export { AmountInput, type AmountInputProps, AppProvider, type AppProviderProps, type AppState, AppStateContext, type AppStateContextState, AppStateProvider, AppUIContext, type AppUIContextState, AppUIProvider, ArrowDown, ArrowUp, ArrowUpDown, Button, type ButtonProps, Canvas, Check, ChevronDown, ChevronLeft, ChevronRight, ClientContext, type ClientContextState, ClientProvider, type ClientProviderProps, type Command, Confirm, type ConfirmProps, Input, Layout, List, type ListProps, Loading, Modal, type ModalProps, type Notify, type NotifyType, type Plugin, type QueryParams, type ResponseData, type Route, type Screen, ScreenType, Search, Spinner, type Stack, StackNavigatorContext, type StackNavigatorContextState, StackNavigatorProvider, type StackNavigatorProviderProps, StackView, type StackViewProps, type Tab, TabBar, type TabBarProps, Textarea, Typography, type TypographyProps, type UseMutationOptions, type UseQueryOptions, WalletConnect, displayAmount, formatAmount, formatTinyAmount, formatTokenId, getQueryKey, inputVariants, parseTokenId, textareaVariants, useAppStateStore, useAppUI, useClient, useClientOnce, useDebounce, useDisclosure, useI18n, useInfiniteQuery, useInterval, useIsMounted, useMutation, useNavigate, usePersistedCooldown, useQuery, useQueryState, useRefValue, useRoute };

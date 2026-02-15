@@ -6,7 +6,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { get, getLocale, translate, type Locales } from '@ywwwtseng/ywjs';
-import { useAppState } from '../hooks/useAppState';
+import { useQueryState } from '../hooks/useQueryState';
 
 export interface I18nContextState {
   t: (key: string, params?: Record<string, string | number>) => string;
@@ -29,7 +29,7 @@ export function I18nProvider({
   callback = 'en',
   children,
 }: I18nProviderProps) {
-  const state = useAppState(path[0]);
+  const state = useQueryState(path[0]);
   const language_code = useMemo(() => {
     if (!state) return callback;
     return get(state, path.slice(1)) || callback;

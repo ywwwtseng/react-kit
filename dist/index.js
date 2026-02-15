@@ -1600,10 +1600,15 @@ import {
 } from "react";
 import { get as get2, getLocale, translate } from "@ywwwtseng/ywjs";
 
-// src/app/hooks/useAppState.ts
+// src/app/hooks/useQueryState.ts
 import { get } from "@ywwwtseng/ywjs";
-function useAppState(path) {
-  return useAppStateStore((store) => get(store.state, path));
+function useQueryState(path) {
+  return useAppStateStore((store) => {
+    if (!path) {
+      return store.state;
+    }
+    return get(store.state, path);
+  });
 }
 
 // src/app/providers/I18nProvider.tsx
@@ -1617,7 +1622,7 @@ function I18nProvider({
   callback = "en",
   children
 }) {
-  const state = useAppState(path[0]);
+  const state = useQueryState(path[0]);
   const language_code = useMemo7(() => {
     if (!state) return callback;
     return get2(state, path.slice(1)) || callback;
@@ -1663,8 +1668,8 @@ function AppProvider({
   ] }) });
 }
 
-// src/app/hooks/useInfiniteQuery.ts
-import { use as use6, useMemo as useMemo8, useState as useState9, useCallback as useCallback7, useEffect as useEffect10 } from "react";
+// src/app/hooks/useMutation.ts
+import { useState as useState9, useCallback as useCallback8 } from "react";
 
 // src/app/hooks/useClient.ts
 import { use as use5 } from "react";
@@ -1676,119 +1681,14 @@ function useClient() {
   return context;
 }
 
-// src/app/hooks/useInfiniteQuery.ts
-var getNextPageParam = (lastPage) => {
-  return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
-};
-function useInfiniteQuery(path, options) {
-  const route = useRoute();
-  const refetchOnMount = options?.refetchOnMount ?? false;
-  const enabled = options?.enabled ?? true;
-  const state = useAppStateStore((store) => store.state);
-  const [pageKeys, setPageKeys] = useState9([]);
-  const data = useMemo8(() => {
-    return pageKeys.map((key) => state[key]).filter(Boolean);
-  }, [pageKeys, state]);
-  const { update } = use6(AppStateContext);
-  const { query, loadingRef } = useClient();
-  const hasNextPage = useMemo8(() => {
-    const page = data[data.length - 1];
-    if (Array.isArray(page)) {
-      const limit = options.params?.limit;
-      if (typeof limit === "number") {
-        return page.length === limit;
-      }
-      if (page.length === 0) {
-        return false;
-      }
-    }
-    return true;
-  }, [data]);
-  const fetchNextPage = useCallback7(() => {
-    if (!hasNextPage) {
-      return;
-    }
-    const params = options?.params ?? {};
-    if (!enabled) {
-      return;
-    }
-    if (options?.type === "offset") {
-      params.offset = pageKeys.length * options.params.limit;
-    } else {
-      if (options?.type === "cursor") {
-        const cursor = getNextPageParam(
-          data ? data[data.length - 1] : void 0
-        );
-        if (cursor) {
-          params.cursor = cursor;
-        }
-      }
-    }
-    const queryKey = getQueryKey(path, params);
-    if (loadingRef.current.some((key) => [...pageKeys, queryKey].includes(key))) {
-      return;
-    }
-    setPageKeys([...pageKeys, queryKey]);
-    query(path, params);
-  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys]);
-  const isLoading = useMemo8(() => {
-    if (!enabled) {
-      return false;
-    }
-    return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
-  }, [pageKeys, state, enabled]);
-  useEffect10(() => {
-    if (!enabled) {
-      return;
-    }
-    const params = options?.params ?? {};
-    if (options?.type === "offset") {
-      params.offset = 0;
-    }
-    const queryKey = getQueryKey(path, params);
-    if (loadingRef.current.includes(queryKey)) {
-      return;
-    }
-    if (state[queryKey] !== void 0 && refetchOnMount === false) {
-      return;
-    }
-    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
-    query(path, params);
-    return () => {
-      if (refetchOnMount) {
-        update([
-          {
-            type: "update",
-            payload: (draft) => {
-              pageKeys.forEach((page) => {
-                delete draft.state[page];
-              });
-            }
-          }
-        ]);
-        setPageKeys([]);
-      }
-    };
-  }, [path, JSON.stringify(options), enabled, route.name]);
-  return {
-    data: data.length > 0 ? data.flat() : void 0,
-    isLoading,
-    hasNextPage,
-    fetchNextPage
-  };
-}
-
-// src/app/hooks/useMutation.ts
-import { useState as useState10, useCallback as useCallback9 } from "react";
-
 // src/app/hooks/useNotify.ts
-import { useCallback as useCallback8 } from "react";
+import { useCallback as useCallback7 } from "react";
 import toast from "react-hot-toast";
 
 // src/app/hooks/useI18n.ts
-import { use as use7 } from "react";
+import { use as use6 } from "react";
 function useI18n() {
-  const context = use7(I18nContext);
+  const context = use6(I18nContext);
   if (!context) {
     console.trace("useI18n must be used within a I18nProvider");
     throw new Error("useI18n must be used within a I18nProvider");
@@ -1799,7 +1699,7 @@ function useI18n() {
 // src/app/hooks/useNotify.ts
 function useNotify() {
   const { t } = useI18n();
-  return useCallback8((type, message, params) => {
+  return useCallback7((type, message, params) => {
     (toast[type] || toast)?.(t?.(message, params) ?? message);
   }, [t]);
 }
@@ -1809,9 +1709,9 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
   const { showLoadingUI } = useAppUI();
   const client = useClient();
   const notify = useNotify();
-  const [isLoading, setIsLoading] = useState10(false);
+  const [isLoading, setIsLoading] = useState9(false);
   const isLoadingRef = useRefValue(isLoading);
-  const mutate = useCallback9(
+  const mutate = useCallback8(
     (payload) => {
       if (isLoadingRef.current) {
         return Promise.reject({
@@ -1853,24 +1753,24 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use8, useEffect as useEffect11, useCallback as useCallback10, useMemo as useMemo9, useRef as useRef7 } from "react";
+import { use as use7, useEffect as useEffect10, useCallback as useCallback9, useMemo as useMemo8, useRef as useRef6 } from "react";
 function useQuery(path, options) {
   const { showLoadingUI } = useAppUI();
-  const isUnMountedRef = useRef7(false);
+  const isUnMountedRef = useRef6(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
-  const { clear } = use8(AppStateContext);
+  const { clear } = use7(AppStateContext);
   const route = useRoute();
-  const currentRouteRef = useRef7(route.name);
-  const key = useMemo9(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
-  const currentKeyRef = useRef7(key);
+  const currentRouteRef = useRef6(route.name);
+  const key = useMemo8(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
+  const currentKeyRef = useRef6(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const isLoading = useAppStateStore((store) => store.loading).includes(key);
   const data = useAppStateStore((store) => store.state[key]);
-  const refetch = useCallback10(() => {
+  const refetch = useCallback9(() => {
     if (!enabled) {
       return;
     }
@@ -1892,7 +1792,7 @@ function useQuery(path, options) {
       }
     });
   }, [key, enabled, route.name]);
-  useEffect11(() => {
+  useEffect10(() => {
     currentKeyRef.current = key;
     return () => {
       if (options?.autoClearCache) {
@@ -1900,12 +1800,12 @@ function useQuery(path, options) {
       }
     };
   }, [key]);
-  useEffect11(() => {
+  useEffect10(() => {
     return () => {
       isUnMountedRef.current = true;
     };
   }, []);
-  useEffect11(() => {
+  useEffect10(() => {
     if (isUnMountedRef.current) {
       return;
     }
@@ -1941,6 +1841,109 @@ function useQuery(path, options) {
     refetch,
     isLoading,
     data
+  };
+}
+
+// src/app/hooks/useInfiniteQuery.ts
+import { use as use8, useMemo as useMemo9, useState as useState10, useCallback as useCallback10, useEffect as useEffect11 } from "react";
+var getNextPageParam = (lastPage) => {
+  return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
+};
+function useInfiniteQuery(path, options) {
+  const route = useRoute();
+  const refetchOnMount = options?.refetchOnMount ?? false;
+  const enabled = options?.enabled ?? true;
+  const state = useAppStateStore((store) => store.state);
+  const [pageKeys, setPageKeys] = useState10([]);
+  const data = useMemo9(() => {
+    return pageKeys.map((key) => state[key]).filter(Boolean);
+  }, [pageKeys, state]);
+  const { update } = use8(AppStateContext);
+  const { query, loadingRef } = useClient();
+  const hasNextPage = useMemo9(() => {
+    const page = data[data.length - 1];
+    if (Array.isArray(page)) {
+      const limit = options.params?.limit;
+      if (typeof limit === "number") {
+        return page.length === limit;
+      }
+      if (page.length === 0) {
+        return false;
+      }
+    }
+    return true;
+  }, [data]);
+  const fetchNextPage = useCallback10(() => {
+    if (!hasNextPage) {
+      return;
+    }
+    const params = options?.params ?? {};
+    if (!enabled) {
+      return;
+    }
+    if (options?.type === "offset") {
+      params.offset = pageKeys.length * options.params.limit;
+    } else {
+      if (options?.type === "cursor") {
+        const cursor = getNextPageParam(
+          data ? data[data.length - 1] : void 0
+        );
+        if (cursor) {
+          params.cursor = cursor;
+        }
+      }
+    }
+    const queryKey = getQueryKey(path, params);
+    if (loadingRef.current.some((key) => [...pageKeys, queryKey].includes(key))) {
+      return;
+    }
+    setPageKeys([...pageKeys, queryKey]);
+    query(path, params);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys]);
+  const isLoading = useMemo9(() => {
+    if (!enabled) {
+      return false;
+    }
+    return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
+  }, [pageKeys, state, enabled]);
+  useEffect11(() => {
+    if (!enabled) {
+      return;
+    }
+    const params = options?.params ?? {};
+    if (options?.type === "offset") {
+      params.offset = 0;
+    }
+    const queryKey = getQueryKey(path, params);
+    if (loadingRef.current.includes(queryKey)) {
+      return;
+    }
+    if (state[queryKey] !== void 0 && refetchOnMount === false) {
+      return;
+    }
+    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
+    query(path, params);
+    return () => {
+      if (refetchOnMount) {
+        update([
+          {
+            type: "update",
+            payload: (draft) => {
+              pageKeys.forEach((page) => {
+                delete draft.state[page];
+              });
+            }
+          }
+        ]);
+        setPageKeys([]);
+      }
+    };
+  }, [path, JSON.stringify(options), enabled, route.name]);
+  return {
+    data: data.length > 0 ? data.flat() : void 0,
+    isLoading,
+    hasNextPage,
+    fetchNextPage
   };
 }
 
@@ -2065,7 +2068,6 @@ export {
   parseTokenId,
   textareaVariants,
   default2 as toast,
-  useAppState,
   useAppStateStore,
   useAppUI,
   useClient,
@@ -2080,6 +2082,7 @@ export {
   useNavigate,
   usePersistedCooldown,
   useQuery,
+  useQueryState,
   useRefValue,
   useRoute
 };
