@@ -1314,7 +1314,7 @@ function StackView({ drawer = { style: {} } }) {
 // src/app/providers/ClientProvider.tsx
 import { AppError } from "@ywwwtseng/ywjs";
 import {
-  useRef as useRef5,
+  useRef as useRef6,
   useMemo as useMemo5,
   useCallback as useCallback4,
   createContext as createContext3
@@ -1325,7 +1325,8 @@ import { Request } from "@ywwwtseng/request";
 import {
   createContext as createContext2,
   useCallback as useCallback3,
-  useMemo as useMemo4
+  useMemo as useMemo4,
+  useRef as useRef5
 } from "react";
 import { create } from "zustand";
 import { produce } from "immer";
@@ -1402,6 +1403,7 @@ var useAppStateStore = create((set) => ({
 }));
 function AppStateProvider({ children }) {
   const { update } = useAppStateStore();
+  const queryKeysMapRef = useRef5(/* @__PURE__ */ new Map());
   const clear = useCallback3((key) => {
     update([
       {
@@ -1416,9 +1418,10 @@ function AppStateProvider({ children }) {
   const value = useMemo4(
     () => ({
       update,
-      clear
+      clear,
+      queryKeysMap: queryKeysMapRef.current
     }),
-    [update, clear]
+    [update, clear, queryKeysMapRef]
   );
   return /* @__PURE__ */ jsx25(AppStateContext.Provider, { value, children });
 }
@@ -1437,7 +1440,7 @@ function ClientProvider({
   onError,
   children
 }) {
-  const loadingRef = useRef5([]);
+  const loadingRef = useRef6([]);
   const navigate = useNavigate();
   const { update } = useAppStateStore();
   const request = useMemo5(
@@ -1753,18 +1756,18 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use7, useEffect as useEffect10, useCallback as useCallback9, useMemo as useMemo8, useRef as useRef6 } from "react";
+import { use as use7, useEffect as useEffect10, useCallback as useCallback9, useMemo as useMemo8, useRef as useRef7 } from "react";
 function useQuery(path, options) {
   const { showLoadingUI } = useAppUI();
-  const isUnMountedRef = useRef6(false);
+  const isUnMountedRef = useRef7(false);
   const notify = useNotify();
   const notifyRef = useRefValue(notify);
   const { query, loadingRef } = useClient();
   const { clear } = use7(AppStateContext);
   const route = useRoute();
-  const currentRouteRef = useRef6(route.name);
+  const currentRouteRef = useRef7(route.name);
   const key = useMemo8(() => getQueryKey(path, options?.params ?? {}), [path, JSON.stringify(options?.params ?? {})]);
-  const currentKeyRef = useRef6(key);
+  const currentKeyRef = useRef7(key);
   const params = options?.params ?? {};
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
@@ -1851,16 +1854,29 @@ var getNextPageParam = (lastPage) => {
   return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
 };
 function useInfiniteQuery(path, options) {
+  const firstQueryParams = useMemo9(() => {
+    const params = options?.params ?? {};
+    if (options?.type === "offset") {
+      params.offset = 0;
+    }
+    return {
+      path,
+      params
+    };
+  }, [path, JSON.stringify(options?.params ?? {})]);
   const { showLoadingUI } = useAppUI();
   const route = useRoute();
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const state = useAppStateStore((store) => store.state);
-  const [pageKeys, setPageKeys] = useState10([]);
+  const { update, queryKeysMap } = use8(AppStateContext);
+  const firstQueryKey = useMemo9(() => {
+    return getQueryKey(firstQueryParams.path, firstQueryParams.params);
+  }, [firstQueryParams]);
+  const [pageKeys, setPageKeys] = useState10(queryKeysMap.get(firstQueryKey) ?? []);
   const data = useMemo9(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean);
   }, [pageKeys, state]);
-  const { update } = use8(AppStateContext);
   const { query, loadingRef } = useClient();
   const hasNextPage = useMemo9(() => {
     const page = data[data.length - 1];
@@ -1879,29 +1895,33 @@ function useInfiniteQuery(path, options) {
     if (!hasNextPage) {
       return;
     }
-    const params = options?.params ?? {};
     if (!enabled) {
       return;
     }
+    const params = options?.params ?? {};
     if (options?.type === "offset") {
       params.offset = pageKeys.length * options.params.limit;
     } else {
-      if (options?.type === "cursor") {
-        const cursor = getNextPageParam(
-          data ? data[data.length - 1] : void 0
-        );
-        if (cursor) {
-          params.cursor = cursor;
-        }
+      const cursor = getNextPageParam(
+        data ? data[data.length - 1] : void 0
+      );
+      if (cursor) {
+        params.cursor = cursor;
       }
     }
     const queryKey = getQueryKey(path, params);
     if (loadingRef.current.some((key) => [...pageKeys, queryKey].includes(key))) {
       return;
     }
-    setPageKeys([...pageKeys, queryKey]);
+    if (!options?.refetchOnMount) {
+    }
+    const newPageKeys = [...pageKeys, queryKey];
+    setPageKeys(newPageKeys);
+    if (!options?.refetchOnMount) {
+      queryKeysMap.set(firstQueryKey, newPageKeys);
+    }
     query(path, params);
-  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys]);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys, firstQueryKey]);
   const isLoading = useMemo9(() => {
     if (!enabled) {
       return false;
@@ -1912,22 +1932,23 @@ function useInfiniteQuery(path, options) {
     if (!enabled) {
       return;
     }
-    const params = options?.params ?? {};
-    if (options?.type === "offset") {
-      params.offset = 0;
-    }
-    const queryKey = getQueryKey(path, params);
-    if (loadingRef.current.includes(queryKey)) {
+    if (!options?.refetchOnMount && queryKeysMap.get(firstQueryKey)?.length > 0) {
       return;
     }
-    if (state[queryKey] !== void 0 && refetchOnMount === false) {
+    if (loadingRef.current.includes(firstQueryKey)) {
+      return;
+    }
+    if (state[firstQueryKey] !== void 0 && refetchOnMount === false) {
       return;
     }
     if (options?.showLoading) {
       showLoadingUI(true);
     }
-    setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
-    query(path, params).finally(() => {
+    setPageKeys([firstQueryKey]);
+    if (!options?.refetchOnMount) {
+      queryKeysMap.set(firstQueryKey, [firstQueryKey]);
+    }
+    query(firstQueryParams.path, firstQueryParams.params).finally(() => {
       if (options?.showLoading) {
         showLoadingUI(false);
       }
@@ -1947,7 +1968,7 @@ function useInfiniteQuery(path, options) {
         setPageKeys([]);
       }
     };
-  }, [path, JSON.stringify(options), enabled, route.name]);
+  }, [firstQueryParams, firstQueryKey, enabled, route.name]);
   return {
     data: data.length > 0 ? data.flat() : void 0,
     isLoading,

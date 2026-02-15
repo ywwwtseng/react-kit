@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useMemo,
+  useRef,
   type PropsWithChildren,
 } from 'react';
 import { create } from 'zustand';
@@ -12,6 +13,7 @@ import type { Command } from '../types';
 export interface AppStateContextState {
   update: (commands: Command[]) => void;
   clear: (key: string) => void;
+  queryKeysMap: Map<string, string[]>;
 }
 
 export const AppStateContext = createContext<AppStateContextState | undefined>(
@@ -112,6 +114,7 @@ export const useAppStateStore = create<AppState>((set) => ({
 
 export function AppStateProvider({ children }: PropsWithChildren) {
   const { update } = useAppStateStore();
+  const queryKeysMapRef = useRef<Map<string, string[]>>(new Map());
 
   const clear = useCallback((key: string) => {
     update([
@@ -129,8 +132,9 @@ export function AppStateProvider({ children }: PropsWithChildren) {
     () => ({
       update,
       clear,
+      queryKeysMap: queryKeysMapRef.current,
     }),
-    [update, clear]
+    [update, clear, queryKeysMapRef]
   );
 
   return (

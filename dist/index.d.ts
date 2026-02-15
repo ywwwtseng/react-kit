@@ -271,6 +271,7 @@ declare function ClientProvider({ url, transformRequest, onError, children, }: C
 interface AppStateContextState {
     update: (commands: Command[]) => void;
     clear: (key: string) => void;
+    queryKeysMap: Map<string, string[]>;
 }
 declare const AppStateContext: React$1.Context<AppStateContextState>;
 type AppState = {

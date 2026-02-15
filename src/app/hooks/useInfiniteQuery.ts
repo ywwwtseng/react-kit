@@ -36,18 +36,34 @@ export function useInfiniteQuery<T = unknown>(
   hasNextPage: boolean;
   fetchNextPage: () => void;
 } {
+  const firstQueryParams = useMemo(() => {
+    const params: QueryParams = options?.params ?? {};
+
+    if (options?.type === 'offset') {
+      params.offset = 0;
+    }
+
+    return {
+      path,
+      params,
+    };
+  }, [path, JSON.stringify(options?.params ?? {})]);
   const { showLoadingUI } = useAppUI();
   const route = useRoute();
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
   const state = useAppStateStore((store) => store.state);
-  const [pageKeys, setPageKeys] = useState<string[]>([]);
+  const { update, queryKeysMap } = use(AppStateContext) as AppStateContextState;
+  const firstQueryKey = useMemo(() => {
+    return getQueryKey(firstQueryParams.path, firstQueryParams.params);
+  }, [firstQueryParams]);
+  const [pageKeys, setPageKeys] = useState<string[]>(queryKeysMap.get(firstQueryKey) ?? []);
   const data = useMemo(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean) as T[];
   }, [pageKeys, state]);
-
-  const { update } = use(AppStateContext) as AppStateContextState;
   const { query, loadingRef } = useClient();
+
+ 
 
   const hasNextPage = useMemo(() => {
     const page = data[data.length - 1];
@@ -72,29 +88,23 @@ export function useInfiniteQuery<T = unknown>(
       return;
     }
 
-    const params: QueryParams = options?.params ?? {};
-
     if (!enabled) {
       return;
     }
 
+    const params: QueryParams = options?.params ?? {};
     
     if (options?.type === 'offset') {
       params.offset = pageKeys.length * options.params.limit;
     } else {
-      if (options?.type === 'cursor') {
-        const cursor = getNextPageParam<T>(
-          data ? data[data.length - 1] : undefined
-        );
-    
-        if (cursor) {
-          params.cursor = cursor;
-        }
+      const cursor = getNextPageParam<T>(
+        data ? data[data.length - 1] : undefined
+      );
+  
+      if (cursor) {
+        params.cursor = cursor;
       }
     }
-
-   
-
 
     const queryKey = getQueryKey(path, params);
 
@@ -102,10 +112,19 @@ export function useInfiniteQuery<T = unknown>(
       return;
     }
 
-    setPageKeys([...pageKeys, queryKey]);
+    if (!options?.refetchOnMount) {
+      
+    }
+
+    const newPageKeys = [...pageKeys, queryKey];
+
+    setPageKeys(newPageKeys);
+    if (!options?.refetchOnMount) {
+      queryKeysMap.set(firstQueryKey, newPageKeys);
+    }
 
     query(path, params);
-  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys]);
+  }, [path, JSON.stringify(options), hasNextPage, enabled, data, pageKeys, firstQueryKey]);
 
   const isLoading = useMemo(() => {
     if (!enabled) {
@@ -122,19 +141,15 @@ export function useInfiniteQuery<T = unknown>(
       return;
     }
 
-    const params: QueryParams = options?.params ?? {};
-
-    if (options?.type === 'offset') {
-      params.offset = 0;
-    }
-
-    const queryKey = getQueryKey(path, params);
-
-    if (loadingRef.current.includes(queryKey)) {
+    if (!options?.refetchOnMount && queryKeysMap.get(firstQueryKey)?.length > 0) {
       return;
     }
 
-    if (state[queryKey] !== undefined && refetchOnMount === false) {
+    if (loadingRef.current.includes(firstQueryKey)) {
+      return;
+    }
+
+    if (state[firstQueryKey] !== undefined && refetchOnMount === false) {
       return;
     }
 
@@ -142,8 +157,11 @@ export function useInfiniteQuery<T = unknown>(
       showLoadingUI(true);
     }
 
-    setPageKeys((pageKeys) => [...pageKeys, queryKey]);
-    query(path, params).finally(() => {
+    setPageKeys([firstQueryKey]);
+    if (!options?.refetchOnMount) {
+      queryKeysMap.set(firstQueryKey, [firstQueryKey]);
+    }
+    query(firstQueryParams.path, firstQueryParams.params).finally(() => {
       if (options?.showLoading) {
         showLoadingUI(false);
       }
@@ -165,7 +183,7 @@ export function useInfiniteQuery<T = unknown>(
         setPageKeys([]);
       }
     };
-  }, [path, JSON.stringify(options), enabled, route.name]);
+  }, [firstQueryParams, firstQueryKey, enabled, route.name]);
 
   return {
     data: data.length > 0 ? (data.flat() as T) : undefined,
