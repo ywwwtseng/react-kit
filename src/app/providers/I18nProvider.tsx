@@ -1,5 +1,7 @@
 import {
   useCallback,
+  useEffect,
+  useState,
   useMemo,
   createContext,
   use,
@@ -10,7 +12,8 @@ import { useQueryState } from '../hooks/useQueryState';
 
 export interface I18nContextState {
   t: (key: string, params?: Record<string, string | number>) => string;
-  language_code: string;
+  localeCode: string;
+  setLocaleCode: (localeCode: string) => void;
 }
 
 export const I18nContext = createContext<I18nContextState | undefined>(
@@ -29,16 +32,19 @@ export function I18nProvider({
   callback = 'en',
   children,
 }: I18nProviderProps) {
-  const state = useQueryState(path[0]);
+  const state = useQueryState(path ? path[0] : null);
+ 
   const language_code = useMemo(() => {
     if (!state) return callback;
     return get(state, path.slice(1)) || callback;
   }, [state, path, callback]);
 
+  const [localeCode, setLocaleCode] = useState<string | null>(language_code);
+
   const locale = useMemo(() => {
     if (!locales) return null;
-    return getLocale(locales, language_code, locales[callback]);
-  }, [language_code, callback, locales]);
+    return getLocale(locales, localeCode, locales[callback]);
+  }, [localeCode, callback, locales]);
 
   const t = useCallback(
     (key: string, params?: Record<string, string | number>) => {
@@ -49,12 +55,17 @@ export function I18nProvider({
     [locale]
   );
 
+  useEffect(() => {
+    setLocaleCode(language_code);
+  }, [language_code]);
+
   const value = useMemo(
     () => ({
-      language_code,
+      localeCode,
+      setLocaleCode,
       t,
     }),
-    [locale, t]
+    [localeCode, t]
   );
 
   return (

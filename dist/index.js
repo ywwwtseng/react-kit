@@ -1597,6 +1597,8 @@ import { Toaster } from "react-hot-toast";
 // src/app/providers/I18nProvider.tsx
 import {
   useCallback as useCallback6,
+  useEffect as useEffect10,
+  useState as useState9,
   useMemo as useMemo7,
   createContext as createContext5,
   use as use4
@@ -1625,15 +1627,16 @@ function I18nProvider({
   callback = "en",
   children
 }) {
-  const state = useQueryState(path[0]);
+  const state = useQueryState(path ? path[0] : null);
   const language_code = useMemo7(() => {
     if (!state) return callback;
     return get2(state, path.slice(1)) || callback;
   }, [state, path, callback]);
+  const [localeCode, setLocaleCode] = useState9(language_code);
   const locale = useMemo7(() => {
     if (!locales) return null;
-    return getLocale(locales, language_code, locales[callback]);
-  }, [language_code, callback, locales]);
+    return getLocale(locales, localeCode, locales[callback]);
+  }, [localeCode, callback, locales]);
   const t = useCallback6(
     (key, params) => {
       if (!locale) return key;
@@ -1641,12 +1644,16 @@ function I18nProvider({
     },
     [locale]
   );
+  useEffect10(() => {
+    setLocaleCode(language_code);
+  }, [language_code]);
   const value = useMemo7(
     () => ({
-      language_code,
+      localeCode,
+      setLocaleCode,
       t
     }),
-    [locale, t]
+    [localeCode, t]
   );
   return /* @__PURE__ */ jsx28(I18nContext.Provider, { value, children });
 }
@@ -1672,7 +1679,7 @@ function AppProvider({
 }
 
 // src/app/hooks/useMutation.ts
-import { useState as useState9, useCallback as useCallback8 } from "react";
+import { useState as useState10, useCallback as useCallback8 } from "react";
 
 // src/app/hooks/useClient.ts
 import { use as use5 } from "react";
@@ -1712,7 +1719,7 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
   const { showLoadingUI } = useAppUI();
   const client = useClient();
   const notify = useNotify();
-  const [isLoading, setIsLoading] = useState9(false);
+  const [isLoading, setIsLoading] = useState10(false);
   const isLoadingRef = useRefValue(isLoading);
   const mutate = useCallback8(
     (payload) => {
@@ -1756,7 +1763,7 @@ function useMutation(action, { ignoreNotify, showLoading = false, onError, onSuc
 }
 
 // src/app/hooks/useQuery.ts
-import { use as use7, useEffect as useEffect10, useCallback as useCallback9, useMemo as useMemo8, useRef as useRef7 } from "react";
+import { use as use7, useEffect as useEffect11, useCallback as useCallback9, useMemo as useMemo8, useRef as useRef7 } from "react";
 function useQuery(path, options) {
   const { showLoadingUI } = useAppUI();
   const isUnMountedRef = useRef7(false);
@@ -1795,7 +1802,7 @@ function useQuery(path, options) {
       }
     });
   }, [key, enabled, route.name]);
-  useEffect10(() => {
+  useEffect11(() => {
     currentKeyRef.current = key;
     return () => {
       if (options?.autoClearCache) {
@@ -1803,12 +1810,12 @@ function useQuery(path, options) {
       }
     };
   }, [key]);
-  useEffect10(() => {
+  useEffect11(() => {
     return () => {
       isUnMountedRef.current = true;
     };
   }, []);
-  useEffect10(() => {
+  useEffect11(() => {
     if (isUnMountedRef.current) {
       return;
     }
@@ -1849,7 +1856,7 @@ function useQuery(path, options) {
 }
 
 // src/app/hooks/useInfiniteQuery.ts
-import { use as use8, useMemo as useMemo9, useState as useState10, useCallback as useCallback10, useEffect as useEffect11 } from "react";
+import { use as use8, useMemo as useMemo9, useState as useState11, useCallback as useCallback10, useEffect as useEffect12 } from "react";
 var getNextPageParam = (lastPage) => {
   return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
 };
@@ -1873,7 +1880,7 @@ function useInfiniteQuery(path, options) {
   const firstQueryKey = useMemo9(() => {
     return getQueryKey(firstQueryParams.path, firstQueryParams.params);
   }, [firstQueryParams]);
-  const [pageKeys, setPageKeys] = useState10(queryKeysMap.get(firstQueryKey) ?? []);
+  const [pageKeys, setPageKeys] = useState11(queryKeysMap.get(firstQueryKey) ?? []);
   const data = useMemo9(() => {
     return pageKeys.map((key) => state[key]).filter(Boolean);
   }, [pageKeys, state]);
@@ -1928,7 +1935,7 @@ function useInfiniteQuery(path, options) {
     }
     return pageKeys.length > 0 ? state[pageKeys[pageKeys.length - 1]] === void 0 : false;
   }, [pageKeys, state, enabled]);
-  useEffect11(() => {
+  useEffect12(() => {
     if (!enabled) {
       return;
     }

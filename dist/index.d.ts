@@ -292,7 +292,8 @@ declare function useAppUI(): AppUIContextState;
 
 interface I18nContextState {
     t: (key: string, params?: Record<string, string | number>) => string;
-    language_code: string;
+    localeCode: string;
+    setLocaleCode: (localeCode: string) => void;
 }
 interface I18nProviderProps extends PropsWithChildren {
     locales?: Locales;
