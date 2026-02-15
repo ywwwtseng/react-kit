@@ -343,6 +343,7 @@ interface UseInfiniteQueryOptions {
     refetchOnMount?: boolean;
     enabled?: boolean;
     type?: 'cursor' | 'offset';
+    showLoading?: boolean;
 }
 declare function useInfiniteQuery<T = unknown>(path: string, options: UseInfiniteQueryOptions): {
     data: T | undefined;

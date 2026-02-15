@@ -1,5 +1,6 @@
-import { use, useMemo, useState, useCallback, useEffect, useRef } from 'react';
+import { use, useMemo, useState, useCallback, useEffect } from 'react';
 import { useRoute } from '../../navigation';
+import { useAppUI } from '../providers/AppUIProvider';
 import {
   useAppStateStore,
   AppStateContext,
@@ -23,6 +24,7 @@ interface UseInfiniteQueryOptions {
   refetchOnMount?: boolean;
   enabled?: boolean;
   type?: 'cursor' | 'offset';
+  showLoading?: boolean;
 }
 
 export function useInfiniteQuery<T = unknown>(
@@ -34,6 +36,7 @@ export function useInfiniteQuery<T = unknown>(
   hasNextPage: boolean;
   fetchNextPage: () => void;
 } {
+  const { showLoadingUI } = useAppUI();
   const route = useRoute();
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
@@ -135,8 +138,16 @@ export function useInfiniteQuery<T = unknown>(
       return;
     }
 
+    if (options?.showLoading) {
+      showLoadingUI(true);
+    }
+
     setPageKeys((pageKeys) => [...pageKeys, queryKey]);
-    query(path, params);
+    query(path, params).finally(() => {
+      if (options?.showLoading) {
+        showLoadingUI(false);
+      }
+    });
 
     return () => {
       if (refetchOnMount) {

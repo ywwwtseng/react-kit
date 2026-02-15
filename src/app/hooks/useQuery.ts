@@ -113,7 +113,8 @@ export function useQuery<T = unknown>(path: string, options?: UseQueryOptions) {
       if (options?.autoClearCache && key !== currentKeyRef.current) {
         clear(key);
       }
-
+    })
+    .finally(() => {
       if (options?.showLoading) {
         showLoadingUI(false);
       }

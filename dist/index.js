@@ -1832,6 +1832,7 @@ function useQuery(path, options) {
       if (options?.autoClearCache && key2 !== currentKeyRef.current) {
         clear(key2);
       }
+    }).finally(() => {
       if (options?.showLoading) {
         showLoadingUI(false);
       }
@@ -1850,6 +1851,7 @@ var getNextPageParam = (lastPage) => {
   return Array.isArray(lastPage) ? lastPage?.[lastPage.length - 1]?.created_at ?? null : null;
 };
 function useInfiniteQuery(path, options) {
+  const { showLoadingUI } = useAppUI();
   const route = useRoute();
   const refetchOnMount = options?.refetchOnMount ?? false;
   const enabled = options?.enabled ?? true;
@@ -1921,8 +1923,15 @@ function useInfiniteQuery(path, options) {
     if (state[queryKey] !== void 0 && refetchOnMount === false) {
       return;
     }
+    if (options?.showLoading) {
+      showLoadingUI(true);
+    }
     setPageKeys((pageKeys2) => [...pageKeys2, queryKey]);
-    query(path, params);
+    query(path, params).finally(() => {
+      if (options?.showLoading) {
+        showLoadingUI(false);
+      }
+    });
     return () => {
       if (refetchOnMount) {
         update([
